@@ -56,3 +56,16 @@ compile_commands.json
 *_qmlcache.qrc
 *.qtcreator
 *__pycache__
+
+.venv
+__pycache__
+
+tes.py
+test.py
+
+.env
+*.html
+pyside*
+
+debug.json
+response.json
