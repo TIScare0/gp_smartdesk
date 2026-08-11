@@ -1,7 +1,7 @@
 import os
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 
-globals().update(dotenv_values('.env'))
+load_dotenv()
 
 def env_item(name):
     return os.environ.get(name)

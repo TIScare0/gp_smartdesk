@@ -50,7 +50,7 @@ class Request:
             if not self._is_valid_status(code):
                 raise RuntimeError(f'{code} is an invalid status code')
 
-        if data and method == 'GET':
+        if (data or kwargs.get('json')) and method == 'GET':
             method = 'POST'
 
         try:

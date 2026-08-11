@@ -7,6 +7,7 @@ from network import Request
 class LeonardoModels:
     ...
 
+
 class LeonardoBase(Request):
     def __init__(self):
         super().__init__()
@@ -14,6 +15,6 @@ class LeonardoBase(Request):
     ...
 
 
-class LeonardoImage(Request):
-    ...
-
+class Leonardo(LeonardoBase):
+    def __init__(self):
+        super().__init__()
