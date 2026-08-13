@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
-from curl_cffi import requests
+from curl_cffi import CurlOpt, requests
 
 
 _USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36'
@@ -119,3 +119,6 @@ class Request:
             allow_status_codes=allow_status_codes,
             **kwargs
         ).json()
+
+    def start_verbose(self):
+        self.session.curl_options[CurlOpt.VERBOSE] = 1

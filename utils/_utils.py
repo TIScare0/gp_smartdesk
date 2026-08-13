@@ -1,5 +1,16 @@
 import json
+import re
 
+KNOWN_EXTENSIONS = {
+    'jpg',
+    'jpeg',
+    'png',
+    'webp',
+    'gif',
+    'bmp',
+    'mp4',
+    'webm',
+}
 
 def open_file(filename, is_json=False):
     data = None
@@ -10,16 +21,32 @@ def open_file(filename, is_json=False):
         return None
     return json.loads(data) if is_json else data
 
-def save_file(filename, data, is_json=False):
-    with open(filename, 'w', encoding='utf-8') as f:
-        if is_json:
-            json.dump(f, data)
-            return
-        f.write(data)
-        return
+def save_file(filename, data, _type='w', is_json=False):
+    if _type == 'wb':
+        with open(filename, _type) as f:
+            f.write(data)
+    else:
+        with open(filename, _type, encoding='utf-8') as f:
+            if is_json:
+                json.dump(data, f)
+            else:
+                f.write(data)
 
 def create_filename(chars: str, ext: str | None = None):
     filename = chars[:20].lower().replace(' ', '_')
     if ext:
-        filename = filename + ext
+        filename = filename + f'.{ext}'
     return filename
+
+def determine_ext(url, default_ext='unknown_video'):
+    if not url:
+        return default_ext
+
+    url = url.partition('?')[0].rstrip('/')
+
+    guess = url.rpartition('.')[2].lower()
+
+    if guess in KNOWN_EXTENSIONS:
+        return guess
+
+    return default_ext

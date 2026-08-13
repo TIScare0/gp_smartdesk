@@ -67,8 +67,27 @@ class Models:
             core_mode=Modality.IMAGE
         ),
     }
+    NVIDIA = {
+
+    }
+    MISTRAL = {
+
+    }
+    HUGGING_FACE = {
+
+    }
+    NIGHTCAFE = {
+
+    }
+    OPENROUTER = {
+        
+    }
+    BING = {
+        
+    }
     ALL = {
-        **GEMINI
+        **GEMINI,
+        **PUTTER
     }
 
 
