@@ -1,8 +1,9 @@
 from __future__ import annotations
+from typing import Optional, Dict
 
 from typing import Any
 from curl_cffi import CurlOpt, requests
-
+from curl_cffi.requests.exceptions import HTTPError
 
 _USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36'
 
@@ -122,3 +123,23 @@ class Request:
 
     def start_verbose(self):
         self.session.curl_options[CurlOpt.VERBOSE] = 1
+
+
+class AppError(HTTPError):
+    headers: Optional[Dict[str, str]]
+    status_code: Optional[int]
+    body: Any
+
+    def __init__(
+        self,
+        *,
+        headers: Optional[Dict[str, str]] = None,
+        status_code: Optional[int] = None,
+        body: Any = None,
+    ) -> None:
+        self.headers = headers
+        self.status_code = status_code
+        self.body = body
+
+    def __str__(self) -> str:
+        return f"headers: {self.headers}, status_code: {self.status_code}, body: {self.body}"
