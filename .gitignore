@@ -15,7 +15,7 @@ tes.py
 test.py
 
 .env
-*.html
+debug.html
 pyside*
 
 debug.json
