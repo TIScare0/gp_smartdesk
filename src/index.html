@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/pixel_grid.css" />
 </head>
 <body class="light-theme">
   <!-- Subtle Custom Magnetic Cursor -->
@@ -24,20 +25,13 @@
     <div class="ambient-noise"></div>
   </div>
 
-  <div id="appContainer" class="app-layout sidebar-expanded">
-    
-    <!-- =========================================================================
-         LEFT EDITORIAL SIDEBAR / COLLAPSIBLE RAIL & DRAWER
-         ========================================================================= -->
+  <div id="appContainer" class="app-layout sidebar-expanded">    
     <aside id="editorialSidebar" class="editorial-sidebar" aria-label="Main Navigation">
-      
-      <!-- Top Brand & Collapse Toggle Header -->
       <div class="sidebar-top-header">
         <button id="sidebarLogoBtn" class="sidebar-brand-btn" title="Toggle Navigation Sidebar" aria-label="Toggle Sidebar">
           <span class="monogram-symbol">✧</span>
           <div class="brand-text-wrap">
             <span class="brand-wordmark">AURA</span>
-            <span class="edition-tag">STUDIO</span>
           </div>
         </button>
 
@@ -82,15 +76,7 @@
               <circle cx="8.5" cy="8.5" r="1.5"></circle>
               <polyline points="21 15 16 10 5 21"></polyline>
             </svg>
-            <span class="btn-label-text">Inspiration Gallery</span>
-          </button>
-
-          <button id="sidebarNotebooksBtn" class="sidebar-nav-link" title="Notebooks & Prompts">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            </svg>
-            <span class="btn-label-text">Notebooks & Prompts</span>
+            <span class="btn-label-text">Images</span>
           </button>
         </div>
       </div>
@@ -111,22 +97,22 @@
 
       <!-- Bottom User Profile & Settings Dock -->
       <div class="sidebar-bottom-dock">
-        <!-- User Profile Row -->
-        <div class="user-profile-row" id="userProfileRow" title="NAIEM AHEMAD — AURA Member">
-          <div class="user-avatar-badge">N</div>
-          <div class="user-info-text">
-            <span class="user-name">NAIEM AHEMAD</span>
-            <span class="user-tier">PRO MEMBER</span>
-          </div>
-        </div>
 
-        <!-- Studio Settings Button (Moved to Bottom-Left) -->
+        <!-- Studio Settings Button -->
         <button id="settingsModalBtn" class="sidebar-settings-btn" title="Studio Parameters & Settings" aria-label="Studio Settings">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
           <span class="btn-label-text">Settings</span>
+        </button>
+        <button id="helpModalBtn" class="sidebar-settings-btn" title="Studio help" aria-label="Studio Help">
+          <svg width="16" height="16" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M25 2C12.31 2 2 12.31 2 25s10.31 23 23 23 23-10.31 23-23S37.69 2 25 2Z"></path>
+            <path d="M25.29 12.51c-3.73 0-6.2 2.26-6.74 5.7l2.26.4c.43-2.09 1.72-3.3 3.73-3.3 2.04 0 3.48 1.29 3.48 3.34 0 1.22-.43 2.04-1.68 3.77l-2.4 3.3c-.75 1.04-1.07 1.79-1.07 3.23v1.47h3.08v-1.15c0-1.22.22-1.72.93-2.69l2.4-3.3c1.22-1.69 1.83-2.94 1.83-4.66 0-3.55-2.62-6.1-6.5-6.1Z"></path>
+            <path d="M23.71 33.49v3.8h2.73v-3.8h-2.73Z" fill="currentColor" stroke="none"></path>
+          </svg>
+          <span class="btn-label-text">help</span>
         </button>
       </div>
     </aside>
@@ -140,36 +126,11 @@
     <div id="mainStageContainer" class="main-stage-container">
 
       <!-- =========================================================================
-           TOP EDITORIAL NAVIGATION (Settings button removed from right side)
+           TOP EDITORIAL NAVIGATION
            ========================================================================= -->
       <header id="editorialHeader">
-        <div class="header-left">
-          <button id="headerSidebarToggleBtn" class="header-sidebar-toggle-btn" title="Toggle Navigation Sidebar" aria-label="Toggle Sidebar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-
-          <button id="brandLogoBtn" class="brand-monogram-wrap" aria-label="AURA Home">
-            <span class="monogram-symbol">✧</span>
-            <span class="brand-wordmark">AURA</span>
-            <span class="edition-tag">STUDIO 2.5</span>
-          </button>
-        </div>
-
-        <div class="header-center">
-          <div class="live-status-pill">
-            <span class="pulse-indicator"></span>
-            <span class="status-city" id="liveCityIndicator">COPENHAGEN</span>
-            <span class="status-divider">/</span>
-            <span class="status-clock" id="liveClock">14:05:22</span>
-          </div>
-        </div>
-
         <div class="header-right">
-          <button id="themeToggleBtn" class="editorial-nav-btn" title="Toggle Theme (Oatmeal / Obsidian)">
+          <button id="themeToggleBtn" class="editorial-nav-btn" title="Toggle Theme (Linen / Obsidian)">
             <span class="theme-icon light-icon">☾</span>
             <span class="theme-icon dark-icon">☼</span>
             <span class="btn-caption">LIGHT</span>
@@ -189,11 +150,6 @@
 
         <!-- Main Central Typography -->
         <div class="hero-center-container">
-          <div class="hero-sub-eyebrow">
-            <span class="eyebrow-accent"></span>
-            <span class="eyebrow-text">SYNTHESIS & ARTIFICIAL COGNITION</span>
-          </div>
-
           <h1 class="hero-editorial-headline">
             Intelligence, <span class="serif-italic">distilled</span> into form.
           </h1>
@@ -202,32 +158,6 @@
             A tranquil conversational environment designed for high-order architectural reasoning, creative discourse, and pristine structural design.
           </p>
 
-          <!-- Suggested Inquiry Prompts (Curated Editorial Themes) -->
-          <div class="hero-curated-pills" id="heroCuratedPills">
-            <button class="inquiry-pill" data-prompt="Draft an architectural design manifesto on modern Scandinavian minimalism, tactile materials, and organic light.">
-              <span class="pill-index">01</span>
-              <span class="pill-label">Architectural Manifesto</span>
-              <span class="pill-arrow">↗</span>
-            </button>
-            
-            <button class="inquiry-pill" data-prompt="Analyze the sensory design principles of high-end Nordic dining and spatial choreography.">
-              <span class="pill-index">02</span>
-              <span class="pill-label">Sensory Spatial Design</span>
-              <span class="pill-arrow">↗</span>
-            </button>
-
-            <button class="inquiry-pill" data-prompt="Write a production TypeScript design token engine with mathematical golden-ratio modular typography.">
-              <span class="pill-index">03</span>
-              <span class="pill-label">Modular Typographic Engine</span>
-              <span class="pill-arrow">↗</span>
-            </button>
-
-            <button class="inquiry-pill" data-prompt="Synthesize an essay exploring the intersection of biological computing and artificial neural aesthetics.">
-              <span class="pill-index">04</span>
-              <span class="pill-label">Neural Aesthetics Essay</span>
-              <span class="pill-arrow">↗</span>
-            </button>
-          </div>
         </div>
       </main>
 
@@ -239,13 +169,6 @@
         <!-- Thread Context Header -->
         <div class="thread-top-bar">
           <div class="thread-meta-left">
-            <button id="newChatTopBtn" class="clean-ghost-btn" title="Start New Conversation">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span>NEW INQUIRY</span>
-            </button>
             <span class="thread-title-display" id="threadTitleDisplay">Untitled Inquiry</span>
           </div>
 
@@ -317,15 +240,6 @@
               </svg>
             </button>
 
-            <!-- Model Switcher Pill -->
-            <button id="composerModelSelectorBtn" class="composer-model-pill" aria-label="Select Intelligence Model">
-              <span class="model-sparkle">✦</span>
-              <span id="activeModelLabel" class="model-name">Gemini 2.5 Pro</span>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-
             <!-- Send Action Button -->
             <button id="composerSendBtn" class="composer-submit-btn" disabled aria-label="Send Inquiry">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -335,106 +249,46 @@
             </button>
           </div>
 
-          <!-- Micro Info Footer -->
-          <div class="composer-sub-meta">
-            <div class="meta-left">
-              <span class="meta-tag">AURA ENGINE v2.5</span>
-              <span class="meta-dot">·</span>
-              <span class="meta-status">STREAM ACTIVE</span>
-            </div>
-            <div class="meta-right">
-              <span class="key-hint"><kbd>Return</kbd> to send</span>
-              <span class="key-hint"><kbd>Shift + Return</kbd> for new line</span>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
 
-    <!-- =========================================================================
-         MODEL SELECTOR POPOVER
-         ========================================================================= -->
-    <div id="modelPickerPopover" class="editorial-popover">
-      <div class="popover-heading">COGNITIVE ENGINES</div>
-      
-      <button class="model-option-row active" data-model="gemini-2.5-pro" data-name="Gemini 2.5 Pro">
-        <div class="model-meta">
-          <div class="model-title">Gemini 2.5 Pro</div>
-          <div class="model-desc">Deep multimodal reasoning, mathematical logic & coding</div>
-        </div>
-        <span class="model-check">✓</span>
-      </button>
-
-      <button class="model-option-row" data-model="gemini-2.5-flash" data-name="Gemini 2.5 Flash">
-        <div class="model-meta">
-          <div class="model-title">Gemini 2.5 Flash</div>
-          <div class="model-desc">Ultra-low latency real-time synthesis & summaries</div>
-        </div>
-        <span class="model-check">✓</span>
-      </button>
-
-      <button class="model-option-row" data-model="claude-3-5-sonnet" data-name="Claude 3.5 Sonnet">
-        <div class="model-meta">
-          <div class="model-title">Claude 3.5 Sonnet</div>
-          <div class="model-desc">Nuanced literary prose, editorial voice & architectural clarity</div>
-        </div>
-        <span class="model-check">✓</span>
-      </button>
-
-      <button class="model-option-row" data-model="gpt-4o" data-name="GPT-4o Omniverse">
-        <div class="model-meta">
-          <div class="model-title">GPT-4o Omniverse</div>
-          <div class="model-desc">Versatile reasoning and dynamic cross-domain structuring</div>
-        </div>
-        <span class="model-check">✓</span>
-      </button>
-    </div>
-
-    <!-- =========================================================================
-         STUDIO PREFERENCES MODAL
-         ========================================================================= -->
-    <div id="settingsModalBackdrop" class="modal-overlay">
-      <div class="editorial-modal">
-        <div class="modal-header">
-          <h2 class="modal-title">Studio Parameters</h2>
-          <button id="closeSettingsModalBtn" class="modal-close-btn">&times;</button>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="settingSystemPrompt" class="field-label">Persona & Tone Directive</label>
-            <textarea id="settingSystemPrompt" class="field-textarea" rows="3" placeholder="Instruct the bot on personality, aesthetic tone, and formatting constraints..."></textarea>
-            <span class="field-hint">Default: High-order editorial intelligence, elegant prose, and structured clarity.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="settingTemperature" class="field-label">Cognitive Temperature (<span id="tempValueLabel">0.7</span>)</label>
-            <input type="range" id="settingTemperature" min="0.1" max="1.0" step="0.05" value="0.7" class="field-slider" />
-            <div class="slider-labels">
-              <span>Precise & Analytical (0.1)</span>
-              <span>Poetic & Exploratory (1.0)</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="settingCustomApiKey" class="field-label">Custom API Key (Optional)</label>
-            <input type="password" id="settingCustomApiKey" class="field-input" placeholder="Enter Gemini or custom endpoint key if desired" />
-            <span class="field-hint">Leave blank to use default studio high-speed stream.</span>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button id="saveSettingsBtn" class="modal-save-btn">Apply Preferences</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Toast Notification Container -->
+    <div id="settingsModalBackdrop" class="modal-overlay"></div>
     <div id="toastContainer" class="toast-hub"></div>
+
+    <!-- Lens Inspector Lightbox Modal (Frosted Glass Translucent Blur + Big Landscape Rectangle Card + Magnifying Lens) -->
+    <div class="lens-modal-backdrop" id="lensModalBackdrop" aria-hidden="true">
+      <div class="lens-modal-card" id="lensModalCard">
+        
+        <!-- Floating Glass Close Button -->
+        <button class="lens-modal-close-btn" id="lensModalCloseBtn" aria-label="Close Magnifier Modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Pure Image Card with Magnifying Lens -->
+        <div class="modal-lens-stage" id="modalLensStage">
+          <img src="" alt="" class="modal-lens-base-img" id="modalLensBaseImg" />
+          
+          <!-- Zoomed Mask Layer with Optical Glass Rim -->
+          <div class="modal-lens-zoom-layer" id="modalLensZoomLayer">
+            <div class="modal-lens-zoom-inner" id="modalLensZoomInner">
+              <img src="" alt="" id="modalLensZoomImg" />
+            </div>
+          </div>
+
+          <!-- Lens Rim Ring Cursor -->
+          <div class="modal-lens-ring" id="modalLensRing"></div>
+        </div>
+
+      </div>
+    </div>
 
   </div>
 
+  <script src="js/pixel_animation.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

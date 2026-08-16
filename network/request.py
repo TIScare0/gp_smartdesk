@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import Optional, Dict
 
 from typing import Any
+
 from curl_cffi import CurlOpt, requests
 from curl_cffi.requests.exceptions import HTTPError
 
 _USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36'
+
 
 class Request:
     def __init__(self, session=None):
@@ -32,7 +33,7 @@ class Request:
         cookies: dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         data: dict[str, Any] | None = None,
-        timeout: int | float = 20,
+        timeout: float = 20,
         allow_status_codes: int | tuple[int, ...] | None = None,
         **kwargs: Any,
     ):
@@ -96,7 +97,7 @@ class Request:
             cookies=cookies,
             **kwargs
         ).text
-    
+
     def download_json(
         self,
         url,
@@ -126,15 +127,15 @@ class Request:
 
 
 class AppError(HTTPError):
-    headers: Optional[Dict[str, str]]
-    status_code: Optional[int]
+    headers: dict[str, str] | None
+    status_code: int | None
     body: Any
 
     def __init__(
         self,
         *,
-        headers: Optional[Dict[str, str]] = None,
-        status_code: Optional[int] = None,
+        headers: dict[str, str] | None = None,
+        status_code: int | None = None,
         body: Any = None,
     ) -> None:
         self.headers = headers

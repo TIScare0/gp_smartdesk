@@ -4,12 +4,14 @@ import webview
 
 rectangles = []
 
+
 def random_color():
     red = random.randint(0, 255)
     green = random.randint(0, 255)
     blue = random.randint(0, 255)
 
     return f'rgb({red}, {green}, {blue})'
+
 
 def bind(window):
     def toggle_disabled():
@@ -67,6 +69,7 @@ def bind(window):
     empty_button.events.click += empty_container
     add_button.events.click += create_rectangle
     color_button.events.click += change_color
+
 
 if __name__ == '__main__':
     window = webview.create_window(

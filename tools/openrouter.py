@@ -1,17 +1,15 @@
 from dataclasses import dataclass
 
-import inspect
-
 from openrouter import OpenRouter as OpenRouterAI
 from openrouter.errors import OpenRouterError
-from openrouter import RetryConfig
+
 from config import env_item
+
 
 @dataclass(frozen=True)
 class OpenrouterModels:
     openrouter_free: str = 'openrouter/free'
     nvidia_3_ultra: str = 'nvidia/nemotron-3-ultra-550b-a55b:free'
-    google_gemma_4: str = 'google/gemma-4-26b-a4b-it:free'
 
 
 class OpenRouter:

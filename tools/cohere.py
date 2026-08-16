@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from cohere import ClientV2
 from cohere.core.api_error import ApiError
+
 from config import env_item
 
 
@@ -38,13 +39,5 @@ class Cohere:
                 }
             return {
                 'status': False,
-                'error': f'Unkown expected occured; Error: {str(e)}'
+                'error': f'Unkown expected occured; Error: {e!s}'
             }
-
-print(
-    Cohere(
-        CohereModels.cohere_03
-    ).txt2txt(
-        'Hello I am 0xvd and I am dev'
-    )
-)

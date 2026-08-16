@@ -1,5 +1,4 @@
 import json
-import re
 
 KNOWN_EXTENSIONS = {
     'jpg',
@@ -12,6 +11,7 @@ KNOWN_EXTENSIONS = {
     'webm',
 }
 
+
 def open_file(filename, is_json=False):
     data = None
     try:
@@ -20,6 +20,7 @@ def open_file(filename, is_json=False):
     except FileNotFoundError:
         return None
     return json.loads(data) if is_json else data
+
 
 def save_file(filename, data, _type='w', is_json=False):
     if _type == 'wb':
@@ -32,11 +33,13 @@ def save_file(filename, data, _type='w', is_json=False):
             else:
                 f.write(data)
 
+
 def create_filename(chars: str, ext: str | None = None):
     filename = chars[:20].lower().replace(' ', '_')
     if ext:
         filename = filename + f'.{ext}'
     return filename
+
 
 def determine_ext(url, default_ext='unknown_video'):
     if not url:

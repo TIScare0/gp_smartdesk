@@ -1,8 +1,9 @@
-from dataclasses import dataclass
 import base64
 import mimetypes
+from dataclasses import dataclass
 
-from openai import OpenAI, APIError
+from openai import APIError, OpenAI
+
 from config import env_item
 
 
@@ -17,7 +18,7 @@ class Nvidia:
         self.thinking = thinking
         self.model = model
         self.client = OpenAI(
-            api_key=env_item('NVIDIA_API_KEY'), 
+            api_key=env_item('NVIDIA_API_KEY'),
             base_url='https://integrate.api.nvidia.com/v1'
         )
 
@@ -33,7 +34,8 @@ class Nvidia:
                 temperature=1,
                 top_p=0.95,
                 max_tokens=16384,
-                extra_body={"chat_template_kwargs":{"enable_thinking":self.thinking},"reasoning_budget":16384},
+                extra_body={"chat_template_kwargs": {
+                    "enable_thinking": self.thinking}, "reasoning_budget": 16384},
             )
             return {
                 'status': True,
@@ -47,7 +49,7 @@ class Nvidia:
                 }
             return {
                 'status': False,
-                'error': f'Unkown error occurred; Error: {str(e)}'
+                'error': f'Unkown error occurred; Error: {e!s}'
             }
 
     def image_url(self, image_path_or_url: str) -> str:
@@ -60,7 +62,7 @@ class Nvidia:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return f"data:{mime_type};base64,{b64}"
 
-    def image2txt(self, prompt:str, image_path_or_url: str):
+    def image2txt(self, prompt: str, image_path_or_url: str):
         try:
             data = self.client.chat.completions.create(
                 model=self.model,
@@ -85,7 +87,8 @@ class Nvidia:
                 temperature=1,
                 top_p=0.95,
                 max_tokens=16384,
-                extra_body={"chat_template_kwargs":{"enable_thinking":self.thinking}},
+                extra_body={"chat_template_kwargs": {
+                    "enable_thinking": self.thinking}},
             )
             return {
                 'status': True,
@@ -106,5 +109,5 @@ class Nvidia:
                     }
             return {
                 'status': False,
-                'error': f'Unkown error occurred; Error: {str(e)}'
+                'error': f'Unkown error occurred; Error: {e!s}'
             }

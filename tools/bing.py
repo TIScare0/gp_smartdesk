@@ -3,11 +3,8 @@ import urllib.parse
 from dataclasses import dataclass
 
 from network import Request
-from utils import (
-    save_file,
-    create_filename,
-    determine_ext
-)
+from utils import create_filename, determine_ext, save_file
+
 
 @dataclass(frozen=True)
 class BingModels:
@@ -15,7 +12,7 @@ class BingModels:
 
 
 class Bing(Request):
-    def __init__(self, model:str):
+    def __init__(self, model: str):
         super().__init__()
         self.model = model
 
@@ -38,26 +35,29 @@ class Bing(Request):
                 },
                 method='POST',
             ).url
-            parsed_url = urllib.parse.parse_qs(urllib.parse.urlparse(response_url).query)
+            parsed_url = urllib.parse.parse_qs(
+                urllib.parse.urlparse(response_url).query)
             _id = (parsed_url.get('id') or [None])[0]
             if not _id:
                 return {
                     'status': False,
                     'error': 'Id param not found.'
                 }
-            
+
             while True:
-                data = self.download_json(f'https://www.bing.com/images/create/ai-image-generator/async/results/{_id}')
-                print(data)
+                data = self.download_json(
+                    f'https://www.bing.com/images/create/ai-image-generator/async/results/{_id}')
                 if data.get('status') >= 1:
                     try:
-                        url = data.get('records', [])[0].get('mediaItems', [None])[0].get('src')
+                        url = data.get('records', [])[0].get(
+                            'mediaItems', [None])[0].get('src')
                     except Exception:
                         return {
                             'status': False,
                             'error': 'Unable to get Url'
                         }
-                    filename = create_filename(prompt, determine_ext(url, default_ext='jpeg'))
+                    filename = create_filename(
+                        prompt, determine_ext(url, default_ext='jpeg'))
                     saved_path = f'{path}/{filename}' if path else filename
                     save_file(
                         filename=saved_path,

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from mistralai.client import Mistral as MistralAI
 from mistralai.client.errors import MistralError
+
 from config import env_item
 
 
@@ -37,5 +38,5 @@ class Mistral:
                 }
             return {
                 'status': False,
-                'error': f'Unkown error occured; Error: {str(e)}'
+                'error': f'Unkown error occured; Error: {e!s}'
             }

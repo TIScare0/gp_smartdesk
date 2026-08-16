@@ -1,5 +1,6 @@
-from google import genai
 from dataclasses import dataclass
+
+from google import genai
 from google.genai._gaos.lib.compat_errors import RateLimitError
 
 from config import env_item
@@ -14,8 +15,8 @@ class GeminiModels:
     flash_lite = "gemini-3.1-flash-lite"
     flash_lite_previous = "gemini-3.5-flash-lite"
     gemma_26b = "gemma-4-26b"
-    gemma_31b ="gemma-4-31b"
- 
+    gemma_31b = "gemma-4-31b"
+
 
 class GeminiBase(Request):
     def __init__(self, model: str):
@@ -25,7 +26,8 @@ class GeminiBase(Request):
 
     def base_interaction(self, prompt, **kwargs):
         try:
-            interaction = self.client.interactions.create(model=self.model, input=prompt, **kwargs)
+            interaction = self.client.interactions.create(
+                model=self.model, input=prompt, **kwargs)
             return {
                 'status': True,
                 'response': interaction

@@ -9,3 +9,4 @@ piper-tts==1.6.0
 cohere==7.0.8
 mistralai==2.9.2
 openrouter==1.1.42
+openai==3.1.0
