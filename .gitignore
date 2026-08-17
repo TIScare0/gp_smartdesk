@@ -18,7 +18,7 @@ test.py
 debug.html
 pyside*
 
-debug.json
+debug*
 response.json
 
 test.png

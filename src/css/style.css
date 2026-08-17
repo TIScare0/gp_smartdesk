@@ -1319,6 +1319,7 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
 .message-row {
   width: 100%;
   max-width: 880px;
+  align-items: flex-start;   /* ← add this */
   display: flex;
   gap: 16px;                  /* Gap between avatar and message bubble */
   animation: messageFadeIn 0.35s var(--ease-editorial);
@@ -1363,7 +1364,6 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
   font-weight: 700;
   flex-shrink: 0;
   border: 1px solid var(--border-hairline);
-  margin-top: 2px;
 }
 
 .message-row.ai .msg-avatar {
@@ -1396,6 +1396,30 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
 }
 
 /* Message Bubbles */
+.msg-bubble h1, .msg-bubble h2, .msg-bubble h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  margin: 20px 0 10px;
+}
+
+.msg-bubble > *:first-child {
+  margin-top: 0;
+}
+
+.msg-bubble > *:first-child,
+.msg-bubble > *:first-child > *:first-child {
+  margin-top: 0;
+}
+
+.msg-bubble {
+  margin-top: 0;
+}
+.msg-bubble *:first-child {
+  margin-top: 0 !important;
+}
+
 .msg-bubble {
   font-size: 14.5px;
   line-height: 1.7;
@@ -2101,5 +2125,44 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
 
   .composer-sub-meta .meta-right {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   THINKING INDICATOR — Shimmer Sweeping Through Text
+   ========================================================================== */
+
+.thinking-shimmer-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-top: 100px;
+
+  background: linear-gradient(
+    100deg,
+    var(--text-ghost) 0%,
+    var(--text-ghost) 35%,
+    var(--accent-gold) 50%,
+    var(--text-ghost) 65%,
+    var(--text-ghost) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  animation: shimmerSweep 1.8s linear infinite;
+}
+
+@keyframes shimmerSweep {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
   }
 }

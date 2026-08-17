@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-
 if sys.platform == "win32":
     cache_path = Path(os.environ["LOCALAPPDATA"])
 else:

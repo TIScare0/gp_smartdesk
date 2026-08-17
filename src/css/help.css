@@ -1,0 +1,381 @@
+/* ==========================================================================
+   AURA — Help & Guide
+   Extends the editorial design tokens defined in style.css
+   ========================================================================== */
+
+html, body {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+}
+
+.help-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+/* ---------- Top bar ---------- */
+.help-topbar {
+  height: 60px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.help-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 10px 6px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.help-back-btn:hover {
+  background: var(--bg-surface-subtle);
+}
+
+.help-topbar-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding-left: 20px;
+  border-left: 1px solid var(--border-hairline);
+}
+
+/* ---------- Content ---------- */
+.help-content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 60px 24px 100px;
+}
+
+/* ---------- Hero ---------- */
+.help-hero {
+  margin-bottom: 56px;
+}
+
+.help-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent-gold);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--accent-glow);
+  margin-bottom: 16px;
+}
+
+.help-hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  margin-bottom: 14px;
+}
+
+.help-hero p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 520px;
+}
+
+/* ---------- Section shell ---------- */
+.help-section {
+  margin-bottom: 56px;
+}
+
+.section-heading {
+  margin-bottom: 20px;
+}
+
+.section-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 6px;
+}
+
+.section-heading h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Info card (what is an API key) ---------- */
+.info-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.info-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-main);
+  margin-bottom: 14px;
+}
+
+.info-card p:last-of-type {
+  margin-bottom: 18px;
+}
+
+.info-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-glow);
+  border: 1px solid rgba(179, 139, 77, 0.25);
+  color: var(--text-main);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.info-callout svg {
+  flex-shrink: 0;
+  color: var(--accent-gold);
+  margin-top: 1px;
+}
+
+/* ---------- Model guide cards ---------- */
+.model-guide-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-subtle);
+  margin-bottom: 18px;
+}
+
+.model-guide-card:last-child {
+  margin-bottom: 0;
+}
+
+.model-guide-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.model-guide-visual {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gemini-visual {
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.14), rgba(234, 67, 53, 0.10));
+  color: #4285f4;
+}
+
+.cohere-visual {
+  background: rgba(179, 139, 77, 0.12);
+  color: var(--accent-gold);
+}
+
+.openai-visual {
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+}
+
+.model-guide-header h3 {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.model-guide-header p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* ---------- Step cards ---------- */
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-card {
+  display: flex;
+  gap: 14px;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--text-main);
+  color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.step-body h4 {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.step-body p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.step-body code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  background: var(--bg-surface-subtle);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--accent-gold);
+  border: 1px solid var(--border-hairline);
+}
+
+.step-body strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* ---------- About ---------- */
+.about-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.about-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  background: var(--bg-surface-subtle);
+}
+
+.about-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-ghost);
+}
+
+.about-image-placeholder span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.about-text {
+  padding: 26px 28px 28px;
+}
+
+.about-text p {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.about-text p:last-of-type {
+  margin-bottom: 20px;
+}
+
+.about-meta-row {
+  display: flex;
+  gap: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.about-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.about-meta-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.about-meta-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .help-content {
+    padding: 40px 18px 80px;
+  }
+
+  .model-guide-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .about-meta-row {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}

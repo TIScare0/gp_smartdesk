@@ -10,12 +10,8 @@ from network import Request
 @dataclass(frozen=True)
 class GeminiModels:
     flash = 'gemini-3.6-flash'
-    flash_previous = "gemini-3-flash"
-    flash_stable = "gemini-2.5-flash"
     flash_lite = "gemini-3.1-flash-lite"
-    flash_lite_previous = "gemini-3.5-flash-lite"
-    gemma_26b = "gemma-4-26b"
-    gemma_31b = "gemma-4-31b"
+    flash_previous = "gemini-3-flash"
 
 
 class GeminiBase(Request):

@@ -37,11 +37,11 @@ def save_file(filename, data, _type='w', is_json=False):
 def create_filename(chars: str, ext: str | None = None):
     filename = chars[:20].lower().replace(' ', '_')
     if ext:
-        filename = filename + f'.{ext}'
+        filename = f'{filename}.{ext}'
     return filename
 
 
-def determine_ext(url, default_ext='unknown_video'):
+def determine_ext(url, default_ext: str | None = 'unknown_video'):
     if not url:
         return default_ext
 

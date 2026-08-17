@@ -1,11 +1,265 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help — AURA</title>
+  <link href="../fonts/jet_brain.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/help.css" />
 </head>
-<body>
-    Hello
+<body class="light-theme">
+
+  <div class="ambient-backdrop">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-noise"></div>
+  </div>
+
+  <div class="help-shell">
+
+    <header class="help-topbar">
+      <a href="../index.html" class="help-back-btn" aria-label="Back to AURA">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>AURA</span>
+      </a>
+      <span class="help-topbar-label">Help &amp; Guide</span>
+    </header>
+
+    <main class="help-content">
+
+      <!-- ===================== HERO ===================== -->
+      <section class="help-hero">
+        <span class="help-eyebrow">GUIDE</span>
+        <h1>Bring your own key, <span class="serif-italic">stay in flow.</span></h1>
+        <p>AURA works out of the box on a shared free tier. Add your own API key from any provider below to skip the queue and get unlimited, priority access.</p>
+      </section>
+
+      <!-- ===================== WHAT IS AN API KEY ===================== -->
+      <section class="help-section">
+        <div class="section-heading">
+          <span class="section-eyebrow">01 — Basics</span>
+          <h2>What is an API key?</h2>
+        </div>
+        <div class="info-card">
+          <p>
+            An API key is a private password that lets AURA talk to a model provider — like Gemini or
+            Cohere — on your behalf. When you paste a key into Settings, your messages are sent directly
+            using your own account instead of AURA's shared queue.
+          </p>
+          <p>
+            Your key stays on this device. It's stored in your browser's local storage and is only
+            attached to requests sent to that provider — AURA never sends it anywhere else.
+          </p>
+          <div class="info-callout">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span>Most providers offer a free tier with generous monthly limits — you don't need to pay to get a key.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MODELS ===================== -->
+      <section class="help-section">
+        <div class="section-heading">
+          <span class="section-eyebrow">02 — Models</span>
+          <h2>Get a key for your model</h2>
+        </div>
+
+        <!-- Gemini -->
+        <article class="model-guide-card">
+          <div class="model-guide-header">
+            <div class="model-guide-visual gemini-visual" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div>
+              <h3>Gemini</h3>
+              <p>Google's model family. Fast, large context, generous free tier.</p>
+            </div>
+          </div>
+
+          <div class="step-list">
+            <div class="step-card">
+              <span class="step-number">1</span>
+              <div class="step-body">
+                <h4>Open Google AI Studio</h4>
+                <p>Go to <code>aistudio.google.com</code> and sign in with any Google account. No separate signup is needed — your existing Google login works.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">2</span>
+              <div class="step-body">
+                <h4>Create an API key</h4>
+                <p>Click <strong>Get API key</strong> in the left sidebar, then <strong>Create API key</strong>. Choose an existing Google Cloud project or let it create one for you automatically.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">3</span>
+              <div class="step-body">
+                <h4>Copy the key</h4>
+                <p>Your key appears as a long string starting with <code>AIza...</code>. Copy it immediately — you can always view it again later from the same page.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">4</span>
+              <div class="step-body">
+                <h4>Paste it into AURA</h4>
+                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the Gemini field. It saves automatically as you type.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Cohere -->
+        <article class="model-guide-card">
+          <div class="model-guide-header">
+            <div class="model-guide-visual cohere-visual" aria-hidden="true">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="8" cy="8" r="4.5"></circle>
+                <circle cx="16" cy="16" r="4.5"></circle>
+              </svg>
+            </div>
+            <div>
+              <h3>Cohere</h3>
+              <p>Strong reasoning and retrieval-focused models, with a no-cost trial key.</p>
+            </div>
+          </div>
+
+          <div class="step-list">
+            <div class="step-card">
+              <span class="step-number">1</span>
+              <div class="step-body">
+                <h4>Create a Cohere account</h4>
+                <p>Visit <code>dashboard.cohere.com</code> and sign up with your email or a Google/GitHub account.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">2</span>
+              <div class="step-body">
+                <h4>Find your trial key</h4>
+                <p>Once logged in, go to the <strong>API Keys</strong> tab. A trial key is generated for you automatically — no card required for the free tier.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">3</span>
+              <div class="step-body">
+                <h4>Copy the key</h4>
+                <p>Click the key to reveal and copy it. Trial keys are rate-limited but reset regularly, which is plenty for everyday use in AURA.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">4</span>
+              <div class="step-body">
+                <h4>Paste it into AURA</h4>
+                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the Cohere field.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- OpenAI-compatible -->
+        <article class="model-guide-card">
+          <div class="model-guide-header">
+            <div class="model-guide-visual openai-visual" aria-hidden="true">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+            </div>
+            <div>
+              <h3>OpenAI-compatible</h3>
+              <p>Works with OpenAI directly, or any provider that mirrors its API format.</p>
+            </div>
+          </div>
+
+          <div class="step-list">
+            <div class="step-card">
+              <span class="step-number">1</span>
+              <div class="step-body">
+                <h4>Open the API platform</h4>
+                <p>Go to <code>platform.openai.com</code> and sign in. This is separate from a regular ChatGPT login and may ask you to set up billing.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">2</span>
+              <div class="step-body">
+                <h4>Create a new secret key</h4>
+                <p>Under <strong>API keys</strong>, click <strong>Create new secret key</strong>. Give it a name like "AURA" so you can identify it later.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">3</span>
+              <div class="step-body">
+                <h4>Copy it now</h4>
+                <p>The full key is only shown once. Copy it immediately — if you lose it, you'll need to generate a new one.</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <span class="step-number">4</span>
+              <div class="step-body">
+                <h4>Paste it into AURA</h4>
+                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the OpenAI-compatible field.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ===================== ABOUT ===================== -->
+      <section class="help-section about-section">
+        <div class="section-heading">
+          <span class="section-eyebrow">03 — About</span>
+          <h2>About AURA</h2>
+        </div>
+
+        <div class="about-card">
+          <div class="about-image-wrap">
+            <div class="about-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span>Studio image placeholder</span>
+            </div>
+          </div>
+
+          <div class="about-text">
+            <p>
+              AURA is a tranquil conversational environment for architectural reasoning, creative
+              discourse, and pristine structural design — built for people who think in both prose
+              and code.
+            </p>
+            <p>
+              It's model-agnostic by design: bring the provider you already trust, and AURA handles
+              the editorial layer on top.
+            </p>
+
+            <div class="about-meta-row">
+              <div class="about-meta-item">
+                <span class="about-meta-label">Version</span>
+                <span class="about-meta-value">1.0.0</span>
+              </div>
+              <div class="about-meta-item">
+                <span class="about-meta-label">Build</span>
+                <span class="about-meta-value">Editorial</span>
+              </div>
+              <div class="about-meta-item">
+                <span class="about-meta-label">Updated</span>
+                <span class="about-meta-value">Aug 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
 </body>
 </html>

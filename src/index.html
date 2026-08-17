@@ -1,294 +1,449 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AURA — Intelligent Editorial AI</title>
-  
-  <!-- Premium Editorial Typographic System (Cormorant Garamond + Plus Jakarta Sans + JetBrains Mono) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/pixel_grid.css" />
-</head>
-<body class="light-theme">
-  <!-- Subtle Custom Magnetic Cursor -->
-  <div class="custom-cursor" id="customCursor"></div>
-  <div class="custom-cursor-follower" id="customCursorFollower"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>AURA — Intelligent Editorial AI</title>
+    <link href="fonts/jet_brain.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pixel_grid.css" />
+  </head>
+  <body class="light-theme">
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="custom-cursor-follower" id="customCursorFollower"></div>
 
-  <!-- Ambient Organic Grain & Lighting -->
-  <div class="ambient-backdrop">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-noise"></div>
-  </div>
+    <div class="ambient-backdrop">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+      <div class="ambient-noise"></div>
+    </div>
 
-  <div id="appContainer" class="app-layout sidebar-expanded">    
-    <aside id="editorialSidebar" class="editorial-sidebar" aria-label="Main Navigation">
-      <div class="sidebar-top-header">
-        <button id="sidebarLogoBtn" class="sidebar-brand-btn" title="Toggle Navigation Sidebar" aria-label="Toggle Sidebar">
-          <span class="monogram-symbol">✧</span>
-          <div class="brand-text-wrap">
-            <span class="brand-wordmark">AURA</span>
-          </div>
-        </button>
+    <div id="appContainer" class="app-layout sidebar-expanded">
+      <aside
+        id="editorialSidebar"
+        class="editorial-sidebar"
+        aria-label="Main Navigation"
+      >
+        <div class="sidebar-top-header">
+          <button
+            id="sidebarLogoBtn"
+            class="sidebar-brand-btn"
+            title="Toggle Navigation Sidebar"
+            aria-label="Toggle Sidebar"
+          >
+            <span class="monogram-symbol">✧</span>
+            <div class="brand-text-wrap">
+              <span class="brand-wordmark">AURA</span>
+            </div>
+          </button>
 
-        <button id="sidebarCollapseToggleBtn" class="sidebar-toggle-btn" title="Collapse / Expand Sidebar" aria-label="Toggle Sidebar">
-          <svg class="toggle-icon-sidebar" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="9" y1="3" x2="9" y2="21"></line>
-          </svg>
-        </button>
-      </div>
+          <button
+            id="sidebarCollapseToggleBtn"
+            class="sidebar-toggle-btn"
+            title="Collapse / Expand Sidebar"
+            aria-label="Toggle Sidebar"
+          >
+            <svg
+              class="toggle-icon-sidebar"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
+        </div>
 
-      <!-- Quick Action: New Chat & Search -->
-      <div class="sidebar-actions-group">
-        <button id="sidebarNewChatBtn" class="sidebar-primary-btn" title="New Chat">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-          </svg>
-          <span class="btn-label-text">New chat</span>
-        </button>
+        <div class="sidebar-actions-group">
+          <button
+            id="sidebarNewChatBtn"
+            class="sidebar-primary-btn"
+            title="New Chat"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 20h9"></path>
+              <path
+                d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+              ></path>
+            </svg>
+            <span class="btn-label-text">New chat</span>
+          </button>
 
-        <!-- Search Bar / Trigger -->
-        <div class="sidebar-search-container" id="sidebarSearchContainer">
-          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="sidebarSearchInput" placeholder="Search chats..." aria-label="Search Chats" />
-          <button id="railSearchIconBtn" class="rail-only-btn" title="Search Chats">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="sidebar-search-container" id="sidebarSearchContainer">
+            <svg
+              class="search-icon"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-          </button>
-        </div>
-
-        <!-- Navigation Rail Quick Links -->
-        <div class="sidebar-quick-nav">
-          <button id="sidebarGalleryBtn" class="sidebar-nav-link" title="Kinetic Prompts & Inspiration">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-            <span class="btn-label-text">Images</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Recent Chats Section -->
-      <div class="sidebar-history-section">
-        <div class="sidebar-section-title">
-          <span>RECENT CHATS</span>
-          <span id="sidebarHistoryCount" class="history-count-badge">0</span>
-        </div>
-
-        <div class="sidebar-history-scroll" id="sidebarHistoryScroll">
-          <ul id="sidebarHistoryList" class="sidebar-chat-list">
-            <!-- Rendered by JS -->
-          </ul>
-        </div>
-      </div>
-
-      <!-- Bottom User Profile & Settings Dock -->
-      <div class="sidebar-bottom-dock">
-
-        <!-- Studio Settings Button -->
-        <button id="settingsModalBtn" class="sidebar-settings-btn" title="Studio Parameters & Settings" aria-label="Studio Settings">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-          <span class="btn-label-text">Settings</span>
-        </button>
-        <button id="helpModalBtn" class="sidebar-settings-btn" title="Studio help" aria-label="Studio Help">
-          <svg width="16" height="16" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M25 2C12.31 2 2 12.31 2 25s10.31 23 23 23 23-10.31 23-23S37.69 2 25 2Z"></path>
-            <path d="M25.29 12.51c-3.73 0-6.2 2.26-6.74 5.7l2.26.4c.43-2.09 1.72-3.3 3.73-3.3 2.04 0 3.48 1.29 3.48 3.34 0 1.22-.43 2.04-1.68 3.77l-2.4 3.3c-.75 1.04-1.07 1.79-1.07 3.23v1.47h3.08v-1.15c0-1.22.22-1.72.93-2.69l2.4-3.3c1.22-1.69 1.83-2.94 1.83-4.66 0-3.55-2.62-6.1-6.5-6.1Z"></path>
-            <path d="M23.71 33.49v3.8h2.73v-3.8h-2.73Z" fill="currentColor" stroke="none"></path>
-          </svg>
-          <span class="btn-label-text">help</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Mobile Backdrop -->
-    <div id="sidebarMobileBackdrop" class="sidebar-mobile-backdrop"></div>
-
-    <!-- =========================================================================
-         MAIN VIEWPORT / FLUID STAGE CONTAINER
-         ========================================================================= -->
-    <div id="mainStageContainer" class="main-stage-container">
-
-      <!-- =========================================================================
-           TOP EDITORIAL NAVIGATION
-           ========================================================================= -->
-      <header id="editorialHeader">
-        <div class="header-right">
-          <button id="themeToggleBtn" class="editorial-nav-btn" title="Toggle Theme (Linen / Obsidian)">
-            <span class="theme-icon light-icon">☾</span>
-            <span class="theme-icon dark-icon">☼</span>
-            <span class="btn-caption">LIGHT</span>
-          </button>
-        </div>
-      </header>
-
-      <!-- =========================================================================
-           HERO STAGE: EDITORIAL INQUIRY & FLOATING KINETIC CARDS
-           ========================================================================= -->
-      <main id="heroInquiryStage" class="hero-stage">
-        
-        <!-- Floating Kinetic Inspiration Gallery (Gentle Parallax & Drift) -->
-        <div class="kinetic-canvas" id="kineticCanvas">
-          <!-- Floating cards rendered dynamically via JS -->
-        </div>
-
-        <!-- Main Central Typography -->
-        <div class="hero-center-container">
-          <h1 class="hero-editorial-headline">
-            Intelligence, <span class="serif-italic">distilled</span> into form.
-          </h1>
-
-          <p class="hero-editorial-statement">
-            A tranquil conversational environment designed for high-order architectural reasoning, creative discourse, and pristine structural design.
-          </p>
-
-        </div>
-      </main>
-
-      <!-- =========================================================================
-           ACTIVE CONVERSATIONAL THREAD (CLEAN MINIMAL STREAM)
-           ========================================================================= -->
-      <section id="chatConversationStage" class="chat-stage hidden-stage">
-        
-        <!-- Thread Context Header -->
-        <div class="thread-top-bar">
-          <div class="thread-meta-left">
-            <span class="thread-title-display" id="threadTitleDisplay">Untitled Inquiry</span>
-          </div>
-
-          <div class="thread-meta-right">
-            <div class="thread-search-box">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <input
+              type="text"
+              id="sidebarSearchInput"
+              placeholder="Search chats..."
+              aria-label="Search Chats"
+            />
+            <button
+              id="railSearchIconBtn"
+              class="rail-only-btn"
+              title="Search Chats"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input type="text" id="threadSearchInput" placeholder="Search in stream..." />
+            </button>
+          </div>
+
+          <div class="sidebar-quick-nav">
+            <button
+              id="sidebarGalleryBtn"
+              class="sidebar-nav-link"
+              title="Kinetic Prompts & Inspiration"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span class="btn-label-text">Images</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-history-section">
+          <div class="sidebar-section-title">
+            <span>RECENT CHATS</span>
+            <span id="sidebarHistoryCount" class="history-count-badge">0</span>
+          </div>
+
+          <div class="sidebar-history-scroll" id="sidebarHistoryScroll">
+            <ul id="sidebarHistoryList" class="sidebar-chat-list"></ul>
+          </div>
+        </div>
+
+        <div class="sidebar-bottom-dock">
+          <button
+            id="settingsModalBtn"
+            class="sidebar-settings-btn"
+            title="Studio Parameters & Settings"
+            aria-label="Studio Settings"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+            <span class="btn-label-text">Settings</span>
+          </button>
+          <button
+            id="helpModalBtn"
+            class="sidebar-settings-btn"
+            title="Studio help"
+            aria-label="Studio Help"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 50 50"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M25 2C12.31 2 2 12.31 2 25s10.31 23 23 23 23-10.31 23-23S37.69 2 25 2Z"
+              ></path>
+              <path
+                d="M25.29 12.51c-3.73 0-6.2 2.26-6.74 5.7l2.26.4c.43-2.09 1.72-3.3 3.73-3.3 2.04 0 3.48 1.29 3.48 3.34 0 1.22-.43 2.04-1.68 3.77l-2.4 3.3c-.75 1.04-1.07 1.79-1.07 3.23v1.47h3.08v-1.15c0-1.22.22-1.72.93-2.69l2.4-3.3c1.22-1.69 1.83-2.94 1.83-4.66 0-3.55-2.62-6.1-6.5-6.1Z"
+              ></path>
+              <path
+                d="M23.71 33.49v3.8h2.73v-3.8h-2.73Z"
+                fill="currentColor"
+                stroke="none"
+              ></path>
+            </svg>
+            <span class="btn-label-text">help</span>
+          </button>
+        </div>
+      </aside>
+
+      <div id="sidebarMobileBackdrop" class="sidebar-mobile-backdrop"></div>
+
+      <div id="mainStageContainer" class="main-stage-container">
+        <header id="editorialHeader">
+          <div class="header-right">
+            <button
+              id="themeToggleBtn"
+              class="editorial-nav-btn"
+              title="Toggle Theme (Linen / Obsidian)"
+            >
+              <span class="theme-icon light-icon">☾</span>
+              <span class="theme-icon dark-icon">☼</span>
+              <span class="btn-caption">LIGHT</span>
+            </button>
+          </div>
+        </header>
+
+        <main id="heroInquiryStage" class="hero-stage">
+          <div class="kinetic-canvas" id="kineticCanvas"></div>
+
+          <div class="hero-center-container">
+            <h1 class="hero-editorial-headline">
+              Intelligence, <span class="serif-italic">distilled</span> into
+              form.
+            </h1>
+
+            <p class="hero-editorial-statement">
+              A tranquil conversational environment designed for high-order
+              architectural reasoning, creative discourse, and pristine
+              structural design.
+            </p>
+          </div>
+        </main>
+        <section id="chatConversationStage" class="chat-stage hidden-stage">
+          <div class="thread-top-bar">
+            <div class="thread-meta-left">
+              <span class="thread-title-display" id="threadTitleDisplay"
+                >Untitled Inquiry</span
+              >
             </div>
 
-            <button id="exportChatBtn" class="thread-action-btn" title="Export Conversation">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </button>
+            <div class="thread-meta-right">
+              <div class="thread-search-box">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  id="threadSearchInput"
+                  placeholder="Search in stream..."
+                />
+              </div>
 
-            <button id="clearStreamBtn" class="thread-action-btn" title="Clear Stream">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+              <button
+                id="exportChatBtn"
+                class="thread-action-btn"
+                title="Export Conversation"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </button>
 
-        <!-- Streaming Message Log -->
-        <div id="messagesStreamContainer" class="messages-stream">
-          <!-- Messages appended dynamically -->
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           DOCKED EDITORIAL COMPOSER (BOTTOM ANCHORED)
-           ========================================================================= -->
-      <div id="dockedComposerWrapper" class="composer-dock-wrapper">
-        <div class="composer-island-card">
-          
-          <!-- Attached Media Banner (Hidden until selected) -->
-          <div id="composerMediaPreview" class="composer-media-banner"></div>
-
-          <div class="composer-input-row">
-            <!-- Attachment Action -->
-            <button id="composerAttachBtn" class="composer-tool-btn" title="Attach context or image" aria-label="Attach File">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-              </svg>
-            </button>
-            <input type="file" id="hiddenMediaInput" accept="image/*,text/*" style="display:none;" />
-
-            <!-- Dynamic Growing Clean Textarea -->
-            <textarea
-              id="composerMainInput"
-              rows="1"
-              placeholder="Ask anything, explore ideas, or formulate architecture..."
-              aria-label="Prompt Input"
-            ></textarea>
-
-            <!-- Voice Dictation Action -->
-            <button id="composerVoiceBtn" class="composer-tool-btn" title="Voice Dictation" aria-label="Voice Input">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                <line x1="12" y1="19" x2="12" y2="23"></line>
-                <line x1="8" y1="23" x2="16" y2="23"></line>
-              </svg>
-            </button>
-
-            <!-- Send Action Button -->
-            <button id="composerSendBtn" class="composer-submit-btn" disabled aria-label="Send Inquiry">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-              </svg>
-            </button>
+              <button
+                id="clearStreamBtn"
+                class="thread-action-btn"
+                title="Clear Stream"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
+                </svg>
+              </button>
+            </div>
           </div>
 
+          <div id="messagesStreamContainer" class="messages-stream"></div>
+        </section>
+        <div id="dockedComposerWrapper" class="composer-dock-wrapper">
+          <div class="composer-island-card">
+            <div id="composerMediaPreview" class="composer-media-banner"></div>
+
+            <div class="composer-input-row">
+              <button
+                id="composerAttachBtn"
+                class="composer-tool-btn"
+                title="Attach context or image"
+                aria-label="Attach File"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                  ></path>
+                </svg>
+              </button>
+              <input
+                type="file"
+                id="hiddenMediaInput"
+                accept="image/*,text/*"
+                style="display: none"
+              />
+
+              <textarea
+                id="composerMainInput"
+                rows="1"
+                placeholder="Ask anything, explore ideas, or formulate architecture..."
+                aria-label="Prompt Input"
+              ></textarea>
+
+              <button
+                id="composerVoiceBtn"
+                class="composer-tool-btn"
+                title="Voice Dictation"
+                aria-label="Voice Input"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+                  ></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+              </button>
+
+              <button
+                id="composerSendBtn"
+                class="composer-submit-btn"
+                disabled
+                aria-label="Send Inquiry"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="settingsModalBackdrop" class="modal-overlay"></div>
+      <div id="toastContainer" class="toast-hub"></div>
+
+      <div
+        class="lens-modal-backdrop"
+        id="lensModalBackdrop"
+        aria-hidden="true"
+      >
+        <div class="lens-modal-card" id="lensModalCard">
+          <button
+            class="lens-modal-close-btn"
+            id="lensModalCloseBtn"
+            aria-label="Close Magnifier Modal"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="modal-lens-stage" id="modalLensStage">
+            <img
+              src=""
+              alt=""
+              class="modal-lens-base-img"
+              id="modalLensBaseImg"
+            />
+
+            <div class="modal-lens-zoom-layer" id="modalLensZoomLayer">
+              <div class="modal-lens-zoom-inner" id="modalLensZoomInner">
+                <img src="" alt="" id="modalLensZoomImg" />
+              </div>
+            </div>
+
+            <div class="modal-lens-ring" id="modalLensRing"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="settingsModalBackdrop" class="modal-overlay"></div>
-    <div id="toastContainer" class="toast-hub"></div>
-
-    <!-- Lens Inspector Lightbox Modal (Frosted Glass Translucent Blur + Big Landscape Rectangle Card + Magnifying Lens) -->
-    <div class="lens-modal-backdrop" id="lensModalBackdrop" aria-hidden="true">
-      <div class="lens-modal-card" id="lensModalCard">
-        
-        <!-- Floating Glass Close Button -->
-        <button class="lens-modal-close-btn" id="lensModalCloseBtn" aria-label="Close Magnifier Modal">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-
-        <!-- Pure Image Card with Magnifying Lens -->
-        <div class="modal-lens-stage" id="modalLensStage">
-          <img src="" alt="" class="modal-lens-base-img" id="modalLensBaseImg" />
-          
-          <!-- Zoomed Mask Layer with Optical Glass Rim -->
-          <div class="modal-lens-zoom-layer" id="modalLensZoomLayer">
-            <div class="modal-lens-zoom-inner" id="modalLensZoomInner">
-              <img src="" alt="" id="modalLensZoomImg" />
-            </div>
-          </div>
-
-          <!-- Lens Rim Ring Cursor -->
-          <div class="modal-lens-ring" id="modalLensRing"></div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <script src="js/pixel_animation.js"></script>
-  <script src="js/script.js"></script>
-</body>
+    <script src="js/pixelGrid.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>

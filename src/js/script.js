@@ -652,6 +652,30 @@
     persistSession();
   }
 
+  function startThinkingCycle(msgId) {
+    const phrases = [
+      'Thinking',
+      'Reasoning',
+      'Synthesizing',
+      'Weighing options',
+      'Structuring response'
+    ];
+    let i = 0;
+    const labelEl = document.querySelector(`#thinking_${msgId} .thinking-label`);
+    if (!labelEl) return null;
+
+    const interval = setInterval(() => {
+      if (!document.body.contains(labelEl)) {
+        clearInterval(interval);
+        return;
+      }
+      i = (i + 1) % phrases.length;
+      labelEl.innerHTML = `<span>${phrases[i]}</span>`;
+    }, 1800);
+
+    return interval; // store this so you can clearInterval() when the real response arrives
+  }
+
   // Render Single Message in Stream
   function appendMessageElement(msg, isPlaceholder = false) {
     if (!DOM.messagesStream) return null;
@@ -684,6 +708,8 @@
       const cardElement = document.getElementById(cardId);
       if (cardElement && window.AURAPixelGrid?.PixelEngineInstance) {
         const engine = new window.AURAPixelGrid.PixelEngineInstance(cardElement, msg.scene, msg.userPrompt);
+        engine.isStabilized = true;
+        engine.startTime = performance.now() - engine.durationMs - 2000;
         if (window.AURAPixelGrid.activeEngines) {
           window.AURAPixelGrid.activeEngines.push(engine);
         }
@@ -708,7 +734,9 @@
         <div class="msg-avatar">AURA</div>
         <div class="msg-column" style="flex:1;">
           <div class="msg-bubble" id="body_${msg.id}">
-            ${isPlaceholder ? '<span style="color:var(--text-subtle);font-style:italic;">Formulating reasoned synthesis...</span>' : renderMarkdown(msg.content)}
+            ${isPlaceholder ? `
+  <span class="thinking-shimmer-text" id="thinkingText_${msg.id}">Thinking...</span>
+` : renderMarkdown(msg.content)}
           </div>
           <div class="ai-actions-shelf" id="actions_${msg.id}" style="${isPlaceholder ? 'display:none;' : ''}">
             <button class="msg-chip-action copy-act" data-id="${msg.id}">
@@ -719,6 +747,9 @@
         </div>
       `;
     }
+
+    setTimeout(() => {
+    }, 50000);
 
     DOM.messagesStream.appendChild(row);
     scrollToStreamBottom();
@@ -791,20 +822,23 @@
     text = text.replace(/```([a-zA-Z0-9]*)\n([\s\S]*?)```/g, (match, lang, code) => {
       const language = lang || 'typescript';
       const cleanCode = code.trim();
+      const codeId = `code_${Math.random().toString(36).slice(2, 10)}`;
+
+      // Stash the code in a hidden element instead of embedding it in an attribute
       return `
         <div class="code-container">
           <div class="code-header">
             <span>${language}</span>
-            <button class="code-copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(cleanCode)}')); window.showAuraToast('Code copied to clipboard');">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              Copy
+            <button class="code-copy-btn" data-copy-target="${codeId}">
+              <svg class="copy-icon-default" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <svg class="copy-icon-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span class="copy-btn-label">Copy</span>
             </button>
           </div>
-          <pre><code>${cleanCode}</code></pre>
+          <pre><code id="${codeId}">${escapeHtml(cleanCode)}</code></pre>
         </div>
       `;
     });
-
     // Inline Code
     text = text.replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);font-size:12px;background:var(--bg-surface-subtle);padding:2px 6px;border-radius:4px;color:var(--accent-gold);border:1px solid var(--border-hairline);">$1</code>');
 
@@ -825,10 +859,43 @@
     text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
 
     // Paragraph breaks
-    text = text.replace(/\n\n/g, '</p><p>');
-    text = `<p>${text}</p>`;
+    // text = text.replace(/\n\n/g, '</p><p>');
+    // text = `<p>${text}</p>`;
     return text;
   }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.code-copy-btn');
+    if (!btn) return;
+
+    const targetId = btn.getAttribute('data-copy-target');
+    const codeEl = document.getElementById(targetId);
+    if (!codeEl) return;
+
+    const code = codeEl.textContent;
+    navigator.clipboard.writeText(code);
+    window.showAuraToast('Code copied to clipboard');
+
+    const label = btn.querySelector('.copy-btn-label');
+    const iconDefault = btn.querySelector('.copy-icon-default');
+    const iconCheck = btn.querySelector('.copy-icon-check');
+
+    if (btn.dataset.resetTimer) clearTimeout(Number(btn.dataset.resetTimer));
+
+    label.textContent = 'Copied';
+    iconDefault.style.display = 'none';
+    iconCheck.style.display = 'inline-block';
+    btn.classList.add('copied');
+
+    const timer = setTimeout(() => {
+      label.textContent = 'Copy';
+      iconDefault.style.display = 'inline-block';
+      iconCheck.style.display = 'none';
+      btn.classList.remove('copied');
+    }, 2000);
+
+    btn.dataset.resetTimer = timer;
+  });
 
   function escapeHtml(str) {
     return String(str || '')
