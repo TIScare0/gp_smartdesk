@@ -15,8 +15,6 @@ tes.py
 test.py
 
 .env
-debug.html
-pyside*
 
 debug*
 response.json
@@ -25,3 +23,5 @@ test.png
 image.png
 
 todo*
+
+output.txt

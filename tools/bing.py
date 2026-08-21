@@ -16,7 +16,7 @@ class Bing(Request):
         super().__init__()
         self.model = model
 
-    def txt2image(self, prompt, path=None):
+    def txt2img(self, prompt, path=None):
         if self.model == BingModels.bing_2_5_image:
             response_url = self.request(
                 'https://www.bing.com/images/create/ai-image-generator',

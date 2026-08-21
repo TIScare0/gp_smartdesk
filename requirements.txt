@@ -10,3 +10,5 @@ cohere==7.0.8
 mistralai==2.9.2
 openrouter==1.1.42
 openai==3.1.0
+fastembed==0.8.0
+pypdf==6.16.1

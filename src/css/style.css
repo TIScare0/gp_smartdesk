@@ -2166,3 +2166,19 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
     background-position: -50% 0;
   }
 }
+
+.tg-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(4px);
+  transition-property: opacity, filter, transform;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: opacity, filter, transform;
+}
+.tg-word.tg-visible {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateY(0);
+}

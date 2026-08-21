@@ -19,11 +19,11 @@ class GeminiBase(Request):
         super().__init__()
         self.model = model
         self.client = genai.Client(api_key=env_item('GEMINI_API_KEY'))
+        self.system_prompt = ''
 
     def base_interaction(self, prompt, **kwargs):
         try:
-            interaction = self.client.interactions.create(
-                model=self.model, input=prompt, **kwargs)
+            interaction = self.client.interactions.create(model=self.model, input=prompt, system_instruction=self.system_prompt, **kwargs)
             return {
                 'status': True,
                 'response': interaction

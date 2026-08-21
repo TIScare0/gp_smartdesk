@@ -16,19 +16,26 @@ class Mistral:
     def __init__(self, model: str):
         self.model = model
         self.client = MistralAI(api_key=env_item('MISTRAL_API_KEY'))
+        self.system_prompt = ''
 
     def txt2txt(self, prompt: str):
         try:
             data = self.client.chat.complete(
                 model=self.model,
-                messages=[{
-                    'role': 'user',
-                    'content': prompt
-                }]
+                messages=[
+                    {
+                        'role': 'user',
+                        'content': prompt
+                    },
+                    {
+                        'role': 'system',
+                        'content': self.system_prompt
+                    }
+                ],
             )
             return {
                 'status': True,
-                'response': data.choices[0].message.content
+                'response': data.choices[0].message.content #type: ignore
             }
         except MistralError as e:
             if e.status_code == 429:

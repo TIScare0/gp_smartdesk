@@ -1,0 +1,3486 @@
+[
+  {
+    "name": "GTU Bachelor of Architecture Papers",
+    "code": "BA",
+    "branches": [
+      {
+        "branch_code": "50",
+        "branch_name": "GTU B.Arch Architecture Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Design Papers",
+    "code": "BN",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU B.Design Communication Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU B.Design Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU B.Design Industrial Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU B.Design Textile Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Pharmacy Papers",
+    "code": "BP",
+    "branches": [
+      {
+        "branch_code": "90",
+        "branch_name": "GTU B.Pharm Pharmacy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Planning Papers",
+    "code": "BL",
+    "branches": [
+      {
+        "branch_code": "55",
+        "branch_name": "GTU B.Plan Bachelor of Planning Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Vocation Papers",
+    "code": "BV",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU B.Voc Automobile Servicing Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU B.Voc Software Development Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU B.Voc Production Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU B.Voc Refrigeration and Air Conditioning Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU B.Voc Information Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU B.Voc Entrepreneurship Development Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "07",
+        "branch_name": "GTU B.Voc Solar and Renewable Energy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "08",
+        "branch_name": "GTU B.Voc Practical Accounting and Tax (DPATP) & Tally Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU B.Voc Food Processing and Quality Control Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "21",
+        "branch_name": "GTU B.Voc Banking Financial Services and Insurance Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "22",
+        "branch_name": "GTU B.Voc Sales & Marketing Management Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Business Administration Papers",
+    "code": "BB",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU BBA Bachelor of Business Administration Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Computer Applications Papers",
+    "code": "BC",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU BCA Bachelor of Computer Applications Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Engineering Papers",
+    "code": "BE",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU BE Aeronautical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU BE Automobile Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU BE Bio-Medical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU BE Bio-Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU BE Chemical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU BE Civil Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "07",
+        "branch_name": "GTU BE Computer Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "08",
+        "branch_name": "GTU BE Electrical & Electronics Engineering Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU BE Electrical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "10",
+        "branch_name": "GTU BE Electronics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU BE Electronics & Communication Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "12",
+        "branch_name": "GTU BE Electronics & Telecommunication Engineering Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "13",
+        "branch_name": "GTU BE Environmental Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "14",
+        "branch_name": "GTU BE Food Processing Technology Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "15",
+        "branch_name": "GTU BE Industrial Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "16",
+        "branch_name": "GTU BE Information Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "17",
+        "branch_name": "GTU BE Instrumentation & Control Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "18",
+        "branch_name": "GTU BE Marine Engineering Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "19",
+        "branch_name": "GTU BE Mechanical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "20",
+        "branch_name": "GTU BE Mechatronics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "21",
+        "branch_name": "GTU BE Metallurgy Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "22",
+        "branch_name": "GTU BE Mining Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "23",
+        "branch_name": "GTU BE Plastic Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "24",
+        "branch_name": "GTU BE Power Electronics Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "25",
+        "branch_name": "GTU BE Production Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "26",
+        "branch_name": "GTU BE Rubber Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "28",
+        "branch_name": "GTU BE Textile Processing Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "29",
+        "branch_name": "GTU BE Textile Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "31",
+        "branch_name": "GTU BE Computer Science & Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "32",
+        "branch_name": "GTU BE Information & Communication Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "34",
+        "branch_name": "GTU BE Manufacturing Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "35",
+        "branch_name": "GTU BE Environmental Science & Technology Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "36",
+        "branch_name": "GTU BE Chemical Technology Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "37",
+        "branch_name": "GTU BE Environmental Science and Engineering Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "39",
+        "branch_name": "GTU BE Nano Technology Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "40",
+        "branch_name": "GTU BE Civil & Infrastructure Engineering Papers",
+        "sem_count": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "41",
+        "branch_name": "GTU BE Robotics and Automation Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "42",
+        "branch_name": "GTU BE Computer Science & Engineering (Artificial Intelligence and Machine Learning) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "43",
+        "branch_name": "GTU BE Artificial Intelligence and Data Science Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "44",
+        "branch_name": "GTU BE Chemical Engineering (Green Technology & Sustainability Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "45",
+        "branch_name": "GTU BE Computer Science & Engineering (Internet of Things and Cyber Security Including Block Chain Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "46",
+        "branch_name": "GTU BE Computer Science & Engineering (Data Science) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "47",
+        "branch_name": "GTU BE Electronics & Instrumentation Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "48",
+        "branch_name": "GTU BE Computer Science & Engineering (Cyber Security) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "49",
+        "branch_name": "GTU BE Computer Science & Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "50",
+        "branch_name": "GTU BE Smart & Sustainable Energy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          6
+        ]
+      },
+      {
+        "branch_code": "51",
+        "branch_name": "GTU BE Food Engineering & Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "52",
+        "branch_name": "GTU BE Artificial Intelligence and Machine Learning Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "53",
+        "branch_name": "GTU BE Plastics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "54",
+        "branch_name": "GTU BE Electronics and Communication (Communication System Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "AA",
+        "branch_name": "GTU BE Minor/Honors - Industrial Process Safety Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AB",
+        "branch_name": "GTU BE Minor/Honors - Waste Technology Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AC",
+        "branch_name": "GTU BE Minor/Honors - Construction Technology Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AD",
+        "branch_name": "GTU BE Minor/Honors - Next Generation Smart Village Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AF",
+        "branch_name": "GTU BE Minor/Honors - Smart Cities Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AG",
+        "branch_name": "GTU BE Minor/Honors - Artificial Intelligence & Machine Learning Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AH",
+        "branch_name": "GTU BE Minor/Honors - Cyber Security Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AI",
+        "branch_name": "GTU BE Minor/Honors - Internet of Things Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AJ",
+        "branch_name": "GTU BE Minor/Honors - Solar Energy Systems Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AK",
+        "branch_name": "GTU BE Minor/Honors - Electrical and Computer Papers",
+        "sem_count": [
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "AL",
+        "branch_name": "GTU BE Minor/Honors - Electric Vehicles Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AN",
+        "branch_name": "GTU BE Minor/Honors - 3D Printing Papers",
+        "sem_count": [
+          4,
+          5
+        ]
+      },
+      {
+        "branch_code": "AO",
+        "branch_name": "GTU BE Minor/Honors - Robotics Papers",
+        "sem_count": [
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "AP",
+        "branch_name": "GTU BE Minor/Honors - Energy Engineering Papers",
+        "sem_count": [
+          4
+        ]
+      },
+      {
+        "branch_code": "AQ",
+        "branch_name": "GTU BE Minor/Honors - Global Citizenship Personality Development Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AR",
+        "branch_name": "GTU BE Minor/Honours - Industrial Based Non Destructive Techniques and Practices Papers",
+        "sem_count": [
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "AS",
+        "branch_name": "GTU BE Minor/Honours - Green Technology and Sustainability Engineering Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AT",
+        "branch_name": "GTU BE Minor/Honours - Data Science Papers",
+        "sem_count": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "AU",
+        "branch_name": "GTU BE Minor/Honours - Forensic Structural Engineering Papers",
+        "sem_count": [
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "AV",
+        "branch_name": "GTU BE Minor/Honours - Computer Aided Civil Engineering Processes Papers",
+        "sem_count": [
+          4,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "NA",
+        "branch_name": "GTU BE Army Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "NB",
+        "branch_name": "GTU BE Air Force Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "NC",
+        "branch_name": "GTU BE Navy Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Engineering (Part Time) Papers",
+    "code": "EP",
+    "branches": [
+      {
+        "branch_code": "06",
+        "branch_name": "GTU BE (Part Time) Civil Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU BE (Part Time) Electrical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU BE (Part Time) Electronics & Communication Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "19",
+        "branch_name": "GTU BE (Part Time) Mechanical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Hotel Management and Catering Technology Papers",
+    "code": "BH",
+    "branches": [
+      {
+        "branch_code": "30",
+        "branch_name": "GTU BHMCT Hotel Management & Catering Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "33",
+        "branch_name": "GTU BHMCT Hospitality and Tourism Administration Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Interior Design Papers",
+    "code": "BI",
+    "branches": [
+      {
+        "branch_code": "51",
+        "branch_name": "GTU BID Interior Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Pharmacy (Practice) Papers",
+    "code": "PP",
+    "branches": [
+      {
+        "branch_code": "91",
+        "branch_name": "GTU BPP Pharmacy Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Bachelor of Science Papers",
+    "code": "BS",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU BSc Honors/Honors with Research (Biotechnology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Diploma in Architecture Papers",
+    "code": "DA",
+    "branches": [
+      {
+        "branch_code": "62",
+        "branch_name": "GTU D.Arch Diploma in Architecture Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "63",
+        "branch_name": "GTU D.Arch Diploma in Architecture Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Diploma in Pharmacy Papers",
+    "code": "DP",
+    "branches": [
+      {
+        "branch_code": "91",
+        "branch_name": "GTU D.Pharm Diploma Pharmacy Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Diploma in Vocation Papers",
+    "code": "DV",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU D.Voc Automobile Servicing Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU D.Voc Software Development Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU D.Voc Refrigeration and Air Conditioning Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU D.Voc Architecture Assistantship Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "08",
+        "branch_name": "GTU D.Voc Electrical Wiring Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Diploma in Engineering Papers",
+    "code": "DI",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU Diploma Diploma in Aeronautical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU Diploma Automobile Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU Diploma Biomedical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU Diploma Chemical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU Diploma Civil Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "07",
+        "branch_name": "GTU Diploma Computer Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU Diploma Electrical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU Diploma Electronics and Communication Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "13",
+        "branch_name": "GTU Diploma Environmental Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "16",
+        "branch_name": "GTU Diploma Information Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "17",
+        "branch_name": "GTU Diploma Instrumentation and Control Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "18",
+        "branch_name": "GTU Diploma Diploma in Marine Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "19",
+        "branch_name": "GTU Diploma Mechanical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "20",
+        "branch_name": "GTU Diploma Mechatronics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "21",
+        "branch_name": "GTU Diploma Metallurgy Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "22",
+        "branch_name": "GTU Diploma Mining Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "23",
+        "branch_name": "GTU Diploma Plastics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7
+        ]
+      },
+      {
+        "branch_code": "24",
+        "branch_name": "GTU Diploma Power Electronics Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "28",
+        "branch_name": "GTU Diploma Textile Processing Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "29",
+        "branch_name": "GTU Diploma Textile Manufacturing Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "31",
+        "branch_name": "GTU Diploma Computer Science & Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "32",
+        "branch_name": "GTU Diploma Information and Communication Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          3,
+          3
+        ]
+      },
+      {
+        "branch_code": "41",
+        "branch_name": "GTU Diploma Automation and Robotics Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "50",
+        "branch_name": "GTU Diploma Architectural Assistantship Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "51",
+        "branch_name": "GTU Diploma Computer Aided Costume Design & Dress Making Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "52",
+        "branch_name": "GTU Diploma Ceramic Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "53",
+        "branch_name": "GTU Diploma Commercial Art Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "54",
+        "branch_name": "GTU Diploma Commercial Practice Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "55",
+        "branch_name": "GTU Diploma Fabrication Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          8
+        ]
+      },
+      {
+        "branch_code": "56",
+        "branch_name": "GTU Diploma Home Science Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "58",
+        "branch_name": "GTU Diploma Printing Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "branch_code": "59",
+        "branch_name": "GTU Diploma Textile Designing Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "60",
+        "branch_name": "GTU Diploma Transportation Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "61",
+        "branch_name": "GTU Diploma Fire Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "branch_code": "63",
+        "branch_name": "GTU Diploma Agricultural Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "branch_code": "64",
+        "branch_name": "GTU Diploma Renewable Energy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "65",
+        "branch_name": "GTU Diploma Mechanical Engineering \u00a0(CAD/CAM) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "66",
+        "branch_name": "GTU Diploma Cyber System and Information Security Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "81",
+        "branch_name": "GTU Diploma Civil Engineering (DLM) Papers",
+        "sem_count": [
+          1,
+          2,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "82",
+        "branch_name": "GTU Diploma Mechanical Engineering (DLM) Papers",
+        "sem_count": [
+          1,
+          2,
+          5,
+          6,
+          8
+        ]
+      },
+      {
+        "branch_code": "83",
+        "branch_name": "GTU Diploma Electrical Engineering (DLM) Papers",
+        "sem_count": [
+          1,
+          2,
+          5,
+          6,
+          8
+        ]
+      },
+      {
+        "branch_code": "NA",
+        "branch_name": "GTU Diploma Army Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "branch_code": "NC",
+        "branch_name": "GTU Diploma Navy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU MBA Integrated Papers",
+    "code": "MA",
+    "branches": [
+      {
+        "branch_code": "71",
+        "branch_name": "GTU IMBA Integrated MBA (IMBA) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "branch_code": "85",
+        "branch_name": "GTU IMBA MBA Applied Management (MAM) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Architecture Papers",
+    "code": "MR",
+    "branches": [
+      {
+        "branch_code": "61",
+        "branch_name": "GTU M.Arch Sustainable Architecture Papers",
+        "sem_count": [
+          1,
+          3
+        ]
+      },
+      {
+        "branch_code": "62",
+        "branch_name": "GTU M.Arch Interior Architecture Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Pharmacy Papers",
+    "code": "MP",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU M.Pharm Pharmaceutical Chemistry Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU M.Pharm Pharmaceutical Technology and Pharmaceutics Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU M.Pharm Pharmacology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU M.Pharm Quality Assurance Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU M.Pharm Pharmacognosy Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU M.Pharm Clinical Pharmacy Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "07",
+        "branch_name": "GTU M.Pharm Pharmaceutical Analysis Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "08",
+        "branch_name": "GTU M.Pharm Pharmaceutics Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU M.Pharm Pharmaceutical Quality Assurance Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "10",
+        "branch_name": "GTU M.Pharm Pharmaceutical Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU M.Pharm Pharmacology and Toxicology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "12",
+        "branch_name": "GTU M.Pharm Industrial Pharmacy Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "13",
+        "branch_name": "GTU M.Pharm Quality Assurance Technique Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "14",
+        "branch_name": "GTU M.Pharm Medical Chemistry Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "15",
+        "branch_name": "GTU M.Pharm Quality Assurance and Pharm Regulatory Affairs Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "16",
+        "branch_name": "GTU M.Pharm Pharmaceutical Management and Regulatory Affairs Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "20",
+        "branch_name": "GTU M.Pharm Pharmaceutics Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "21",
+        "branch_name": "GTU M.Pharm Industrial Pharmacy Papers",
+        "sem_count": [
+          1
+        ]
+      },
+      {
+        "branch_code": "22",
+        "branch_name": "GTU M.Pharm Pharmaceutical Chemistry Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "23",
+        "branch_name": "GTU M.Pharm Pharmaceutical Analysis Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "24",
+        "branch_name": "GTU M.Pharm Pharmaceutical Quality Assurance Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "25",
+        "branch_name": "GTU M.Pharm Pharmacology Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "26",
+        "branch_name": "GTU M.Pharm Pharmacognosy Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "27",
+        "branch_name": "GTU M.Pharm Pharmaceutical Regulatory Affairs Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "28",
+        "branch_name": "GTU M.Pharm Pharmaceutical Technology Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "29",
+        "branch_name": "GTU M.Pharm Clinical Pharmacy Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "30",
+        "branch_name": "GTU M.Pharm Pharmacy Practice Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "31",
+        "branch_name": "GTU M.Pharm Phytopharmacy and Phytomedicine Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "32",
+        "branch_name": "GTU M.Pharm Regulatory Affairs Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Arts in Hindu Studies Papers",
+    "code": "MH",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU MAHS Master of Arts in Hindu Studies Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Business Administration Papers",
+    "code": "MB",
+    "branches": [
+      {
+        "branch_code": "92",
+        "branch_name": "GTU MBA MBA Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "93",
+        "branch_name": "GTU MBA MBA (International Business) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "94",
+        "branch_name": "GTU MBA MBA (Innovation, Entrepreneurship and Venture Development) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "95",
+        "branch_name": "GTU MBA Financial Management Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "96",
+        "branch_name": "GTU MBA Information Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "97",
+        "branch_name": "GTU MBA MBA (Logistics and Supply Chain Management) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "98",
+        "branch_name": "GTU MBA MBA (Fintech) Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Business Administration (Part Time) Papers",
+    "code": "MV",
+    "branches": [
+      {
+        "branch_code": "99",
+        "branch_name": "GTU MBA (Part Time) MBA-Parttime Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Computer Applications Papers",
+    "code": "MC",
+    "branches": [
+      {
+        "branch_code": "93",
+        "branch_name": "GTU MCA MCA Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "branch_code": "94",
+        "branch_name": "GTU MCA MCA Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Computer Applications (Integrated) Papers",
+    "code": "IC",
+    "branches": [
+      {
+        "branch_code": "86",
+        "branch_name": "GTU MCA Integrated MCA Integrated Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Engineering Papers",
+    "code": "ME",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU ME Computer (Computer Science & Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "02",
+        "branch_name": "GTU ME Computer Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "03",
+        "branch_name": "GTU ME Instrumentation and Control (Applied Instrumentation) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "04",
+        "branch_name": "GTU ME Electronics and Communication Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU ME Electronics and Communication (Communication System Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "06",
+        "branch_name": "GTU ME Electronics and Communication (Communication Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "07",
+        "branch_name": "GTU ME Electrical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "08",
+        "branch_name": "GTU ME Mechanical (CAD/CAM) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU ME Mechanical (Machine Design) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "10",
+        "branch_name": "GTU ME Mechanical (Cryogenic Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU ME Mechanical (I.C.Engine & Automobile) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "12",
+        "branch_name": "GTU ME Civil (Water Resources Management) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "13",
+        "branch_name": "GTU ME Civil (Transportation Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "14",
+        "branch_name": "GTU ME Civil (Construction Engineering and Management) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "15",
+        "branch_name": "GTU ME Civil (CASAD) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "16",
+        "branch_name": "GTU ME Chemical Engineering (Computer Aided Process Design) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "17",
+        "branch_name": "GTU ME Environmental Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "18",
+        "branch_name": "GTU ME Environmental Management Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "19",
+        "branch_name": "GTU ME Civil (Transportation System Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "20",
+        "branch_name": "GTU ME Civil (Structural Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "21",
+        "branch_name": "GTU ME Mechanical (Thermal Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "22",
+        "branch_name": "GTU ME Electronics and Communication (Digital Communications) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "23",
+        "branch_name": "GTU ME Information Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "24",
+        "branch_name": "GTU ME Plastic Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "25",
+        "branch_name": "GTU ME Textile Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "26",
+        "branch_name": "GTU ME Electronics and Communication (Signal Processing and VLSI Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "27",
+        "branch_name": "GTU ME Electronics and Communication (Wireless Communication Systems and Networks) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "28",
+        "branch_name": "GTU ME Mechanical (Production Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "29",
+        "branch_name": "GTU ME Power Electronics Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "30",
+        "branch_name": "GTU ME Chemical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "31",
+        "branch_name": "GTU ME Bio Medical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "32",
+        "branch_name": "GTU ME Civil (Computer Aided Structural Analysis) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "33",
+        "branch_name": "GTU ME Civil (Water Resource Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "34",
+        "branch_name": "GTU ME Mechanical (Thermal Science) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "35",
+        "branch_name": "GTU ME Mechanical (Automobile Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "36",
+        "branch_name": "GTU ME Me Electrical (Automation and Control Power System) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "37",
+        "branch_name": "GTU ME Electrical (Power System Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "38",
+        "branch_name": "GTU ME Computer (Computer Science & Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "39",
+        "branch_name": "GTU ME Mechanical (Energy Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "40",
+        "branch_name": "GTU ME Rubber Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "41",
+        "branch_name": "GTU ME Electronics and Communication (Signal Processing & Communication) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "42",
+        "branch_name": "GTU ME Electronics and Communication (VLSI System Design) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "43",
+        "branch_name": "GTU ME Civil (Geotechnical Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "44",
+        "branch_name": "GTU ME Electronics and Communication (Wireless Communication Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "45",
+        "branch_name": "GTU ME Electrical (Power Electronics & Electrical Drives) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "46",
+        "branch_name": "GTU ME Mechanical (Industrial Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "47",
+        "branch_name": "GTU ME Mechatronics Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "48",
+        "branch_name": "GTU ME Town and Country Planning Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "49",
+        "branch_name": "GTU ME Construction Management Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "50",
+        "branch_name": "GTU ME Advanced Manufacturing Systems Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "51",
+        "branch_name": "GTU ME Computer Engineering (IT Systems and Network Security) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "52",
+        "branch_name": "GTU ME Electronics and Communication (VLSI & Embedded Systems Design) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "53",
+        "branch_name": "GTU ME Computer Engineering (Wireless & Mobile Computing) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "54",
+        "branch_name": "GTU ME Electronics and Communication (Embedded System) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "55",
+        "branch_name": "GTU ME Computer Engineering (High Performance Computing) Papers",
+        "sem_count": [
+          1
+        ]
+      },
+      {
+        "branch_code": "56",
+        "branch_name": "GTU ME Computer Engineering (Systems and Network Security) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "59",
+        "branch_name": "GTU ME Cyber Security Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "branch_code": "60",
+        "branch_name": "GTU ME Electronics and Communication Engineering (Mobile Communication and Network Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "61",
+        "branch_name": "GTU ME EC (VLSI and Embedded Systems) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "62",
+        "branch_name": "GTU ME Internet of Things Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "63",
+        "branch_name": "GTU ME VLSI Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "64",
+        "branch_name": "GTU ME Electric Vehicle Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "65",
+        "branch_name": "GTU ME Civil Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "66",
+        "branch_name": "GTU ME Advanced Manufacturing Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "67",
+        "branch_name": "GTU ME Applied Instrumentation Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "68",
+        "branch_name": "GTU ME CAD/CAM Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "69",
+        "branch_name": "GTU ME Civil Engineering (Transportation Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "70",
+        "branch_name": "GTU ME Computer Aided Design and Manufacture Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "71",
+        "branch_name": "GTU ME Computer Aided Design Manufacture and Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "72",
+        "branch_name": "GTU ME Computer Aided Process Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "73",
+        "branch_name": "GTU ME Computer Engineering (Software Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "74",
+        "branch_name": "GTU ME Cryogenic Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "75",
+        "branch_name": "GTU ME Energy Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "76",
+        "branch_name": "GTU ME Geotechnical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "77",
+        "branch_name": "GTU ME Information Technology (Information and Cyber Warfare) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "78",
+        "branch_name": "GTU ME Machine Design Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "79",
+        "branch_name": "GTU ME Mechanical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "80",
+        "branch_name": "GTU ME Mechanical (I.C. Engine and Automobile Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "81",
+        "branch_name": "GTU ME Mechanical Engineering (CAD/CAM) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "82",
+        "branch_name": "GTU ME Mechanical Engineering (Production) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "83",
+        "branch_name": "GTU ME Mechanical Engineering (Thermal Engineering) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "84",
+        "branch_name": "GTU ME Plastics Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "85",
+        "branch_name": "GTU ME Power Electronics and Electrical Drives Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "86",
+        "branch_name": "GTU ME Power Systems Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "87",
+        "branch_name": "GTU ME Production Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "88",
+        "branch_name": "GTU ME Rubber Technology Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "89",
+        "branch_name": "GTU ME Structural Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "95",
+        "branch_name": "GTU ME Artificial Intelligence and Data Science Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "branch_code": "96",
+        "branch_name": "GTU ME Electronics and Communication (VLSI Design) Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Science (Integrated) Papers",
+    "code": "CS",
+    "branches": [
+      {
+        "branch_code": "03",
+        "branch_name": "GTU MSc (CS) Master of Science (Integrated - Computer Science) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "branch_code": "05",
+        "branch_name": "GTU MSc (CS) Master of Science (Integrated - Information Technology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Master of Science (Industrial Biotechnology) Papers",
+    "code": "IB",
+    "branches": [
+      {
+        "branch_code": "01",
+        "branch_name": "GTU MSc (IB) Master of Science (Industrial Biotechnology) Papers",
+        "sem_count": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Integrated MSc Biotechnology Papers",
+    "code": "IM",
+    "branches": [
+      {
+        "branch_code": "04",
+        "branch_name": "GTU MSc (IM) Integrated M.sc. Biotechnology Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Diploma Degree Course Papers",
+    "code": "PD",
+    "branches": [
+      {
+        "branch_code": "06",
+        "branch_name": "GTU PDDC Civil Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "09",
+        "branch_name": "GTU PDDC Electrical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "11",
+        "branch_name": "GTU PDDC Electronics & Communication Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "branch_code": "19",
+        "branch_name": "GTU PDDC Mechanical Engineering Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Graduate Diploma in Bioinformatics Papers",
+    "code": "DB",
+    "branches": [
+      {
+        "branch_code": "02",
+        "branch_name": "GTU PGDBI Post Graduate Diploma in Bioinformatics Papers",
+        "sem_count": [
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Graduate Diploma in Digital Marketing Papers",
+    "code": "DM",
+    "branches": [
+      {
+        "branch_code": "75",
+        "branch_name": "GTU PGDDM Post Graduate Diploma in Digital Marketing Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      },
+      {
+        "branch_code": "76",
+        "branch_name": "GTU PGDDM Post Graduate Diploma in Digital Marketing Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Graduate Diploma in Data Science Papers",
+    "code": "DS",
+    "branches": [
+      {
+        "branch_code": "80",
+        "branch_name": "GTU PGDDS Post Graduate Diploma in Data Science Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Graduate Diploma in Hospital Management Papers",
+    "code": "DH",
+    "branches": [
+      {
+        "branch_code": "77",
+        "branch_name": "GTU PGDHM Post Graduate Diploma in Hospital Management Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Post Graduate Diploma in IPR Papers",
+    "code": "PR",
+    "branches": [
+      {
+        "branch_code": "95",
+        "branch_name": "GTU PGDIPR Post Graduate Diploma in IPR Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Pharm.D Papers",
+    "code": "FD",
+    "branches": [
+      {
+        "branch_code": "88",
+        "branch_name": "GTU Pharm.D Pharmacy Papers",
+        "sem_count": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "name": "GTU Pharm.D. (Post Baccalaureate) Papers",
+    "code": "PB",
+    "branches": [
+      {
+        "branch_code": "89",
+        "branch_name": "GTU Pharm.D (PB) Pharm D (PB) Papers",
+        "sem_count": [
+          1,
+          2
+        ]
+      }
+    ]
+  }
+]

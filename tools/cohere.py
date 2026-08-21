@@ -15,6 +15,7 @@ class Cohere:
     def __init__(self, model: str):
         self.model = model
         self.client = ClientV2(env_item('COHERE_API_KEY'))
+        self.system_prompt = ''
 
     def txt2txt(self, prompt):
         try:
@@ -23,16 +24,20 @@ class Cohere:
                 messages=[
                     {
                         'role': 'user',
-                        'content': prompt,
+                        'content': prompt
+                    },
+                    {
+                        'role': 'system',
+                        'content': self.system_prompt
                     }
-                ]
+                ], #type: ignore
             )
             return {
                 'status': True,
-                'response': data.message.content[0].text
+                'response': data.message.content[0].text #type: ignore
             }
         except Exception as e:
-            if isinstance(e, ApiError) and e.status_code >= 402:
+            if isinstance(e, ApiError) and e.status_code >= 402: #type: ignore
                 return {
                     'status': False,
                     'error': 'Usage limit exceeded'

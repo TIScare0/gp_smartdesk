@@ -1,44 +1,40 @@
 /**
  * AURA — 3D Isometric Pixel Grid Simulation & Lens Inspector Module
  * Standalone Engine for voxel elevation waves, stabilization, and magnifying inspection.
+ *
+ * Perf notes (v3):
+ *  - Pixel grid stored as flat typed arrays (Structure-of-Arrays) instead of
+ *    an array-of-objects grid. Avoids per-cell object property lookups and
+ *    GC churn — this was the single biggest cost in the per-frame loop.
+ *  - Static per-cell geometry (normX, normY, wave phase/frequency, screen
+ *    x/y) is precomputed once (on init and on resize) instead of recomputed
+ *    every frame.
+ *  - Draw pass skips shadow/bevel path construction below an elevation
+ *    threshold (they're the most expensive draws — beginPath/fill — and
+ *    contribute least when the voxel is nearly flat).
+ *  - Border stroke is skipped when its alpha is visually negligible.
+ *  - Running max-elevation is tracked inside the physics step instead of a
+ *    separate full-grid scan every flatten frame.
+ *  - Math.pow(x, 1.4) replaced with an equivalent x*sqrt(x)*x^0.1 avoided —
+ *    kept as x*Math.sqrt(x)-based cheaper curve that visually matches.
  */
 
 (function () {
   'use strict';
 
-  // --- Curated Image Scenes Library (Landscape Aspect Ratios) ---
-  const SCENE_LIBRARY = [
-    {
-      url: '/images/earth.jpeg',
-      fallbackColors: ['#3f3529', '#a48455', '#dcd4c6', '#1a1714']
-    },
-    {
-      url: '/images/rich_house.png',
-      fallbackColors: ['#1e3a5f', '#f97316', '#e0e7ff', '#1f2937']
-    },
-    {
-      url: '/images/space.png',
-      fallbackColors: ['#064e3b', '#10b981', '#065f46', '#022c22']
-    },
-    {
-      url: '/images/trees_nature.png',
-      fallbackColors: ['#0284c7', '#06b6d4', '#10b981', '#030712']
-    },
-    {
-      url: '/images/waterfall.png',
-      fallbackColors: ['#9a3412', '#ea580c', '#fb923c', '#431407']
-    }
+  // --- Curated Preview Images (cycled while the real image generates) ---
+  const IMAGES = [
+    { url: '/images/earth.jpeg' },
+    { url: '/images/rich_house.png' },
+    { url: '/images/space.png' },
+    { url: '/images/trees_nature.png' },
+    { url: '/images/waterfall.png' }
   ];
 
   // Active running card engines
   const activeEngines = [];
 
-  // Match prompt to scene or pick random
-  function matchSceneFromPrompt(promptText) {
-    return SCENE_LIBRARY[Math.floor(Math.random() * SCENE_LIBRARY.length)];
-  }
-
-  // --- Procedural Fallback Generator (Handles local CORS safety) ---
+  // ---  Fallback Generator (Handles local CORS safety) ---
   function createProceduralFallback(colors, cols, rows) {
     const c = document.createElement('canvas');
     c.width = cols;
@@ -46,9 +42,10 @@
     const ctx = c.getContext('2d');
     if (!ctx) return c;
 
+    const palette = colors && colors.length ? colors : ['#2a2a2a', '#050505'];
     const grad = ctx.createLinearGradient(0, 0, cols, rows);
-    colors.forEach((col, i) => {
-      grad.addColorStop(i / (colors.length - 1), col);
+    palette.forEach((col, i) => {
+      grad.addColorStop(i / Math.max(1, palette.length - 1), col);
     });
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, cols, rows);
@@ -63,6 +60,12 @@
     }
     return c;
   }
+
+  // Visibility thresholds below which a draw call is skipped entirely —
+  // tuned so the cutoff is imperceptible but avoids wasted path/fill work.
+  const ELEVATION_DRAW_EPS = 0.35;   // below this, bevels/shadow are skipped
+  const BORDER_ALPHA_EPS = 0.006;    // below this, stroke is skipped
+  const CELL_HIDDEN_EPS = 0.004;     // below this reveal progress, cell is skipped
 
   // --- 3D Pixel Grid Engine Instance ---
   class PixelEngineInstance {
@@ -81,7 +84,7 @@
       this.inspectBtn = cardElement.querySelector('.inspect-lens-btn');
       this.canvasViewport = cardElement.querySelector('.card-canvas-viewport');
 
-      this.dispCtx = this.dispCanvas?.getContext('2d');
+      this.dispCtx = this.dispCanvas?.getContext('2d', { alpha: false });
       this.procCtx = this.procCanvas?.getContext('2d', { willReadFrequently: true });
 
       this.config = {
@@ -96,34 +99,259 @@
         borderOpacity: 0.12,
       };
 
-      this.pixelGrid = [];
+      this.cellCount = this.config.gridCols * this.config.gridRows;
+
+      // --- Perpetual ambient animation clock (never resets) ---
+      this.animStart = performance.now();
+
+      // --- Phase state machine ---
+      // 'looping'  : perpetual 3D wave animation, colors driven by whatever
+      //              is currently sampled into targets (preview or real).
+      // 'flatten'  : real image has arrived — smoothly kill elevation to 0.
+      // 'blackout' : fade the whole card to solid black.
+      // 'reveal'   : staggered per-cell reveal of the real image pixels.
+      // 'done'     : static final frame; canvas stops drawing per-frame work,
+      //              the <img> overlay is swapped in as the resting state.
+      this.phase = 'looping';
+      this.phaseStart = performance.now();
+
       this.isStabilized = false;
-      this.startTime = performance.now();
-      this.durationMs = 5000; // 5 seconds of 3D animation
-      this.targetElevationScale = 1.0;
-      this.currentElevationScale = 1.0;
+
+      // Image generation state
+      this.targetImageReady = false;
+      this.finalImageUrl = null;
+
+      // Preview cycling
+      this.previewCycleActive = false;
+      this.previewList = [];
+      this.previewIndex = 0;
+      this.previewIntervalId = null;
+
+      // Elevation control — smoothly driven to 0 during 'flatten'
+      this.elevationScale = 1.0;
+      this._runningMaxElevation = 0;
+
+      // Blackout / reveal
+      this.blackoutAlpha = 0;
+      this.revealDurationMs = 850;
+
+      // Cached layout (recomputed only on resize)
+      this._layoutW = -1;
+      this._layoutH = -1;
+      this._cellSize = 0;
+      this._gap = 0;
+      this._offsetX0 = 0;
+      this._offsetY0 = 0;
+
+      // The overlay <img> must NEVER be visible while the canvas is doing
+      // work (looping/flatten/blackout/reveal) — it only appears as the
+      // final resting frame once 'done' is reached. We control this purely
+      // in JS, not via CSS class toggles mid-sequence, to avoid double-draw.
+      if (this.overlayImg) {
+        this.overlayImg.classList.remove('visible');
+        this.overlayImg.style.transition = 'none';
+        this.overlayImg.style.opacity = '0';
+      }
 
       this.initGrid();
       this.loadSceneImage();
       this.bindEvents();
     }
 
+    // ---------------------------------------------------------------
+    // Preview cycling — only swaps pixel color TARGETS. Never touches
+    // animStart/phase, so the ambient wave animation is uninterrupted.
+    // ---------------------------------------------------------------
+    startPreviewCycle(imageUrls, intervalMs = 5000) {
+      if (!Array.isArray(imageUrls) || imageUrls.length === 0) return;
+
+      this.previewList = imageUrls.slice();
+      this.previewIndex = 0;
+      this.previewCycleActive = true;
+
+      this._sampleUrlIntoTargets(this.previewList[this.previewIndex]);
+
+      if (this.previewIntervalId) clearInterval(this.previewIntervalId);
+      this.previewIntervalId = setInterval(() => {
+        if (!this.previewCycleActive) return;
+        this.previewIndex = (this.previewIndex + 1) % this.previewList.length;
+        this._sampleUrlIntoTargets(this.previewList[this.previewIndex]);
+      }, intervalMs);
+    }
+
+    stopPreviewCycle() {
+      this.previewCycleActive = false;
+      if (this.previewIntervalId) {
+        clearInterval(this.previewIntervalId);
+        this.previewIntervalId = null;
+      }
+    }
+
+    _sampleUrlIntoTargets(url) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => this.sampleImage(img);
+      img.onerror = () => { /* keep current targets; next tick retries */ };
+      img.src = url;
+    }
+
+    // ---------------------------------------------------------------
+    // Called once the real generated image path is available.
+    // Stops preview cycling, loads the real image, and kicks off the
+    // finalize sequence WITHOUT resetting animStart.
+    // ---------------------------------------------------------------
+    setTargetImage(imagePath) {
+      if (!imagePath) return;
+      this.stopPreviewCycle();
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = () => {
+        this.finalImageEl = img;
+        this.finalImageUrl = imagePath;
+        this.targetImageReady = true;
+
+        // Sample real image into color targets — the ongoing wave loop
+        // will smoothly crossfade toward these colors on its own.
+        this.sampleImage(img);
+
+        this.scene = { url: imagePath, name: 'Generated Image' };
+
+        this._beginFlatten();
+      };
+
+      img.onerror = (error) => {
+        console.error('Failed to load generated image:', imagePath, error);
+      };
+
+      img.src = imagePath;
+    }
+
+    _beginFlatten() {
+      this.phase = 'flatten';
+      this.phaseStart = performance.now();
+
+      if (this.statusText) this.statusText.textContent = 'Stabilizing pixel surface...';
+      if (this.countdownSpan) this.countdownSpan.style.display = 'none';
+    }
+
+    _beginBlackout() {
+      this.phase = 'blackout';
+      this.phaseStart = performance.now();
+      this.blackoutAlpha = 0;
+
+      if (this.statusText) this.statusText.textContent = 'Rendering HD image...';
+    }
+
+    _beginReveal() {
+      this.phase = 'reveal';
+      this.phaseStart = performance.now();
+
+      const n = this.cellCount;
+      this.revealDelay = new Float32Array(n);
+      this.revealDur = new Float32Array(n);
+      this.revealProgress = new Float32Array(n);
+
+      for (let i = 0; i < n; i++) {
+        this.revealDelay[i] = Math.random() * (this.revealDurationMs * 0.65);
+        this.revealDur[i] = this.revealDurationMs * (0.3 + Math.random() * 0.4);
+      }
+
+      if (this.statusText) this.statusText.textContent = 'Revealing image...';
+    }
+
+    _finish() {
+      this.phase = 'done';
+      this.isStabilized = true;
+
+      this.cardElement.classList.add('is-stabilized');
+
+      if (this.inspectBtn) this.inspectBtn.classList.add('visible');
+      if (this.statusBadge) this.statusBadge.classList.add('stabilized');
+      if (this.statusText) this.statusText.textContent = '✓ HD Image Stabilized';
+      if (this.countdownSpan) this.countdownSpan.textContent = 'Clean';
+
+      // Swap the resting state over to the plain <img> element now that the
+      // canvas reveal has fully completed — instant swap, no CSS fade, so
+      // there is no double-image flash. The canvas keeps its last-drawn
+      // frame underneath but is simply no longer updated.
+      if (this.overlayImg && this.finalImageUrl) {
+        this.overlayImg.style.transition = 'none';
+        this.overlayImg.src = this.finalImageUrl;
+        this.overlayImg.style.opacity = '1';
+        this.overlayImg.classList.add('visible');
+      }
+    }
+
+    restartAnimation() {
+      this.stopPreviewCycle();
+
+      this.phase = 'looping';
+      this.phaseStart = performance.now();
+      this.animStart = performance.now();
+      this.isStabilized = false;
+      this.targetImageReady = false;
+      this.elevationScale = 1.0;
+      this.blackoutAlpha = 0;
+      this.revealDelay = null;
+      this.revealDur = null;
+      this.revealProgress = null;
+
+      this.cardElement.classList.remove('is-stabilized');
+
+      if (this.inspectBtn) this.inspectBtn.classList.remove('visible');
+      if (this.statusBadge) this.statusBadge.classList.remove('stabilized');
+      if (this.overlayImg) {
+        this.overlayImg.style.transition = 'none';
+        this.overlayImg.style.opacity = '0';
+        this.overlayImg.classList.remove('visible');
+      }
+      if (this.statusText) this.statusText.textContent = 'Generating image...';
+      if (this.countdownSpan) this.countdownSpan.style.display = 'inline-block';
+    }
+
+    // ---------------------------------------------------------------
+    // Grid storage: flat typed arrays (Structure-of-Arrays layout).
+    // Index for (r, c) is r * gridCols + c.
+    // ---------------------------------------------------------------
     initGrid() {
       const { gridCols, gridRows } = this.config;
-      this.pixelGrid = Array.from({ length: gridRows }, () =>
-        Array.from({ length: gridCols }, () => ({
-          r: 25,
-          g: 25,
-          b: 25,
-          targetR: 25,
-          targetG: 25,
-          targetB: 25,
-          targetElevation: 0,
-          currentElevation: 0,
-          phase: Math.random() * Math.PI * 2,
-          frequency: 0.85 + Math.random() * 0.45,
-        }))
-      );
+      const n = gridCols * gridRows;
+      this.cellCount = n;
+
+      this.curR = new Float32Array(n).fill(25);
+      this.curG = new Float32Array(n).fill(25);
+      this.curB = new Float32Array(n).fill(25);
+
+      this.targetR = new Float32Array(n).fill(25);
+      this.targetG = new Float32Array(n).fill(25);
+      this.targetB = new Float32Array(n).fill(25);
+
+      this.rawR = new Float32Array(n).fill(-1); // -1 sentinel = "not sampled yet"
+      this.rawG = new Float32Array(n).fill(-1);
+      this.rawB = new Float32Array(n).fill(-1);
+
+      this.currentElevation = new Float32Array(n);
+
+      this.wavePhase = new Float32Array(n);
+      this.waveFrequency = new Float32Array(n);
+      this.normX = new Float32Array(n);
+      this.normY = new Float32Array(n);
+      this.diagHypot = new Float32Array(n); // precomputed hypot(normX-0.5, normY-0.5)
+
+      for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+          const i = r * gridCols + c;
+          this.wavePhase[i] = Math.random() * Math.PI * 2;
+          this.waveFrequency[i] = 0.85 + Math.random() * 0.45;
+          const nx = c / gridCols;
+          const ny = r / gridRows;
+          this.normX[i] = nx;
+          this.normY[i] = ny;
+          this.diagHypot[i] = Math.hypot(nx - 0.5, ny - 0.5);
+        }
+      }
 
       if (this.procCanvas) {
         this.procCanvas.width = gridCols;
@@ -132,14 +360,12 @@
     }
 
     loadSceneImage() {
+      if (!this.scene || !this.scene.url) return;
       const img = new Image();
       img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         this.sampleImage(img);
-        if (this.overlayImg) {
-          this.overlayImg.src = this.scene.url;
-        }
       };
 
       img.onerror = () => {
@@ -149,9 +375,6 @@
           this.config.gridRows
         );
         this.sampleImage(fallback);
-        if (this.overlayImg) {
-          this.overlayImg.src = fallback.toDataURL();
-        }
       };
 
       img.src = this.scene.url;
@@ -168,20 +391,20 @@
       const data = imgData.data;
       const darkenFactor = 1 - darken;
 
-      for (let r = 0; r < gridRows; r++) {
-        for (let c = 0; c < gridCols; c++) {
-          const idx = (r * gridCols + c) * 4;
-          const cell = this.pixelGrid[r]?.[c];
-          if (!cell) continue;
+      const n = gridCols * gridRows;
+      for (let i = 0; i < n; i++) {
+        const idx = i * 4;
+        const rr = data[idx];
+        const gg = data[idx + 1];
+        const bb = data[idx + 2];
 
-          cell.rawR = data[idx];
-          cell.rawG = data[idx + 1];
-          cell.rawB = data[idx + 2];
+        this.rawR[i] = rr;
+        this.rawG[i] = gg;
+        this.rawB[i] = bb;
 
-          cell.targetR = Math.round(data[idx] * darkenFactor);
-          cell.targetG = Math.round(data[idx + 1] * darkenFactor);
-          cell.targetB = Math.round(data[idx + 2] * darkenFactor);
-        }
+        this.targetR[i] = Math.round(rr * darkenFactor);
+        this.targetG[i] = Math.round(gg * darkenFactor);
+        this.targetB[i] = Math.round(bb * darkenFactor);
       }
     }
 
@@ -195,261 +418,356 @@
 
       if (this.canvasViewport) {
         this.canvasViewport.addEventListener('click', () => {
-          if (this.isStabilized) {
-            openLensModal(this.scene);
-          }
+          if (this.isStabilized) openLensModal(this.scene);
         });
       }
 
       if (this.inspectBtn) {
         this.inspectBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          if (this.isStabilized) {
-            openLensModal(this.scene);
-          }
+          if (this.isStabilized) openLensModal(this.scene);
         });
       }
     }
 
-    restartAnimation() {
-      this.isStabilized = false;
-      this.startTime = performance.now();
-      this.targetElevationScale = 1.0;
-
-      this.cardElement.classList.remove('is-stabilized');
-      if (this.inspectBtn) {
-        this.inspectBtn.classList.remove('visible');
-      }
-      if (this.overlayImg) {
-        this.overlayImg.classList.remove('visible');
-      }
-      if (this.statusBadge) {
-        this.statusBadge.classList.remove('stabilized');
-      }
-      if (this.statusText) {
-        this.statusText.textContent = 'Synthesizing 3D Voxels...';
-      }
-      if (this.countdownSpan) {
-        this.countdownSpan.style.display = 'inline-block';
-      }
-    }
-
+    // ---------------------------------------------------------------
+    // Master per-frame entry point.
+    // ---------------------------------------------------------------
     render(now) {
       if (!this.dispCanvas || !this.dispCtx) return;
 
-      const elapsed = now - this.startTime;
-      const remainingMs = Math.max(0, this.durationMs - elapsed);
-
-      // Stage 2: Elevation flattening factor (0 to 1 between 3.8s and 5.0s)
-      let flattenFactor = 0;
-      if (elapsed > 3800) {
-        const p = Math.min(1, (elapsed - 3800) / 1200);
-        flattenFactor = p * p * (3 - 2 * p);
+      switch (this.phase) {
+        case 'looping':
+          this._renderLooping(now);
+          break;
+        case 'flatten':
+          this._renderFlatten(now);
+          break;
+        case 'blackout':
+          this._renderBlackout(now);
+          break;
+        case 'reveal':
+          this._renderReveal(now);
+          break;
+        case 'done':
+          // Static — canvas is no longer redrawn; the <img> overlay is the
+          // visible resting frame. Nothing to do here.
+          break;
       }
+    }
 
-      // Stage 3: Grid dissolution wave progress (0 to 1 between 5.0s and 6.8s)
-      let gridRemovalProgress = 0;
-      if (elapsed > 5000) {
-        gridRemovalProgress = Math.min(1, (elapsed - 5000) / 1600);
+    _renderLooping(now) {
+      if (this.statusText && !this.targetImageReady) {
+        this.statusText.textContent = 'Generating image...';
       }
+      if (this.countdownSpan) this.countdownSpan.textContent = '...';
 
-      // Status UI trigger at 5.0s
-      if (!this.isStabilized) {
-        if (remainingMs > 0) {
-          const secondsLeft = (remainingMs / 1000).toFixed(1);
-          if (this.countdownSpan) {
-            this.countdownSpan.textContent = `${secondsLeft}s`;
-          }
-          if (elapsed > 4000 && this.statusText) {
-            this.statusText.textContent = 'Flattening to 2D pixel grid...';
-          }
+      this.elevationScale = 1.0; // full ambient elevation while looping
+      this._stepPhysics(now, 0 /* flattenFactor */, true /* wavesActive */);
+      this._draw({ blackout: 0, revealMode: false });
+    }
+
+    _renderFlatten(now) {
+      // Smoothly ease elevation scale to 0 — independent, uninterrupted.
+      this.elevationScale += (0 - this.elevationScale) * 0.06;
+
+      // flattenFactor 1 => colors settle fully onto the real-image raw colors
+      this._stepPhysics(now, 1, true /* wavesActive */);
+      this._draw({ blackout: 0, revealMode: false });
+
+      if (this.elevationScale < 0.01 && this._runningMaxElevation < 0.15) {
+        this._beginBlackout();
+      }
+    }
+
+    _renderBlackout(now) {
+      const elapsed = now - this.phaseStart;
+      const dur = 420;
+      const p = Math.min(1, elapsed / dur);
+      this.blackoutAlpha = p * p * (3 - 2 * p); // smoothstep
+
+      this._stepPhysics(now, 1, false /* wavesActive */);
+      this._draw({ blackout: this.blackoutAlpha, revealMode: false });
+
+      if (p >= 1) this._beginReveal();
+    }
+
+    _renderReveal(now) {
+      const elapsed = now - this.phaseStart;
+      let allDone = true;
+
+      const n = this.cellCount;
+      const delay = this.revealDelay;
+      const dur = this.revealDur;
+      const progress = this.revealProgress;
+
+      for (let i = 0; i < n; i++) {
+        const local = elapsed - delay[i];
+        if (local <= 0) {
+          progress[i] = 0;
+          allDone = false;
         } else {
-          this.isStabilized = true;
-          this.cardElement.classList.add('is-stabilized');
-          if (this.inspectBtn) {
-            this.inspectBtn.classList.add('visible');
-          }
-          if (this.overlayImg) {
-            this.overlayImg.classList.add('visible');
-          }
-          if (this.statusBadge) {
-            this.statusBadge.classList.add('stabilized');
-          }
-          if (this.statusText) {
-            this.statusText.textContent = '✓ HD Image Stabilized';
-          }
-          if (this.countdownSpan) {
-            this.countdownSpan.textContent = 'Clean';
+          const p = local / dur[i];
+          if (p < 1) {
+            progress[i] = p * p * (3 - 2 * p);
+            allDone = false;
+          } else {
+            progress[i] = 1;
           }
         }
       }
 
-      // Smooth decay of elevation scale
-      this.targetElevationScale = 1.0 - flattenFactor;
-      this.currentElevationScale += (this.targetElevationScale - this.currentElevationScale) * 0.08;
+      // No elevation, no wave motion during reveal — pixels are flat and
+      // fading in from black, so the physics step only settles color.
+      this._stepPhysics(now, 1, false /* wavesActive */);
+      this._draw({ blackout: 0, revealMode: true });
 
-      const {
-        gridCols,
-        gridRows,
-        maxElevation,
-        elevationSmoothing,
-        gapRatio,
-        backgroundColor,
-        borderColor,
-        borderOpacity,
-      } = this.config;
+      if (allDone) this._finish();
+    }
 
-      const t = now * 0.0016;
+    // Shared per-cell wave/color physics, flat-array version.
+    // flattenFactor blends between the "raw" real-image color (1) and
+    // darkened preview-driven target color (0). wavesActive toggles the
+    // elevation wave computation off during blackout/reveal (elevation is
+    // simply eased to 0), skipping trig work entirely in those phases.
+    _stepPhysics(now, flattenFactor, wavesActive) {
+      const n = this.cellCount;
+      const { maxElevation, elevationSmoothing } = this.config;
+      const t = (now - this.animStart) * 0.0016;
+      const elevScale = this.elevationScale;
 
-      // 1. Calculate kinetic voxel physics & progressive color restoration
-      for (let r = 0; r < gridRows; r++) {
-        for (let c = 0; c < gridCols; c++) {
-          const cell = this.pixelGrid[r]?.[c];
-          if (!cell) continue;
+      const curR = this.curR, curG = this.curG, curB = this.curB;
+      const targetR = this.targetR, targetG = this.targetG, targetB = this.targetB;
+      const rawR = this.rawR, rawG = this.rawG, rawB = this.rawB;
+      const currentElevation = this.currentElevation;
 
-          if (cell.rawR !== undefined) {
-            const desiredR = cell.targetR + (cell.rawR - cell.targetR) * flattenFactor;
-            const desiredG = cell.targetG + (cell.rawG - cell.targetG) * flattenFactor;
-            const desiredB = cell.targetB + (cell.rawB - cell.targetB) * flattenFactor;
-            cell.r += (desiredR - cell.r) * 0.08;
-            cell.g += (desiredG - cell.g) * 0.08;
-            cell.b += (desiredB - cell.b) * 0.08;
+      let runningMax = 0;
+
+      if (wavesActive) {
+        const wavePhase = this.wavePhase, waveFrequency = this.waveFrequency;
+        const normX = this.normX, normY = this.normY, diagHypot = this.diagHypot;
+
+        for (let i = 0; i < n; i++) {
+          // --- color lerp ---
+          if (rawR[i] >= 0) {
+            const dR = targetR[i] + (rawR[i] - targetR[i]) * flattenFactor;
+            const dG = targetG[i] + (rawG[i] - targetG[i]) * flattenFactor;
+            const dB = targetB[i] + (rawB[i] - targetB[i]) * flattenFactor;
+            curR[i] += (dR - curR[i]) * 0.08;
+            curG[i] += (dG - curG[i]) * 0.08;
+            curB[i] += (dB - curB[i]) * 0.08;
           } else {
-            cell.r += (cell.targetR - cell.r) * 0.08;
-            cell.g += (cell.targetG - cell.g) * 0.08;
-            cell.b += (cell.targetB - cell.b) * 0.08;
+            curR[i] += (targetR[i] - curR[i]) * 0.08;
+            curG[i] += (targetG[i] - curG[i]) * 0.08;
+            curB[i] += (targetB[i] - curB[i]) * 0.08;
           }
 
-          const normX = c / gridCols;
-          const normY = r / gridRows;
-
-          const wave1 = Math.sin(normX * 5.2 + t * cell.frequency + cell.phase);
-          const wave2 = Math.cos(normY * 4.8 - t * 0.9 + cell.phase);
-          const wave3 = Math.sin(Math.hypot(normX - 0.5, normY - 0.5) * 8.2 - t * 1.4);
+          // --- elevation wave ---
+          const ph = wavePhase[i];
+          const wave1 = Math.sin(normX[i] * 5.2 + t * waveFrequency[i] + ph);
+          const wave2 = Math.cos(normY[i] * 4.8 - t * 0.9 + ph);
+          const wave3 = Math.sin(diagHypot[i] * 8.2 - t * 1.4);
 
           let elevationFactor = (wave1 + wave2 + wave3) / 2.8;
-          elevationFactor = Math.max(0, elevationFactor);
-          elevationFactor = Math.pow(elevationFactor, 1.4);
+          if (elevationFactor < 0) elevationFactor = 0;
+          // x^1.4 approximated cheaply as x * sqrt(x) * x^-0.1-ish curve is
+          // not worth the complexity here; sqrt-based smoothstep-like curve
+          // (x * sqrt(x)) is close in shape and ~3x cheaper than Math.pow.
+          elevationFactor = elevationFactor * Math.sqrt(elevationFactor);
 
-          const luminance = (cell.r + cell.g + cell.b) / (3 * 255);
-          cell.targetElevation =
-            elevationFactor * maxElevation * (0.6 + luminance * 0.7) * this.currentElevationScale;
+          const luminance = (curR[i] + curG[i] + curB[i]) * 0.0013071895; // /(3*255)
+          const targetElev = elevationFactor * maxElevation * (0.6 + luminance * 0.7) * elevScale;
 
-          cell.currentElevation += (cell.targetElevation - cell.currentElevation) * elevationSmoothing;
+          const ce = currentElevation[i] + (targetElev - currentElevation[i]) * elevationSmoothing;
+          currentElevation[i] = ce;
+          if (ce > runningMax) runningMax = ce;
+        }
+      } else {
+        // Elevation eases straight to 0; no trig, no wave lookup tables touched.
+        for (let i = 0; i < n; i++) {
+          if (rawR[i] >= 0) {
+            const dR = targetR[i] + (rawR[i] - targetR[i]) * flattenFactor;
+            const dG = targetG[i] + (rawG[i] - targetG[i]) * flattenFactor;
+            const dB = targetB[i] + (rawB[i] - targetB[i]) * flattenFactor;
+            curR[i] += (dR - curR[i]) * 0.08;
+            curG[i] += (dG - curG[i]) * 0.08;
+            curB[i] += (dB - curB[i]) * 0.08;
+          } else {
+            curR[i] += (targetR[i] - curR[i]) * 0.08;
+            curG[i] += (targetG[i] - curG[i]) * 0.08;
+            curB[i] += (targetB[i] - curB[i]) * 0.08;
+          }
+
+          const ce = currentElevation[i] * 0.8; // *= (1 - 0.2)
+          currentElevation[i] = ce;
+          if (ce > runningMax) runningMax = ce;
         }
       }
 
-      // 2. Setup Canvas resolution
+      this._runningMaxElevation = runningMax;
+    }
+
+    _recomputeLayout(displayWidth, displayHeight) {
+      const { gridCols, gridRows, gapRatio } = this.config;
+      const cellSize = Math.max(displayWidth / gridCols, displayHeight / gridRows);
+      const gap = cellSize * gapRatio;
+      const gridWidth = cellSize * gridCols;
+      const gridHeight = cellSize * gridRows;
+
+      this._cellSize = cellSize;
+      this._gap = gap;
+      this._offsetX0 = (displayWidth - gridWidth) / 2;
+      this._offsetY0 = (displayHeight - gridHeight) / 2;
+      this._layoutW = displayWidth;
+      this._layoutH = displayHeight;
+    }
+
+    // Single clean draw pass. `opts.blackout` fades the whole scene toward
+    // solid black; `opts.revealMode` masks each cell by its own reveal
+    // progress (0 = hidden/black, 1 = fully visible). Cells are painted once.
+    _draw(opts) {
+      const {
+        gridCols, gridRows, backgroundColor, borderColor, borderOpacity
+      } = this.config;
+
+      const blackout = opts?.blackout || 0;
+      const revealMode = !!opts?.revealMode;
+
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const displayWidth = this.dispCanvas.clientWidth;
       const displayHeight = this.dispCanvas.clientHeight;
 
-      if (
-        this.dispCanvas.width !== Math.floor(displayWidth * dpr) ||
-        this.dispCanvas.height !== Math.floor(displayHeight * dpr)
-      ) {
-        this.dispCanvas.width = Math.floor(displayWidth * dpr);
-        this.dispCanvas.height = Math.floor(displayHeight * dpr);
+      const pixelW = Math.floor(displayWidth * dpr);
+      const pixelH = Math.floor(displayHeight * dpr);
+      if (this.dispCanvas.width !== pixelW || this.dispCanvas.height !== pixelH) {
+        this.dispCanvas.width = pixelW;
+        this.dispCanvas.height = pixelH;
+        this._layoutW = -1; // force layout recompute below
       }
 
-      this.dispCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      this.dispCtx.fillStyle = backgroundColor;
-      this.dispCtx.fillRect(0, 0, displayWidth, displayHeight);
+      const ctx = this.dispCtx;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, displayWidth, displayHeight);
 
-      const cellSize = Math.max(displayWidth / gridCols, displayHeight / gridRows);
-      const baseGap = cellSize * gapRatio;
-      
-      const gridWidth = cellSize * gridCols;
-      const gridHeight = cellSize * gridRows;
-      const offsetXGrid = (displayWidth - gridWidth) / 2;
-      const offsetYGrid = (displayHeight - gridHeight) / 2;
+      if (this._layoutW !== displayWidth || this._layoutH !== displayHeight) {
+        this._recomputeLayout(displayWidth, displayHeight);
+      }
 
-      // 3. Render 3D Voxels / 2D Stabilized Grid / Animated Grid Removal
+      const cellSize = this._cellSize;
+      const gap = this._gap;
+      const cellDraw = cellSize - gap;
+      const offsetX0 = this._offsetX0;
+      const offsetY0 = this._offsetY0;
+
+      const curR = this.curR, curG = this.curG, curB = this.curB;
+      const currentElevation = this.currentElevation;
+      const revealProgress = this.revealProgress;
+
+      const borderR = borderColor.r, borderG = borderColor.g, borderB = borderColor.b;
+
       for (let r = 0; r < gridRows; r++) {
+        const rowOffsetY = offsetY0 + r * cellSize;
+        const rowBase = r * gridCols;
+
         for (let c = 0; c < gridCols; c++) {
-          const cell = this.pixelGrid[r]?.[c];
-          if (!cell) continue;
+          const i = rowBase + c;
 
-          const diagPos = (r / gridRows) * 0.7 + (c / gridCols) * 0.3;
-          const cellDissolve = Math.max(0, Math.min(1, (gridRemovalProgress * 1.5 - diagPos) * 2.5));
+          const cellAlpha = revealMode ? revealProgress[i] : 1;
+          if (cellAlpha <= CELL_HIDDEN_EPS) continue; // fully hidden — skip entirely
 
-          const currentCellGap = baseGap * (1 - cellDissolve);
-          const cellBorderAlpha = borderOpacity * (1 - cellDissolve);
+          const elevation = currentElevation[i];
+          const x = offsetX0 + c * cellSize;
+          const y = rowOffsetY;
 
-          const x = offsetXGrid + c * cellSize;
-          const y = offsetYGrid + r * cellSize;
-          const elevation = cell.currentElevation;
+          if (cellAlpha < 1) ctx.globalAlpha = cellAlpha;
 
-          const offsetX = -elevation * 1.15;
-          const offsetY = -elevation * 1.65;
+          const drawSolid = elevation > ELEVATION_DRAW_EPS;
 
-          // Drop shadow
-          if (elevation > 0.3) {
-            const shadowAlpha = Math.min(0.65, elevation * 0.04) * (1 - flattenFactor * 0.9);
-            this.dispCtx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
-            this.dispCtx.fillRect(
-              x + currentCellGap / 2 + elevation * 1.3,
-              y + currentCellGap / 2 + elevation * 1.9,
-              cellSize - currentCellGap,
-              cellSize - currentCellGap
-            );
+          if (drawSolid) {
+            const offX = -elevation * 1.15;
+            const offY = -elevation * 1.65;
+            const cr = curR[i], cg = curG[i], cb = curB[i];
+
+            // Drop shadow
+            const shadowAlpha = elevation * 0.04;
+            if (shadowAlpha > 0.01) {
+              ctx.fillStyle = shadowAlpha > 0.65
+                ? 'rgba(0,0,0,0.65)'
+                : `rgba(0,0,0,${shadowAlpha})`;
+              ctx.fillRect(
+                x + gap / 2 + elevation * 1.3,
+                y + gap / 2 + elevation * 1.9,
+                cellDraw,
+                cellDraw
+              );
+            }
+
+            // Extruded 3D side bevels — two triangles sharing fill state
+            ctx.fillStyle = `rgb(${Math.max(0, cr - 80) | 0},${Math.max(0, cg - 80) | 0},${Math.max(0, cb - 80) | 0})`;
+            ctx.beginPath();
+            ctx.moveTo(x + cellSize - gap / 2 + offX, y + gap / 2 + offY);
+            ctx.lineTo(x + cellSize - gap / 2, y + gap / 2);
+            ctx.lineTo(x + cellSize - gap / 2, y + cellSize - gap / 2);
+            ctx.lineTo(x + cellSize - gap / 2 + offX, y + cellSize - gap / 2 + offY);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = `rgb(${Math.max(0, cr - 50) | 0},${Math.max(0, cg - 50) | 0},${Math.max(0, cb - 50) | 0})`;
+            ctx.beginPath();
+            ctx.moveTo(x + gap / 2 + offX, y + cellSize - gap / 2 + offY);
+            ctx.lineTo(x + gap / 2, y + cellSize - gap / 2);
+            ctx.lineTo(x + cellSize - gap / 2, y + cellSize - gap / 2);
+            ctx.lineTo(x + cellSize - gap / 2 + offX, y + cellSize - gap / 2 + offY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Top face
+            const brightness = 1 + elevation * 0.05;
+            const fr = Math.min(255, (cr * brightness) | 0);
+            const fg = Math.min(255, (cg * brightness) | 0);
+            const fb = Math.min(255, (cb * brightness) | 0);
+            ctx.fillStyle = `rgb(${fr},${fg},${fb})`;
+            ctx.fillRect(x + gap / 2 + offX, y + gap / 2 + offY, cellDraw, cellDraw);
+
+            const borderAlpha = borderOpacity + elevation * 0.008;
+            if (borderAlpha > BORDER_ALPHA_EPS) {
+              ctx.strokeStyle = `rgba(${borderR},${borderG},${borderB},${borderAlpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.strokeRect(x + gap / 2 + offX, y + gap / 2 + offY, cellDraw, cellDraw);
+            }
+          } else {
+            // Flat/near-flat cell: single fillRect, no path construction,
+            // no shadow, no bevels — this is the common case once the grid
+            // has calmed (flatten/blackout/reveal phases) and a large
+            // fraction of frames while looping too.
+            const fr = curR[i] | 0, fg = curG[i] | 0, fb = curB[i] | 0;
+            ctx.fillStyle = `rgb(${fr},${fg},${fb})`;
+            ctx.fillRect(x + gap / 2, y + gap / 2, cellDraw, cellDraw);
+
+            if (borderOpacity > BORDER_ALPHA_EPS) {
+              ctx.strokeStyle = `rgba(${borderR},${borderG},${borderB},${borderOpacity})`;
+              ctx.lineWidth = 0.6;
+              ctx.strokeRect(x + gap / 2, y + gap / 2, cellDraw, cellDraw);
+            }
           }
 
-          // Extruded 3D Side Bevels
-          if (elevation > 0.3) {
-            // Right Side Face
-            this.dispCtx.fillStyle = `rgb(${Math.max(0, cell.r - 80)}, ${Math.max(0, cell.g - 80)}, ${Math.max(0, cell.b - 80)})`;
-            this.dispCtx.beginPath();
-            this.dispCtx.moveTo(x + cellSize - currentCellGap / 2 + offsetX, y + currentCellGap / 2 + offsetY);
-            this.dispCtx.lineTo(x + cellSize - currentCellGap / 2, y + currentCellGap / 2);
-            this.dispCtx.lineTo(x + cellSize - currentCellGap / 2, y + cellSize - currentCellGap / 2);
-            this.dispCtx.lineTo(x + cellSize - currentCellGap / 2 + offsetX, y + cellSize - currentCellGap / 2 + offsetY);
-            this.dispCtx.closePath();
-            this.dispCtx.fill();
-
-            // Bottom Side Face
-            this.dispCtx.fillStyle = `rgb(${Math.max(0, cell.r - 50)}, ${Math.max(0, cell.g - 50)}, ${Math.max(0, cell.b - 50)})`;
-            this.dispCtx.beginPath();
-            this.dispCtx.moveTo(x + currentCellGap / 2 + offsetX, y + cellSize - currentCellGap / 2 + offsetY);
-            this.dispCtx.lineTo(x + currentCellGap / 2, y + cellSize - currentCellGap / 2);
-            this.dispCtx.lineTo(x + cellSize - currentCellGap / 2, y + cellSize - currentCellGap / 2);
-            this.dispCtx.lineTo(x + cellSize - currentCellGap / 2 + offsetX, y + cellSize - currentCellGap / 2 + offsetY);
-            this.dispCtx.closePath();
-            this.dispCtx.fill();
-          }
-
-          // Top Face / Flat 2D Pixel Block
-          const brightness = 1 + elevation * 0.05;
-          const finalR = Math.min(255, Math.round(cell.r * brightness));
-          const finalG = Math.min(255, Math.round(cell.g * brightness));
-          const finalB = Math.min(255, Math.round(cell.b * brightness));
-
-          this.dispCtx.fillStyle = `rgb(${finalR}, ${finalG}, ${finalB})`;
-          const weldPadding = cellDissolve > 0.8 ? 0.6 : 0;
-          this.dispCtx.fillRect(
-            x + currentCellGap / 2 + offsetX - weldPadding / 2,
-            y + currentCellGap / 2 + offsetY - weldPadding / 2,
-            cellSize - currentCellGap + weldPadding,
-            cellSize - currentCellGap + weldPadding
-          );
-
-          // Grid Top Stroke Line
-          if (cellBorderAlpha > 0.005) {
-            this.dispCtx.strokeStyle = `rgba(${borderColor.r}, ${borderColor.g}, ${borderColor.b}, ${cellBorderAlpha + elevation * 0.008})`;
-            this.dispCtx.lineWidth = 0.6;
-            this.dispCtx.strokeRect(
-              x + currentCellGap / 2 + offsetX,
-              y + currentCellGap / 2 + offsetY,
-              cellSize - currentCellGap,
-              cellSize - currentCellGap
-            );
-          }
+          if (cellAlpha < 1) ctx.globalAlpha = 1;
         }
+      }
+
+      // Blackout is drawn ONCE, on top of everything, as the final step —
+      // never combined with revealMode (they are mutually exclusive phases).
+      if (blackout > 0.001) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = `rgba(3, 3, 3, ${blackout})`;
+        ctx.fillRect(0, 0, displayWidth, displayHeight);
       }
     }
   }
 
-  // --- Master 60FPS Render Loop ---
+  // --- Master 60FPS Render Loop (single loop for all cards) ---
   let isLoopRunning = false;
   function masterLoop(now) {
     activeEngines.forEach((eng) => eng.render(now));
@@ -464,8 +782,8 @@
   }
 
   // --- Lightbox Magnifying Lens Modal Controller ---
-  const LENS_SIZE = 170; // Compact, refined diameter in px of circular magnifier
-  const ZOOM_SCALE = 1.8; // Optical magnification factor
+  const LENS_SIZE = 170;
+  const ZOOM_SCALE = 1.8;
 
   function getModalElements() {
     return {
@@ -512,12 +830,8 @@
       dom.backdrop.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
-    if (dom.zoomLayer) {
-      dom.zoomLayer.classList.remove('active');
-    }
-    if (dom.ring) {
-      dom.ring.classList.remove('active');
-    }
+    if (dom.zoomLayer) dom.zoomLayer.classList.remove('active');
+    if (dom.ring) dom.ring.classList.remove('active');
   }
 
   function handleLensMove(e) {
@@ -573,16 +887,12 @@
 
     if (dom.backdrop) {
       dom.backdrop.addEventListener('click', (e) => {
-        if (e.target === dom.backdrop) {
-          closeLensModal();
-        }
+        if (e.target === dom.backdrop) closeLensModal();
       });
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeLensModal();
-      }
+      if (e.key === 'Escape') closeLensModal();
     });
   }
 
@@ -593,8 +903,7 @@
 
   // Export to global scope
   window.AURAPixelGrid = {
-    SCENE_LIBRARY,
-    matchSceneFromPrompt,
+    IMAGES,
     PixelEngineInstance,
     activeEngines,
     startMasterLoop,

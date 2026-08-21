@@ -4,87 +4,38 @@
   const KINETIC_PROMPTS = [
     {
       id: 'card-1',
-      thumb: '/images/earth.jpeg',
+      thumb: 'images/earth.jpeg',
       prompt: 'Synthesize a 3D isometric pixel visualization of Nordic structural minimalism, tactile timber joinery, and natural daylight.',
       pos: { top: '10%', left: '7%' },
       delay: '0s'
     },
     {
       id: 'card-2',
-      thumb: '/images/rich_house.png',
+      thumb: 'images/rich_house.png',
       prompt: 'Explore the culinary choreography of Copenhagen fine dining: seasonal foraging, ceramic materiality, and ambient acoustic pacing.',
       pos: { top: '34%', right: '6%' },
       delay: '-4s'
     },
     {
       id: 'card-3',
-      thumb: '/images/space.png',
+      thumb: 'images/space.png',
       prompt: 'Make an image of alpine sunset peak with glowing mountain voxels and golden twilight.',
       pos: { bottom: '12%', left: '10%' },
       delay: '-8s'
     },
     {
       id: 'card-4',
-      thumb: '/images/trees_nature.png',
+      thumb: 'images/trees_nature.png',
       prompt: 'Synthesize a critique examining how artificial neural models perceive spatial rhythm, negative space, and human aesthetic balance.',
       pos: { top: '44%', left: '4%' },
       delay: '-12s'
     },
     {
       id: 'card-5',
-      thumb: '/images/waterfall.png',
+      thumb: 'images/waterfall.png',
       prompt: 'Generate an image of emerald aurora night sky across arctic fjords.',
       pos: { bottom: '14%', right: '9%' },
       delay: '-6s'
-    }
-  ];
-
-  // Default Sessions
-  const DEFAULT_SESSIONS = [
-    {
-      id: 'session-sample-1',
-      title: 'Nordic Architectural Discourse & Light',
-      createdAt: Date.now() - 3600 * 1000 * 2,
-      messages: [
-        {
-          role: 'user',
-          content: 'Explore the architectural philosophy of Nordic modernism and tactile materiality.'
-        },
-        {
-          role: 'assistant',
-          content: 'Nordic architectural modernism rests upon the subtle interplay of natural daylight, organic timber grain, and deliberate spatial silence. Rather than imposing monumental geometry, the form yields to landscape, allowing low-angled Scandinavian sunbeams to sculpt atmospheric warmth within restrained minimalist volumes.'
-        }
-      ]
-    },
-    {
-      id: 'session-sample-2',
-      title: 'Tactile Typography & Serif Proportions',
-      createdAt: Date.now() - 3600 * 1000 * 24,
-      messages: [
-        {
-          role: 'user',
-          content: 'How do high-contrast display serifs maintain baseline rhythm in editorial design?'
-        },
-        {
-          role: 'assistant',
-          content: 'In refined editorial typesetting, high-contrast serifs achieve visual tension through mathematical stroke modulation. Optical size adjustments, generous leading ratios (1.5–1.7), and intentional tracking ensure that headline rhythm feels sculpted and commanding without sacrificing legibility.'
-        }
-      ]
-    },
-    {
-      id: 'session-sample-3',
-      title: 'Kinetic UI Physics & Fluid States',
-      createdAt: Date.now() - 3600 * 1000 * 48,
-      messages: [
-        {
-          role: 'user',
-          content: 'Draft principles for micro-interactions with cubic-bezier easing.'
-        },
-        {
-          role: 'assistant',
-          content: 'Micro-interactions should feel tactile and mass-aware. Utilizing asymmetric cubic-bezier curves like `cubic-bezier(0.2, 0, 0, 1)` yields an immediate mechanical response followed by an elegant, protracted deceleration that mimics physical inertia.'
-        }
-      ]
     }
   ];
 
@@ -94,12 +45,8 @@
     if (rawSessions) {
       storedSessions = JSON.parse(rawSessions);
     }
-    if (!storedSessions || storedSessions.length === 0) {
-      storedSessions = DEFAULT_SESSIONS;
-      localStorage.setItem('aura_editorial_sessions', JSON.stringify(DEFAULT_SESSIONS));
-    }
   } catch (e) {
-    storedSessions = DEFAULT_SESSIONS;
+    storedSessions = [];
   }
 
   const state = {
@@ -127,7 +74,6 @@
     sidebarNewChatBtn: document.getElementById('sidebarNewChatBtn'),
     sidebarSearchInput: document.getElementById('sidebarSearchInput'),
     sidebarSearchRailBtn: document.getElementById('railSearchIconBtn') || document.getElementById('sidebarSearchRailBtn'),
-    sidebarInspirationLink: document.getElementById('sidebarGalleryBtn') || document.getElementById('sidebarInspirationLink'),
     helpButtonLink: document.getElementById('helpModalBtn'),
     sidebarNotebooksLink: document.getElementById('sidebarNotebooksBtn') || document.getElementById('sidebarNotebooksLink'),
     sidebarChatCount: document.getElementById('sidebarHistoryCount') || document.getElementById('sidebarChatCount'),
@@ -168,18 +114,21 @@
     toastContainer: document.getElementById('toastContainer')
   };
 
-  // Initializer
   function init() {
     setupSidebarState();
     renderKineticCards();
     renderSidebarChats();
     setupCursor();
-    setupLiveClock();
     setupListeners();
     applyPreferences();
   }
 
-  // Sidebar Layout Management (Expanded vs Collapsed Rail)
+  let web_api = null;
+  window.addEventListener("pywebviewready", () => {
+      web_api = pywebview.api;
+      console.log("Python API ready");
+  });
+
   function setupSidebarState() {
     const savedState = localStorage.getItem('aura_sidebar_state') || 'expanded';
     if (window.innerWidth > 768) {
@@ -217,7 +166,6 @@
     DOM.appContainer?.classList.remove('sidebar-mobile-open');
   }
 
-  // Render Floating Kinetic Inspiration Cards
   function renderKineticCards() {
     if (!DOM.kineticCanvas) return;
     DOM.kineticCanvas.innerHTML = '';
@@ -291,19 +239,6 @@
     });
   }
 
-  // Live Clock
-  function setupLiveClock() {
-    function tick() {
-      if (DOM.liveClock) {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        DOM.liveClock.innerText = timeStr;
-      }
-    }
-    tick();
-    setInterval(tick, 1000);
-  }
-
   // Attach Event Listeners
   function setupListeners() {
     // Curated Inquiry Pills
@@ -360,19 +295,12 @@
       }
     });
 
-    // Sidebar Quick Nav
-    DOM.sidebarInspirationLink?.addEventListener('click', () => {
-      returnToHero();
-      if (window.innerWidth <= 768) closeMobileSidebar();
-    });
-
     DOM.sidebarNotebooksLink?.addEventListener('click', () => {
       startConversation('Draft an architectural and sensory design journal entry focusing on light, materiality, and minimalist Nordic forms.', 'Architectural Notebook');
       if (window.innerWidth <= 768) closeMobileSidebar();
     });
 
     DOM.sidebarSettingsBtn?.addEventListener('click', openSettings);
-    DOM.sidebarInspirationLink?.addEventListener('click', openImages);
     DOM.helpButtonLink?.addEventListener('click', openHelp);
 
     // Composer Input Events
@@ -455,7 +383,6 @@
     });
   }
 
-  // Switch to Active Conversation Mode
   function startConversation(promptText, title = 'Inquiry') {
     state.isHeroActive = false;
 
@@ -524,7 +451,7 @@
     const lower = String(text || '').toLowerCase().trim();
     const imageKeywords = [
       'make an image',
-      'make image',
+      'Make image',
       'generate an image',
       'generate image',
       'create an image',
@@ -585,18 +512,8 @@
   }
 
   // Render 3D Pixel Grid Response Card
-  function render3DPixelGridCardResponse(userPrompt) {
+  async function render3DPixelGridCardResponse(userPrompt) {
     state.isStreaming = true;
-
-    // Pick scene using standalone Pixel Grid engine
-    const scene = window.AURAPixelGrid?.matchSceneFromPrompt
-      ? window.AURAPixelGrid.matchSceneFromPrompt(userPrompt)
-      : {
-          id: 'alpine',
-          name: 'Alpine Sunset Peak',
-          url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-          fallbackColors: ['#1e3a5f', '#f97316', '#e0e7ff', '#1f2937']
-        };
 
     const cardId = `pixelCard_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const aiMsgId = 'msg_' + Date.now();
@@ -604,11 +521,11 @@
     const aiMsg = {
       id: aiMsgId,
       role: 'assistant',
-      isImageCard: true,
-      scene: scene,
       userPrompt: userPrompt,
-      content: `[Synthesized 3D Isometric Pixel Grid: ${scene.name}]`,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      time: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
     };
 
     state.messages.push(aiMsg);
@@ -619,16 +536,21 @@
 
     row.innerHTML = `
       <div class="msg-avatar">AURA</div>
+
       <div class="msg-column" style="flex:1;">
         <div class="msg-bubble pixel-message-bubble">
-          <!-- 3D Pixel Grid Card -->
+
           <article class="pixel-gen-card" id="${cardId}">
-            <div class="card-canvas-viewport" title="Click to inspect with Magnifying Lens when stabilized">
+            <div
+              class="card-canvas-viewport"
+              title="Click to inspect with Magnifying Lens when stabilized"
+            >
               <canvas class="pixel-canvas-display"></canvas>
               <canvas class="pixel-canvas-proc"></canvas>
-              <img class="clear-image-overlay" alt="${escapeHtml(scene.name)}" />
+              <img class="clear-image-overlay" alt="Clear Image" />
             </div>
           </article>
+
         </div>
       </div>
     `;
@@ -636,15 +558,58 @@
     DOM.messagesStream?.appendChild(row);
     scrollToStreamBottom();
 
-    // Mount engine for this card
     const cardElement = document.getElementById(cardId);
-    if (cardElement && window.AURAPixelGrid?.PixelEngineInstance) {
-      const engine = new window.AURAPixelGrid.PixelEngineInstance(cardElement, scene, userPrompt);
+
+    let engine = null;
+
+    const previewUrls = (window.AURAPixelGrid?.IMAGES || []).map((s) => s.url);
+    const seedScene = { url: previewUrls[0] || '', name: 'Preview' };
+
+    if (
+      cardElement &&
+      window.AURAPixelGrid?.PixelEngineInstance
+    ) {
+      engine = new window.AURAPixelGrid.PixelEngineInstance(
+        cardElement,
+        seedScene,
+        userPrompt
+      );
+
       if (window.AURAPixelGrid.activeEngines) {
         window.AURAPixelGrid.activeEngines.push(engine);
       }
+
       if (window.AURAPixelGrid.startMasterLoop) {
         window.AURAPixelGrid.startMasterLoop();
+      }
+
+      // Continuously cycle preview images every 5s while gen_image() is
+      // pending. This only smoothly updates pixel color TARGETS — it never
+      // touches startTime/isStabilized, so the 3D animation timeline is
+      // never restarted or reset.
+      if (previewUrls.length > 0) {
+        engine.startPreviewCycle(previewUrls, 5000);
+      }
+    }
+
+    try {
+      const image_response = await web_api.gen_image(userPrompt);
+      console.log(image_response);
+      const image_path = image_response.result.response;
+      console.log("Generated image:", image_path);
+
+      if (engine) {
+        // setTargetImage() internally stops the preview cycle immediately,
+        // sets the new pixel color targets, and kicks off the finalize
+        // sequence (flatten -> fade to black -> staggered reveal) without
+        // restarting the existing animation timeline.
+        engine.setTargetImage(image_path);
+      }
+
+    } catch (error) {
+      console.error("Image generation failed:", error);
+      if (engine) {
+        engine.stopPreviewCycle();
       }
     }
 
@@ -735,7 +700,7 @@
         <div class="msg-column" style="flex:1;">
           <div class="msg-bubble" id="body_${msg.id}">
             ${isPlaceholder ? `
-  <span class="thinking-shimmer-text" id="thinkingText_${msg.id}">Thinking...</span>
+  <span class="thinking-shimmer-text" id="thinkingText_${msg.id}">${startThinkingCycle(msg.id)}.</span>
 ` : renderMarkdown(msg.content)}
           </div>
           <div class="ai-actions-shelf" id="actions_${msg.id}" style="${isPlaceholder ? 'display:none;' : ''}">
@@ -764,34 +729,43 @@
     const shelfEl = document.getElementById(`actions_${msgObj.id}`);
 
     try {
-      const fullSystemDirective = `${state.systemPrompt}\nContext constraints: Maintain serene editorial tone, structured headings, clean code syntax, and thoughtful clarity. Temperature: ${state.temperature}.`;
-      const encodedPrompt = encodeURIComponent(`${fullSystemDirective}\n\nUser: ${userPrompt}`);
-      const modelParam = state.activeModel.includes('gemini') ? 'gemini' : 'openai';
-      const endpoint = `https://text.pollinations.ai/${encodedPrompt}?model=${modelParam}&system=${encodeURIComponent(fullSystemDirective)}`;
-
-      const response = await fetch(endpoint);
-      if (!response.ok) throw new Error('Stream connection interrupted');
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let accumulated = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        accumulated += decoder.decode(value, { stream: true });
-        if (bodyEl) {
-          bodyEl.innerHTML = renderMarkdown(accumulated);
-        }
-        scrollToStreamBottom();
+      const result = await web_api.chat(userPrompt);
+      const response = result.result;
+      if (!response?.response) {
+        throw new Error(
+          `Model failed: ${response?.error ?? "unknown error"}`
+        );
       }
+      const text = response.response;
+      let index = 0;
+      let accumulated = "";
+      function reveal() {
+          if (index >= text.length) return;
+
+          const chunkSize = Math.floor(Math.random() * 3) + 2;
+
+          accumulated += text.slice(index, index + chunkSize);
+          index += chunkSize;
+
+          if (bodyEl) {
+              bodyEl.innerHTML = renderMarkdown(accumulated);
+          }
+
+          scrollToStreamBottom();
+
+          setTimeout(reveal, 20);
+      }
+
+      reveal();
+
+      scrollToStreamBottom();
 
       msgObj.content = accumulated;
       if (shelfEl) shelfEl.style.display = 'flex';
 
     } catch (err) {
       console.warn('Fallback synthesis generator:', err);
-      const fallbackProse = `### Architectural & Conceptual Synthesis\n\nRegarding *"${userPrompt}"*:\n\n1. **Materiality & Negative Space**: Prioritize natural tactile materials with unadorned surfaces. Let negative space frame the essential intent.\n2. **Rhythmic Clarity**: Create harmonious proportions between typography and interactive components.\n3. **Modular Foundation**:\n\n\`\`\`typescript\n// Architectural Interface Design Token\nexport interface StudioDesignToken {\n  fontFamily: 'Cormorant Garamond' | 'Plus Jakarta Sans';\n  palette: {\n    canvas: '#f6f4ee';\n    ink: '#181715';\n    accent: '#b38b4d';\n  };\n  spacingScale: (step: number) => string;\n}\n\`\`\`\n\n> "Simplicity is not the lack of clutter, that's a consequence of simplicity. Simplicity somehow essentially describes the purpose and place of an object and its components."\n\n*Would you like to refine the structural specifications or explore further?*`;
+      const fallbackProse = 'Unable to connect backend pywebview. IF you are on latest version report bug on github. # https://github.com/TIScare0/gp_smartdesk/issues/new'
 
       let charIndex = 0;
       const streamTimer = setInterval(() => {
@@ -812,6 +786,36 @@
       persistSession();
     }
   }
+
+    function initTextGenerateEffect(text, container, stagger = 0.12) {
+      if (!container) return null;
+      container.innerHTML = '';
+      const words = text.trim().split(/\s+/);
+      words.forEach((word) => {
+        const span = document.createElement('span');
+        span.className = 'tg-word';
+        span.textContent = word;
+        const cleanWord = word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        container.appendChild(span);
+        container.appendChild(document.createTextNode(' '));
+      });
+
+      const elements = container.querySelectorAll('.tg-word');
+      function play() {
+        elements.forEach((el, index) => {
+          el.classList.remove('tg-visible');
+          el.style.transitionDelay = `${index * stagger}s`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              el.classList.add('tg-visible');
+            });
+          });
+        });
+      }
+
+      play();
+      return { play };
+    }
 
   // Markdown Parser
   function renderMarkdown(raw) {
@@ -1162,12 +1166,6 @@
       if (DOM.settingsModalBackdrop) {
           window.location.href = 'pages/settings.html';
       }
-  }
-
-  function openImages() {
-    if (DOM.sidebarInspirationLink) {
-      window.location.href = 'pages/images.html'
-    }
   }
 
   function openHelp() {

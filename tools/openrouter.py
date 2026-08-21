@@ -19,15 +19,22 @@ class OpenRouter:
             env_item('OPENROUTER_API_KEY'),
             timeout_ms=30000
         )
+        self.system_prompt = ''
 
     def txt2txt(self, prompt):
         try:
             data = self.client.chat.send(
                 model=self.model,
-                messages=[{
-                    'role': 'user',
-                    'content': prompt
-                }]
+                messages=[
+                    {
+                        'role': 'user',
+                        'content': prompt
+                    },
+                    {
+                        'role': 'system',
+                        'content': self.system_prompt
+                    }
+                ],
             )
             return {
                 'status': True,

@@ -21,15 +21,22 @@ class Nvidia:
             api_key=env_item('NVIDIA_API_KEY'),
             base_url='https://integrate.api.nvidia.com/v1'
         )
+        self.system_prompt = ''
 
     def txt2txt(self, prompt):
         try:
             data = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{
-                    'role': 'user',
-                    'content': prompt
-                }],
+                messages=[
+                    {
+                        'role': 'user',
+                        'content': prompt
+                    },
+                    {
+                        'role': 'system',
+                        'content': self.system_prompt
+                    }
+                ],
                 stream=False,
                 temperature=1,
                 top_p=0.95,

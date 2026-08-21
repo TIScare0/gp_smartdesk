@@ -1,0 +1,343 @@
+/* ==========================================================================
+   AURA — Download Progress Modal (single card, blurred backdrop)
+   Matches the lens-modal-backdrop pattern already used in style.css
+   ========================================================================== */
+
+.dc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(18, 17, 16, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dc-modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------- Card ---------- */
+.dc-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-popover);
+  padding: 20px 22px 18px;
+  transform: scale(0.94) translateY(10px);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dc-modal-backdrop.active .dc-card {
+  transform: scale(1) translateY(0);
+}
+
+/* ---------- Header row ---------- */
+.dc-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dc-file-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-subtle);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.dc-file-icon.dc-icon-complete {
+  background: rgba(21, 128, 61, 0.12);
+  color: var(--accent-emerald);
+}
+
+.dc-file-icon.dc-icon-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.dc-file-icon.dc-icon-paused {
+  background: var(--accent-glow);
+  color: var(--accent-gold);
+}
+
+.dc-header-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dc-file-name {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dc-file-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dc-icon-btn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dc-icon-btn:hover {
+  background: var(--bg-surface-subtle);
+  border-color: var(--border-hairline);
+  color: var(--text-main);
+}
+
+/* ---------- Progress bar ---------- */
+.dc-progress-track {
+  width: 100%;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.dc-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--accent-gold);
+  position: relative;
+  transition: width 0.3s var(--ease-editorial), background 0.25s ease;
+  overflow: hidden;
+}
+
+/* Shimmer sweep — only while actively downloading */
+.dc-card[data-state="downloading"] .dc-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: dcShimmerSweep 1.6s linear infinite;
+}
+
+@keyframes dcShimmerSweep {
+  100% { transform: translateX(100%); }
+}
+
+.dc-card[data-state="complete"] .dc-progress-fill {
+  background: var(--accent-emerald);
+}
+
+.dc-card[data-state="error"] .dc-progress-fill {
+  background: #ef4444;
+}
+
+.dc-card[data-state="paused"] .dc-progress-fill {
+  background: var(--text-ghost);
+}
+
+/* ---------- Meta rows ---------- */
+.dc-progress-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dc-status-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.dc-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  animation: dcPulseDot 1.3s ease-in-out infinite;
+}
+
+.dc-card[data-state="paused"] .dc-status-dot {
+  background: var(--text-ghost);
+  animation: none;
+}
+
+.dc-card[data-state="complete"] .dc-status-dot {
+  background: var(--accent-emerald);
+  animation: none;
+}
+
+.dc-card[data-state="error"] .dc-status-dot {
+  background: #ef4444;
+  animation: none;
+}
+
+@keyframes dcPulseDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.dc-card[data-state="complete"] .dc-status-text {
+  color: var(--accent-emerald);
+}
+
+.dc-card[data-state="error"] .dc-status-text {
+  color: #ef4444;
+}
+
+.dc-progress-stats {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-subtle);
+}
+
+/* ---------- Footer row: speed/eta + controls ---------- */
+.dc-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.dc-speed-eta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-ghost);
+  white-space: nowrap;
+}
+
+.dc-meta-dot {
+  color: var(--border-medium);
+}
+
+.dc-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.dc-control-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dc-control-btn:hover {
+  border-color: var(--accent-gold);
+  background: var(--accent-glow);
+  color: var(--accent-gold);
+}
+
+.dc-cancel-btn:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Hide controls entirely once complete or errored — replaced by a single action */
+.dc-card[data-state="complete"] .dc-controls,
+.dc-card[data-state="error"] .dc-controls {
+  display: none;
+}
+
+.dc-footer-row .dc-primary-action-btn {
+  display: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.dc-card[data-state="complete"] .dc-primary-action-btn.dc-action-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--accent-emerald);
+  color: #ffffff;
+}
+
+.dc-card[data-state="error"] .dc-primary-action-btn.dc-action-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .dc-footer-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .dc-controls {
+    justify-content: flex-end;
+  }
+}

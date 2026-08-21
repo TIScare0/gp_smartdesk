@@ -1,51 +1,20 @@
 import webview
+from tools import Tools
+import platform
+from config import update_env_item
 
-from tools import Model
-
-
-class Main:
-    def __init__(self) -> None:
-        self.model = Model()
-
-    def _port_to_js(self, func):
-        return func
-
-    def _funcs(self):
-        return {
-            name: self._port_to_js(getattr(self, name))
-            for name in (
-                "hello"
-            )
-        }
-
-    def hello(self, msg):
-        print(f'printef {msg}')
-        return True
-
-class API:
-    def __init__(self) -> None:
-        self.model = Model()
-        self.func_names = set()
-
-    def _port_to_js(self, func):
-        return func
-
-    def _funcs(self):
-        return {name: self._port_to_js(getattr(self, name)) for name in self.func_names}
-
-    def _add_func(self, name):
-        self.func_names.add(name)
-
-    def main(self):
-        self._add_func('avaliable_models')
-        
 if __name__ == "__main__":
-    api = Main()
-
+    if platform.system() == "Linux":
+        update_env_item("QT_QPA_PLATFORM", "xcb")
+        update_env_item("QTWEBENGINE_CHROMIUM_FLAGS", "--use-gl=desktop --enable-gpu-rasterization")
     window = webview.create_window(
         "GP SmartDesk",
-        "index.html",
-        js_api=api._funcs(),
+        "src/index.html",
+        js_api=Tools(),
+        height=1080,
+        width=1920,
     )
-
-    webview.start()
+    gui = 'qt'
+    if platform.system() == 'Windows':
+        gui = 'edgechromium'
+    webview.start(gui=gui, debug=True)
