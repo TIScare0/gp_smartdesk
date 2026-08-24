@@ -1,4 +1,7 @@
+from pathlib import Path
 import json
+import uuid
+from urllib.parse import quote
 
 KNOWN_EXTENSIONS = {
     'jpg',
@@ -53,3 +56,12 @@ def determine_ext(url, default_ext: str | None = 'unknown_video'):
         return guess
 
     return default_ext
+
+def random_uuid() -> str:
+    return str(uuid.uuid4())
+
+def file_url(path: Path) -> str:
+    return "/__file__/" + quote(
+        str(path).lstrip("/"),
+        safe="/",
+    )

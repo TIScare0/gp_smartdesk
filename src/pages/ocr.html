@@ -1,48 +1,223 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GTU Paper Solver — AURA</title>
-  <link href="../fonts/jet_brain.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/gtu_paper.css" />
-</head>
-<body class="light-theme">
-
-  <div class="ambient-backdrop">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-noise"></div>
-  </div>
-
-  <div class="gtu-paper-shell">
-
-    <header class="gtu-paper-topbar">
-      <a href="tools.html" class="gtu-paper-back-btn" aria-label="Back to AURA">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>Tools</span>
-      </a>
-      <span class="gtu-paper-topbar-label">OCR</span>
-    </header>
-
-  </div>
-
-  <div id="toastContainer" class="toast-hub"></div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        applyTheme();
-    });
-
-    function applyTheme() {
-      if (localStorage.getItem('aura_theme_mode') === 'dark') {
-        document.body.classList.add('dark-theme');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OCR — AURA</title>
+    <link href="../fonts/jet_brain.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/ocr.css" />
+  </head>
+  <body class="light-theme">
+    <script>
+      if (localStorage.getItem("aura_theme_mode") === "dark") {
+        document.body.classList.remove("light-theme");
+        document.body.classList.add("dark-theme");
       }
-    }
-  </script>
-</body>
+    </script>
+
+    <div class="ambient-backdrop">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+      <div class="ambient-noise"></div>
+    </div>
+
+    <div class="ocr-shell">
+      <header class="ocr-topbar">
+        <a href="tools.html" class="ocr-back-btn" aria-label="Back to Tools">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Tools</span>
+        </a>
+        <span class="ocr-topbar-label">OCR</span>
+      </header>
+
+      <main class="ocr-content">
+        <section class="ocr-hero">
+          <span class="ocr-eyebrow">TEXT EXTRACTION</span>
+          <h1>
+            Turn images into <span class="serif-italic">editable text.</span>
+          </h1>
+          <p>
+            Upload a photo, scan, or screenshot — AURA reads the text and hands
+            it back to you, clean and ready to use.
+          </p>
+        </section>
+
+        <!-- ===================== THE BIG CARD ===================== -->
+        <div class="ocr-card" id="ocrCard" data-state="idle">
+          <!-- STATE: idle / upload -->
+          <div class="ocr-panel ocr-panel-upload" id="ocrPanelUpload">
+            <label class="ocr-dropzone" id="ocrDropzone" for="ocrFileInput">
+              <input type="file" id="ocrFileInput" accept="image/*" hidden />
+
+              <div class="ocr-dropzone-icon">
+                <svg
+                  width="34"
+                  height="34"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+
+              <span class="ocr-dropzone-title"
+                >Drop an image here, or click to browse</span
+              >
+              <span class="ocr-dropzone-hint"
+                >Supports JPG, PNG, WEBP · up to 15 MB</span
+              >
+            </label>
+          </div>
+
+          <!-- STATE: preview before extraction -->
+          <div class="ocr-panel ocr-panel-preview" id="ocrPanelPreview">
+            <div class="ocr-preview-image-wrap">
+              <img id="ocrPreviewImg" alt="Uploaded image" />
+              <button
+                class="ocr-remove-image-btn"
+                id="ocrRemoveImageBtn"
+                title="Remove image"
+                aria-label="Remove image"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="ocr-preview-meta">
+              <span class="ocr-preview-filename" id="ocrPreviewFilename"
+                >photo.jpg</span
+              >
+              <span class="ocr-preview-size" id="ocrPreviewSize">2.4 MB</span>
+            </div>
+            <button class="ocr-extract-btn" id="ocrExtractBtn">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 11l3 3L22 4"></path>
+                <path
+                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                ></path>
+              </svg>
+              Extract text
+            </button>
+          </div>
+
+          <!-- STATE: extracting (fake progress) -->
+          <div class="ocr-panel ocr-panel-extracting" id="ocrPanelExtracting">
+            <div class="ocr-scan-visual">
+              <img id="ocrScanImg" alt="Scanning" />
+              <div class="ocr-scan-line"></div>
+            </div>
+            <span class="ocr-extracting-label" id="ocrExtractingLabel"
+              >Reading image...</span
+            >
+            <div class="ocr-extracting-track">
+              <div class="ocr-extracting-fill" id="ocrExtractingFill"></div>
+            </div>
+          </div>
+
+          <!-- STATE: result -->
+          <div class="ocr-panel ocr-panel-result" id="ocrPanelResult">
+            <div class="ocr-result-header">
+              <span class="ocr-result-title">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M20 6L9 17l-5-5"></path>
+                </svg>
+                Text extracted
+              </span>
+              <button class="ocr-copy-btn" id="ocrCopyBtn">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  ></path>
+                </svg>
+                <span id="ocrCopyLabel">Copy</span>
+              </button>
+            </div>
+
+            <textarea
+              class="ocr-result-text"
+              id="ocrResultText"
+              spellcheck="false"
+            ></textarea>
+
+            <div class="ocr-result-footer">
+              <span class="ocr-result-meta" id="ocrResultMeta"
+                >142 words · 98% confidence</span
+              >
+              <div class="ocr-result-actions">
+                <button class="ocr-secondary-btn" id="ocrNewImageBtn">
+                  Try another image
+                </button>
+                <button class="ocr-download-btn" id="ocrDownloadBtn">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download .txt
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="toastContainer" class="toast-hub"></div>
+    
+    <script src="../js/webview.js"></script>
+    <script src="../js/ocr.js"></script>
+  </body>
 </html>

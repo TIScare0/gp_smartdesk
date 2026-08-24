@@ -1,0 +1,485 @@
+/* ==========================================================================
+   AURA — OCR Tool
+   Extends the editorial design tokens defined in style.css
+   ========================================================================== */
+
+html, body {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+}
+
+.ocr-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+/* ---------- Top bar ---------- */
+.ocr-topbar {
+  height: 60px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.ocr-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px 6px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.ocr-back-btn:hover {
+  background: var(--bg-surface-subtle);
+}
+
+.ocr-topbar-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding-left: 20px;
+  border-left: 1px solid var(--border-hairline);
+}
+
+/* ---------- Content ---------- */
+.ocr-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 100px;
+}
+
+/* ---------- Hero ---------- */
+.ocr-hero {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.ocr-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent-gold);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--accent-glow);
+  margin-bottom: 16px;
+}
+
+.ocr-hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.ocr-hero p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* ---------- The big card ---------- */
+.ocr-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  min-height: 420px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ocr-panel {
+  display: none;
+  width: 100%;
+  animation: ocrPanelFade 0.3s var(--ease-editorial);
+}
+
+@keyframes ocrPanelFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ocr-card[data-state="idle"] .ocr-panel-upload { display: block; }
+.ocr-card[data-state="preview"] .ocr-panel-preview { display: block; }
+.ocr-card[data-state="extracting"] .ocr-panel-extracting { display: flex; }
+.ocr-card[data-state="result"] .ocr-panel-result { display: flex; }
+
+/* ---------- Upload state ---------- */
+.ocr-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px 24px;
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.ocr-dropzone:hover,
+.ocr-dropzone.drag-over {
+  border-color: var(--accent-gold);
+  background: var(--accent-glow);
+}
+
+.ocr-dropzone-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg-surface-subtle);
+  color: var(--text-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.ocr-dropzone:hover .ocr-dropzone-icon,
+.ocr-dropzone.drag-over .ocr-dropzone-icon {
+  color: var(--accent-gold);
+  background: var(--bg-surface);
+}
+
+.ocr-dropzone-title {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ocr-dropzone-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-subtle);
+}
+
+/* ---------- Preview state ---------- */
+.ocr-panel-preview {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ocr-preview-image-wrap {
+  position: relative;
+  width: 100%;
+  max-height: 320px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+}
+
+.ocr-preview-image-wrap img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  display: block;
+}
+
+.ocr-remove-image-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(18, 17, 16, 0.72);
+  backdrop-filter: blur(6px);
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-remove-image-btn:hover {
+  background: #ef4444;
+}
+
+.ocr-preview-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-subtle);
+}
+
+.ocr-preview-filename {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.ocr-extract-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-extract-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ---------- Extracting state ---------- */
+.ocr-panel-extracting {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ocr-scan-visual {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  max-height: 220px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+}
+
+.ocr-scan-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: saturate(0.85);
+}
+
+.ocr-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  box-shadow: 0 0 12px 2px rgba(179, 139, 77, 0.5);
+  animation: ocrScanSweep 1.8s ease-in-out infinite;
+}
+
+@keyframes ocrScanSweep {
+  0% { top: 0%; }
+  50% { top: 96%; }
+  100% { top: 0%; }
+}
+
+.ocr-extracting-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.ocr-extracting-track {
+  width: 100%;
+  max-width: 320px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  overflow: hidden;
+}
+
+.ocr-extracting-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-gold);
+  border-radius: var(--radius-full);
+  transition: width 0.25s ease;
+}
+
+/* ---------- Result state ---------- */
+.ocr-panel-result {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ocr-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ocr-result-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-emerald);
+}
+
+.ocr-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-copy-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: var(--accent-glow);
+}
+
+.ocr-result-text {
+  width: 100%;
+  min-height: 200px;
+  max-height: 340px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-hairline);
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+
+.ocr-result-text:focus {
+  border-color: var(--accent-gold);
+}
+
+.ocr-result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ocr-result-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-subtle);
+}
+
+.ocr-result-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ocr-secondary-btn {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-secondary-btn:hover {
+  border-color: var(--border-medium);
+  color: var(--text-main);
+  background: var(--bg-surface-subtle);
+}
+
+.ocr-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-download-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 560px) {
+  .ocr-content {
+    padding: 36px 16px 70px;
+  }
+
+  .ocr-card {
+    padding: 24px;
+  }
+
+  .ocr-result-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ocr-result-actions {
+    justify-content: stretch;
+  }
+
+  .ocr-secondary-btn,
+  .ocr-download-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

@@ -10,7 +10,6 @@
     <link href="fonts/jet_brain.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pixel_grid.css" />
-    <link rel="stylesheet" href="css/dowload.css" />
   </head>
   <body class="light-theme">
     <div class="custom-cursor" id="customCursor"></div>
@@ -20,137 +19,6 @@
       <div class="ambient-orb orb-1"></div>
       <div class="ambient-orb orb-2"></div>
       <div class="ambient-noise"></div>
-    </div>
-
-    <div
-      class="dc-modal-backdrop"
-      id="downloadModalBackdrop"
-      aria-hidden="true"
-    >
-      <div class="dc-card" id="downloadCard" data-state="downloading">
-        <div class="dc-card-header">
-          <div class="dc-file-icon" id="dcFileIcon">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-              ></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-          </div>
-
-          <div class="dc-header-text">
-            <span class="dc-file-name" id="dcFileName"
-              >gemini-2.5-pro-weights.bin</span
-            >
-            <span class="dc-file-meta" id="dcFileMeta"
-              >184 MB · from AURA Model Registry</span
-            >
-          </div>
-
-          <button
-            class="dc-icon-btn dc-close-btn"
-            id="dcCloseBtn"
-            title="Close"
-            aria-label="Close"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-
-        <div class="dc-progress-track">
-          <div
-            class="dc-progress-fill"
-            id="dcProgressFill"
-            style="width: 0%"
-          ></div>
-        </div>
-
-        <div class="dc-progress-meta-row">
-          <span class="dc-status-text" id="dcStatusText">
-            <span class="dc-status-dot"></span>
-            <span id="dcStatusLabel">Downloading...</span>
-          </span>
-          <span class="dc-progress-stats" id="dcProgressStats"
-            >0 MB / 184 MB · 0%</span
-          >
-        </div>
-
-        <div class="dc-footer-row">
-          <span class="dc-speed-eta">
-            <span class="dc-speed-text" id="dcSpeedText">— MB/s</span>
-            <span class="dc-meta-dot">·</span>
-            <span class="dc-eta-text" id="dcEtaText">calculating...</span>
-          </span>
-
-          <div class="dc-controls">
-            <button
-              class="dc-control-btn"
-              id="dcPauseResumeBtn"
-              title="Pause download"
-            >
-              <svg
-                class="dc-icon-pause"
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-              </svg>
-              <svg
-                class="dc-icon-resume"
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                style="display: none"
-              >
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              <span class="dc-control-label" id="dcPauseResumeLabel"
-                >Pause</span
-              >
-            </button>
-
-            <button
-              class="dc-control-btn dc-cancel-btn"
-              id="dcCancelBtn"
-              title="Cancel download"
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              <span class="dc-control-label">Cancel</span>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div id="appContainer" class="app-layout sidebar-expanded">
@@ -506,29 +374,6 @@
               ></textarea>
 
               <button
-                id="composerVoiceBtn"
-                class="composer-tool-btn"
-                title="Voice Dictation"
-                aria-label="Voice Input"
-              >
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
-                  ></path>
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                  <line x1="12" y1="19" x2="12" y2="23"></line>
-                  <line x1="8" y1="23" x2="16" y2="23"></line>
-                </svg>
-              </button>
-
-              <button
                 id="composerSendBtn"
                 class="composer-submit-btn"
                 disabled
@@ -597,9 +442,17 @@
         </div>
       </div>
     </div>
+    <script>
+    console.log("=== GP STORAGE TEST ===");
+    console.log("origin:", location.origin);
+    console.log("before:", localStorage.getItem("gp_test"));
 
+    localStorage.setItem("gp_test", "PERSISTENT_TEST");
+
+    console.log("after:", localStorage.getItem("gp_test"));
+</script>
+    <script src="js/webview.js"></script>
     <script src="js/pixelGrid.js"></script>
     <script src="js/script.js"></script>
-    <script src="js/download.js"></script>
   </body>
 </html>

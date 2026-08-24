@@ -239,10 +239,6 @@ html, body {
 }
 
 .model-option-card:hover {
-  border-color: var(--border-medium);
-}
-
-.model-option-card.selected {
   border-color: var(--accent-gold);
   background: var(--accent-glow);
 }

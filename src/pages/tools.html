@@ -1,117 +1,343 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tools — AURA</title>
-  <link href="../fonts/jet_brain.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/tools.css" />
-</head>
-<body class="light-theme">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tools — AURA</title>
+    <link href="../fonts/jet_brain.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/tools.css" />
+    <link rel="stylesheet" href="../css/dowload.css" />
+  </head>
+  <body class="light-theme">
+    <div class="ambient-backdrop">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+      <div class="ambient-noise"></div>
+    </div>
 
-  <div class="ambient-backdrop">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-noise"></div>
-  </div>
-
-  <div class="tools-shell">
-
-    <header class="tools-topbar">
-      <a href="../index.html" class="tools-back-btn" aria-label="Back to AURA">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>AURA</span>
-      </a>
-      <span class="tools-topbar-label">Tools</span>
-    </header>
-
-    <main class="tools-content">
-
-      <section class="tools-hero">
-        <span class="tools-eyebrow">CAPABILITIES</span>
-        <h1>Purpose-built <span class="serif-italic">tools</span>, one studio.</h1>
-        <p>Specialized utilities that extend AURA beyond conversation — from document solving to computer vision.</p>
-      </section>
-
-      <div class="tools-grid">
-
-        <!-- GTU Paper Solver -->
-        <a href="gtu_paper.html" class="tool-card" data-tool="gtu-paper-solver">
-          <div class="tool-card-icon tool-icon-gtu">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <div
+      class="dc-modal-backdrop"
+      id="downloadModalBackdrop"
+      aria-hidden="true"
+    >
+      <div class="dc-card" id="downloadCard" data-state="downloading">
+        <div class="dc-card-header">
+          <div class="dc-file-icon" id="dcFileIcon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              ></path>
               <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="9" y1="13" x2="15" y2="13"></line>
-              <line x1="9" y1="17" x2="13" y2="17"></line>
             </svg>
           </div>
-          <div class="tool-card-body">
-            <h3>GTU Paper Solver</h3>
-            <p>Upload a GTU exam paper and get worked solutions, step by step.</p>
-          </div>
-        </a>
 
-        <!-- OCR -->
-        <a href="ocr.html" class="tool-card" data-tool="ocr">
-          <div class="tool-card-icon tool-icon-ocr">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-              <line x1="7" y1="8" x2="17" y2="8"></line>
-              <line x1="7" y1="12" x2="17" y2="12"></line>
-              <line x1="7" y1="16" x2="13" y2="16"></line>
+          <div class="dc-header-text">
+            <span class="dc-file-name" id="dcFileName"
+              >gemini-2.5-pro-weights.bin</span
+            >
+            <span class="dc-file-meta" id="dcFileMeta"></span>
+          </div>
+
+          <button
+            class="dc-icon-btn dc-close-btn"
+            id="dcCloseBtn"
+            title="Close"
+            aria-label="Close"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
-          </div>
-          <div class="tool-card-body">
-            <h3>OCR</h3>
-            <p>Extract clean, editable text from photos, scans, and screenshots.</p>
-          </div>
-        </a>
+          </button>
+        </div>
 
-        <!-- QR / Barcode Scanner -->
-        <a href="qrbr_scanner.html" class="tool-card" data-tool="qr-barcode-scanner">
-          <div class="tool-card-icon tool-icon-qr">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-              <line x1="14" y1="14" x2="14" y2="21"></line>
-              <line x1="21" y1="14" x2="21" y2="21"></line>
-              <line x1="17.5" y1="14" x2="17.5" y2="17.5"></line>
-              <line x1="14" y1="17.5" x2="21" y2="17.5"></line>
-            </svg>
-          </div>
-          <div class="tool-card-body">
-            <h3>QR / Barcode Scanner</h3>
-            <p>Scan and decode QR codes and barcodes from an image or camera.</p>
-          </div>
-        </a>
+        <div class="dc-progress-track">
+          <div
+            class="dc-progress-fill"
+            id="dcProgressFill"
+            style="width: 0%"
+          ></div>
+        </div>
 
-        <!-- TTS -->
-        <a href="tts.html" class="tool-card" data-tool="tts">
-          <div class="tool-card-icon tool-icon-tts">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-              <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
-              <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
-            </svg>
-          </div>
-          <div class="tool-card-body">
-            <h3>Text to Speech</h3>
-            <p>Turn any written response or document into natural-sounding audio.</p>
-          </div>
-        </a>
+        <div class="dc-progress-meta-row">
+          <span class="dc-status-text" id="dcStatusText">
+            <span class="dc-status-dot"></span>
+            <span id="dcStatusLabel">Downloading...</span>
+          </span>
+        </div>
 
+        <div class="dc-footer-row">
+          <div class="dc-controls">
+            <button
+              class="dc-control-btn"
+              id="dcPauseResumeBtn"
+              title="Pause download"
+            >
+              <svg
+                class="dc-icon-pause"
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              <svg
+                class="dc-icon-resume"
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style="display: none"
+              >
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span class="dc-control-label" id="dcPauseResumeLabel"
+                >Pause</span
+              >
+            </button>
+
+            <button
+              class="dc-control-btn dc-cancel-btn"
+              id="dcCancelBtn"
+              title="Cancel download"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <span class="dc-control-label">Cancel</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </main>
-  </div>
-<script>
-  if (localStorage.getItem('aura_theme_mode') === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
-</script>
-</body>
+    </div>
+
+    <div class="tools-shell">
+      <header class="tools-topbar">
+        <a
+          href="../index.html"
+          class="tools-back-btn"
+          aria-label="Back to AURA"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>AURA</span>
+        </a>
+        <span class="tools-topbar-label">Tools</span>
+      </header>
+
+      <main class="tools-content">
+        <section class="tools-hero">
+          <span class="tools-eyebrow">CAPABILITIES</span>
+          <h1>
+            Purpose-built <span class="serif-italic">tools</span>, one studio.
+          </h1>
+          <p>
+            Specialized utilities that extend AURA beyond conversation — from
+            document solving to computer vision.
+          </p>
+        </section>
+
+        <div class="tools-grid">
+          <!-- GTU Paper Solver -->
+          <button
+            onclick="select_tool('gtupaper')"
+            class="tool-card"
+            data-tool="gtu-paper-solver"
+          >
+            <div class="tool-card-icon tool-icon-gtu">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="9" y1="13" x2="15" y2="13"></line>
+                <line x1="9" y1="17" x2="13" y2="17"></line>
+              </svg>
+            </div>
+            <div class="tool-card-body">
+              <h3>GTU Paper Solver</h3>
+              <p>
+                Upload a GTU exam paper and get worked solutions, step by step.
+              </p>
+            </div>
+          </button>
+
+          <!-- OCR -->
+          <button
+            onclick="select_tool('ocr')"
+            class="tool-card"
+            data-tool="ocr"
+          >
+            <div class="tool-card-icon tool-icon-ocr">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <line x1="7" y1="8" x2="17" y2="8"></line>
+                <line x1="7" y1="12" x2="17" y2="12"></line>
+                <line x1="7" y1="16" x2="13" y2="16"></line>
+              </svg>
+            </div>
+            <div class="tool-card-body">
+              <h3>OCR</h3>
+              <p>
+                Extract clean, editable text from photos, scans, and
+                screenshots.
+              </p>
+            </div>
+          </button>
+
+          <!-- QR / Barcode Scanner -->
+          <button
+            onclick="select_tool('qrbrs')"
+            class="tool-card"
+            data-tool="qr-barcode-scanner"
+          >
+            <div class="tool-card-icon tool-icon-qr">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <line x1="14" y1="14" x2="14" y2="21"></line>
+                <line x1="21" y1="14" x2="21" y2="21"></line>
+                <line x1="17.5" y1="14" x2="17.5" y2="17.5"></line>
+                <line x1="14" y1="17.5" x2="21" y2="17.5"></line>
+              </svg>
+            </div>
+            <div class="tool-card-body">
+              <h3>QR / Barcode Scanner</h3>
+              <p>
+                Scan and decode QR codes and barcodes from an image or camera.
+              </p>
+            </div>
+          </button>
+
+          <!-- TTS -->
+          <button
+            onclick="select_tool('piper')"
+            class="tool-card"
+            data-tool="tts"
+          >
+            <div class="tool-card-icon tool-icon-tts">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+                <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+              </svg>
+            </div>
+            <div class="tool-card-body">
+              <h3>Text to Speech</h3>
+              <p>
+                Turn any written response or document into natural-sounding
+                audio.
+              </p>
+            </div>
+          </button>
+        </div>
+      </main>
+    </div>
+    <script src="../js/webview.js"></script>
+    <script src="../js/download.js"></script>
+    <script>
+      DOWNLOAD_META_MAP = {
+        piper: { filename: "Piper Audio Model" },
+        ocr: {filename: 'Ocr Model'}
+      };
+
+      REDIRECT_MAP = {
+        piper: "tts.html",
+        ocr: "ocr.html",
+        qrbrs: "qrbr_scanner.html",
+        gtupaper: "gtu_paper.html",
+      };
+
+      async function download_tool_model(tool_name) {
+        const downloader = window.AURADownload;
+        const filename = DOWNLOAD_META_MAP[tool_name].filename;
+        return await downloader.open(filename, tool_name);
+      }
+
+      if (localStorage.getItem("aura_theme_mode") === "dark") {
+        document.body.classList.add("dark-theme");
+      }
+
+      function redirect(tool_name) {
+        window.location.href = REDIRECT_MAP[tool_name];
+      }
+
+      async function select_tool(tool_name) {
+        if (tool_name === "piper" || tool_name === "ocr") {
+          const result = await download_tool_model(tool_name);
+
+          if (result.completed) {
+            redirect(tool_name);
+          }
+
+          return;
+        }
+
+        redirect(tool_name);
+      }
+    </script>
+  </body>
 </html>

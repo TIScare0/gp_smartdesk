@@ -17,13 +17,6 @@
     closeBtn: document.getElementById('dcCloseBtn'),
     progressFill: document.getElementById('dcProgressFill'),
     statusLabel: document.getElementById('dcStatusLabel'),
-    progressStats: document.getElementById('dcProgressStats'),
-    speedText: document.getElementById('dcSpeedText'),
-    etaText: document.getElementById('dcEtaText'),
-    pauseResumeBtn: document.getElementById('dcPauseResumeBtn'),
-    pauseResumeLabel: document.getElementById('dcPauseResumeLabel'),
-    iconPause: document.querySelector('.dc-icon-pause'),
-    iconResume: document.querySelector('.dc-icon-resume'),
     cancelBtn: document.getElementById('dcCancelBtn')
   };
 
@@ -35,67 +28,106 @@
   };
 
   let session = null; // active download session state
-  let fakeDriverHandle = null;
 
-  // ---------------------------------------------------------------------
-  // Public API
-  // ---------------------------------------------------------------------
-  function open(config) {
-    session = {
-      fileName: config.fileName || 'download.bin',
-      totalBytes: config.totalBytes || 0,
-      loadedBytes: 0,
-      sourceLabel: config.sourceLabel || 'AURA Model Registry',
-      state: 'downloading', // downloading | paused | complete | error
-      startedAt: performance.now(),
-      onCancel: config.onCancel || null
-    };
+  async function open(filename, download_id) {
+      const web_api = window.web_api;
 
-    DOM.fileName.textContent = session.fileName;
-    DOM.fileMeta.textContent = `${formatBytes(session.totalBytes)} · from ${session.sourceLabel}`;
-    setState('downloading');
-    updateProgressUI();
+      if (!web_api) {
+          console.error("Python API isn't ready");
+          return { status: false, completed: false };
+      }
 
-    DOM.backdrop.classList.add('active');
-    DOM.backdrop.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+      if (!download_id) {
+          const error = 'Unable to get download id';
+          console.error(error);
+          setError(error);
+          return { status: false, completed: false };
+      }
 
-    // FAKE progress source — replace with real download wiring later.
-    startFakeProgressDriver();
+      session = {
+          fileName: filename || 'Unknown download',
+          status: 'downloading...',
+          download_id: download_id,
+          progress: 0
+      };
+
+      DOM.fileName.textContent = session.fileName;
+
+      setState('downloading');
+
+      DOM.backdrop.classList.add('active');
+      DOM.backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Start Python download
+      const started = await web_api.download(download_id);
+
+      if (!started?.status) {
+          console.error(started?.error);
+          setError(started?.error || 'Failed to start download');
+
+          return {
+              status: false,
+              completed: false
+          };
+      }
+
+      const did = started.id;
+
+      console.log(`Download started: ${did}`);
+
+      // Wait for the actual download to finish
+      while (true) {
+          const result = await web_api.download_step(did);
+
+          console.log("DOWNLOAD STEP:", result);
+
+          if (!result?.status) {
+              console.error(result?.error);
+
+              setError(result?.error || 'Download failed');
+
+              return {
+                  status: false,
+                  completed: false
+              };
+          }
+
+          // Update progress
+          if (result.data?.progress !== undefined) {
+              setProgress(result.data.progress);
+          }
+
+          // Actual download completion
+          if (result.done === true) {
+              console.log("DOWNLOAD COMPLETE");
+
+              setProgress(100);
+              setState('complete');
+
+              // Let the user see "Complete"
+              await new Promise(resolve => setTimeout(resolve, 500));
+
+              close();
+
+              return {
+                  status: true,
+                  completed: true
+              };
+          }
+
+          // Don't hammer Python
+          await new Promise(resolve => setTimeout(resolve, 50));
+      }
   }
 
   function close() {
     DOM.backdrop.classList.remove('active');
     DOM.backdrop.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    stopFakeProgressDriver();
     session = null;
   }
 
-  function setProgress(loadedBytes, totalBytes) {
-    if (!session) return;
-    session.loadedBytes = loadedBytes;
-    if (totalBytes) session.totalBytes = totalBytes;
-    updateProgressUI();
-
-    if (session.loadedBytes >= session.totalBytes && session.totalBytes > 0) {
-      setState('complete');
-      stopFakeProgressDriver();
-    }
-  }
-
-  function setError(message) {
-    if (!session) return;
-    setState('error');
-    stopFakeProgressDriver();
-    if (message && DOM.fileMeta) {
-      DOM.fileMeta.textContent = message;
-    }
-  }
-
-  // ---------------------------------------------------------------------
-  // State machine
-  // ---------------------------------------------------------------------
   function setState(newState) {
     if (!session) return;
     session.state = newState;
@@ -117,50 +149,43 @@
         DOM.fileIcon.classList.add('dc-icon-complete');
         DOM.fileIcon.innerHTML = ICONS.complete;
         DOM.statusLabel.textContent = 'Complete';
-        DOM.speedText.textContent = '';
-        DOM.etaText.textContent = 'Done';
         break;
       case 'error':
         DOM.fileIcon.classList.add('dc-icon-error');
         DOM.fileIcon.innerHTML = ICONS.error;
         DOM.statusLabel.textContent = 'Failed';
-        DOM.speedText.textContent = '';
-        DOM.etaText.textContent = '';
         break;
     }
   }
 
-  function togglePauseResume() {
+  function setProgress(progress) {
     if (!session) return;
-    if (session.state === 'downloading') {
-      setState('paused');
-      DOM.pauseResumeLabel.textContent = 'Resume';
-      DOM.iconPause.style.display = 'none';
-      DOM.iconResume.style.display = 'inline-block';
-    } else if (session.state === 'paused') {
-      setState('downloading');
-      DOM.pauseResumeLabel.textContent = 'Pause';
-      DOM.iconPause.style.display = 'inline-block';
-      DOM.iconResume.style.display = 'none';
+    session.progress = progress
+    updateProgressUI();
+
+    if (session.progress == 100) {
+      setState('complete');
+    }
+  }
+
+  function setError(message) {
+    if (!session) return;
+    setState('error');
+    if (message && DOM.fileMeta) {
+      DOM.fileMeta.textContent = message;
     }
   }
 
   function cancelDownload() {
     if (!session) return;
     const cb = session.onCancel;
-    stopFakeProgressDriver();
     close();
     if (typeof cb === 'function') cb();
   }
 
-  // ---------------------------------------------------------------------
-  // UI updates
-  // ---------------------------------------------------------------------
   function updateProgressUI() {
-    if (!session || session.totalBytes <= 0) return;
-    const pct = Math.min(100, (session.loadedBytes / session.totalBytes) * 100);
+    const pct = session.progress;
     DOM.progressFill.style.width = `${pct}%`;
-    DOM.progressStats.textContent = `${formatBytes(session.loadedBytes)} / ${formatBytes(session.totalBytes)} · ${Math.round(pct)}%`;
   }
 
   function formatBytes(bytes) {
@@ -169,75 +194,20 @@
     return mb >= 1000 ? `${(mb / 1024).toFixed(2)} GB` : `${mb.toFixed(0)} MB`;
   }
 
-  // ---------------------------------------------------------------------
-  // FAKE progress driver — DELETE THIS SECTION when wiring a real download.
-  // Replace with e.g. an XHR .onprogress handler calling setProgress(),
-  // or fetch() + ReadableStream reader loop calling setProgress() per chunk.
-  // ---------------------------------------------------------------------
-  function startFakeProgressDriver() {
-    stopFakeProgressDriver();
-    const tick = () => {
-      if (!session || session.state !== 'downloading') {
-        fakeDriverHandle = setTimeout(tick, 400);
-        return;
-      }
-      const increment = session.totalBytes * (0.01 + Math.random() * 0.02);
-      const newLoaded = Math.min(session.totalBytes, session.loadedBytes + increment);
-      setProgress(newLoaded, session.totalBytes);
-
-      const speedMBs = (increment / (1024 * 1024)) / 0.4;
-      DOM.speedText.textContent = `${speedMBs.toFixed(1)} MB/s`;
-      const remainingBytes = session.totalBytes - newLoaded;
-      const etaSec = speedMBs > 0 ? Math.round((remainingBytes / (1024 * 1024)) / speedMBs) : 0;
-      DOM.etaText.textContent = etaSec > 0 ? `~${etaSec}s remaining` : 'Finishing...';
-
-      if (session && session.state === 'downloading' && newLoaded < session.totalBytes) {
-        fakeDriverHandle = setTimeout(tick, 400 + Math.random() * 300);
-      }
-    };
-    fakeDriverHandle = setTimeout(tick, 500);
-  }
-
-  function stopFakeProgressDriver() {
-    if (fakeDriverHandle) {
-      clearTimeout(fakeDriverHandle);
-      fakeDriverHandle = null;
-    }
-  }
-  // ---------------------------------------------------------------------
-
-  // ---------------------------------------------------------------------
-  // Event bindings
-  // ---------------------------------------------------------------------
   DOM.closeBtn?.addEventListener('click', close);
-  DOM.pauseResumeBtn?.addEventListener('click', togglePauseResume);
   DOM.cancelBtn?.addEventListener('click', cancelDownload);
 
   DOM.backdrop?.addEventListener('click', (e) => {
     if (e.target === DOM.backdrop) {
-      // Only allow backdrop-click-to-close once finished or errored,
-      // not mid-download (avoids accidental dismissal of active transfer)
       if (session && (session.state === 'complete' || session.state === 'error')) {
         close();
       }
     }
   });
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && session && (session.state === 'complete' || session.state === 'error')) {
-      close();
-    }
-  });
-
-  // ---------------------------------------------------------------------
-  // Export public API
-  // ---------------------------------------------------------------------
   window.AURADownload = {
     open,       // open({ fileName, totalBytes, sourceLabel, onCancel })
     close,
-    setProgress, // setProgress(loadedBytes, totalBytes?) — call from real download logic
-    setError,    // setError(message?)
-    cancel: cancelDownload
   };
 
 })();

@@ -1,11 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTU Paper Solver — AURA</title>
+  <link href="../fonts/jet_brain.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/gtu_paper.css" />
 </head>
-<body>
-    Hello
+<body class="light-theme">
+
+  <div class="ambient-backdrop">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-noise"></div>
+  </div>
+
+  <div class="gtu-paper-shell">
+
+    <header class="gtu-paper-topbar">
+      <a href="tools.html" class="gtu-paper-back-btn" aria-label="Back to AURA">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Tools</span>
+      </a>
+      <span class="gtu-paper-topbar-label">QR & Bar Code Scanner</span>
+    </header>
+
+  </div>
+
+  <div id="toastContainer" class="toast-hub"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        applyTheme();
+    });
+
+    function applyTheme() {
+      if (localStorage.getItem('aura_theme_mode') === 'dark') {
+        document.body.classList.add('dark-theme');
+      }
+    }
+  </script>
 </body>
 </html>

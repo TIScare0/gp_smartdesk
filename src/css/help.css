@@ -1,34 +1,69 @@
-/* ==========================================================================
-   AURA — Help & Guide
-   Extends the editorial design tokens defined in style.css
-   ========================================================================== */
-
-html, body {
+/* ---- Fallback tokens (only apply if style.css vars aren't already defined) ---- */
+:root {
+  --bg-primary: #faf7f2;
+  --bg-surface: #ffffff;
+  --bg-surface-subtle: #f3efe8;
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --text-main: #211d18;
+  --text-muted: #6b6559;
+  --text-subtle: #948d7e;
+  --text-ghost: #c4bcac;
+  --border-hairline: rgba(33, 29, 24, 0.09);
+  --accent-gold: #b38b4d;
+  --accent-glow: rgba(179, 139, 77, 0.1);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --transition-fast: 0.15s ease;
+}
+html,
+body {
   overflow: auto;
   height: auto;
   min-height: 100vh;
+  background: var(--bg-primary);
+  margin: 0;
 }
 
-.help-shell {
+.help-shell-v2 {
   position: relative;
   z-index: 2;
   min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
 }
 
-/* ---------- Top bar ---------- */
-.help-topbar {
-  height: 60px;
-  padding: 0 28px;
+/* ---------- Frame (bar + content, no card — just space around) ---------- */
+.help-frame {
+  width: 100%;
+  max-width: 1040px;
+  display: flex;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ---------- Left rail (names only) ---------- */
+.help-rail {
+  width: 210px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-hairline);
+}
+
+.help-rail-top {
+  height: 88px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  border-bottom: 1px solid var(--border-hairline);
-  background: var(--bg-glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 40;
+  padding: 0 24px 0 0;
+  flex-shrink: 0;
 }
 
 .help-back-btn {
@@ -38,10 +73,10 @@ html, body {
   color: var(--text-main);
   text-decoration: none;
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  padding: 6px 10px 6px 6px;
+  padding: 6px 8px 6px 4px;
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast);
 }
@@ -50,29 +85,96 @@ html, body {
   background: var(--bg-surface-subtle);
 }
 
-.help-topbar-label {
+.help-rail-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 0 20px;
+  padding-right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.help-rail-label {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-subtle);
-  padding-left: 20px;
-  border-left: 1px solid var(--border-hairline);
+  padding: 10px 14px 8px 0;
+}
+
+.rail-item {
+  display: block;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+}
+
+.rail-item:hover {
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+}
+
+.rail-item.is-active {
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.help-rail-bottom {
+  padding: 16px 14px 24px 0;
+  border-top: 1px solid var(--border-hairline);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-ghost);
+  letter-spacing: 0.04em;
 }
 
 /* ---------- Content ---------- */
-.help-content {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 60px 24px 100px;
+.help-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 88px 0 80px 56px;
 }
 
-/* ---------- Hero ---------- */
-.help-hero {
-  margin-bottom: 56px;
+.help-panel-wrap {
+  width: 100%;
+  max-width: 580px;
 }
 
-.help-eyebrow {
+.help-panel {
+  display: none;
+}
+.help-panel.is-active {
+  display: block;
+  animation: panelIn 0.35s ease;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-eyebrow {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -85,156 +187,90 @@ html, body {
   margin-bottom: 16px;
 }
 
-.help-hero h1 {
+.panel-title {
   font-family: var(--font-serif);
-  font-size: clamp(30px, 4.5vw, 44px);
+  font-size: clamp(26px, 4vw, 36px);
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--text-main);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
-.help-hero p {
-  font-size: 15px;
+.panel-subtitle {
+  font-size: 14px;
   line-height: 1.65;
   color: var(--text-muted);
-  max-width: 520px;
+  max-width: 480px;
+  margin-bottom: 32px;
 }
 
-/* ---------- Section shell ---------- */
-.help-section {
-  margin-bottom: 56px;
-}
-
-.section-heading {
+/* Hero visual — rounded image card */
+.panel-hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
-.section-eyebrow {
+.panel-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+}
+
+.panel-hero-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-ghost);
+}
+
+.panel-hero-placeholder span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.panel-hero-caption {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+}
+
+/* Steps */
+.panel-steps-heading {
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-subtle);
-  margin-bottom: 6px;
+  margin-bottom: 16px;
 }
 
-.section-heading h2 {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: -0.01em;
-}
-
-/* ---------- Info card (what is an API key) ---------- */
-.info-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-md);
-  padding: 24px 26px;
-  box-shadow: var(--shadow-subtle);
-}
-
-.info-card p {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-main);
-  margin-bottom: 14px;
-}
-
-.info-card p:last-of-type {
-  margin-bottom: 18px;
-}
-
-.info-callout {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  background: var(--accent-glow);
-  border: 1px solid rgba(179, 139, 77, 0.25);
-  color: var(--text-main);
-  font-size: 12.5px;
-  line-height: 1.55;
-}
-
-.info-callout svg {
-  flex-shrink: 0;
-  color: var(--accent-gold);
-  margin-top: 1px;
-}
-
-/* ---------- Model guide cards ---------- */
-.model-guide-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-md);
-  padding: 24px 26px;
-  box-shadow: var(--shadow-subtle);
-  margin-bottom: 18px;
-}
-
-.model-guide-card:last-child {
-  margin-bottom: 0;
-}
-
-.model-guide-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 22px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-.model-guide-visual {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.gemini-visual {
-  background: linear-gradient(135deg, rgba(66, 133, 244, 0.14), rgba(234, 67, 53, 0.10));
-  color: #4285f4;
-}
-
-.cohere-visual {
-  background: rgba(179, 139, 77, 0.12);
-  color: var(--accent-gold);
-}
-
-.openai-visual {
-  background: var(--bg-surface-subtle);
-  color: var(--text-main);
-}
-
-.model-guide-header h3 {
-  font-family: var(--font-serif);
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 2px;
-}
-
-.model-guide-header p {
-  font-size: 12.5px;
-  color: var(--text-muted);
-}
-
-/* ---------- Step cards ---------- */
 .step-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .step-card {
@@ -287,58 +323,85 @@ html, body {
   font-weight: 600;
 }
 
-/* ---------- About ---------- */
-.about-card {
+.info-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-glow);
+  border: 1px solid rgba(179, 139, 77, 0.25);
+  color: var(--text-main);
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin-top: 20px;
+}
+
+.info-callout svg {
+  flex-shrink: 0;
+  color: var(--accent-gold);
+  margin-top: 1px;
+}
+
+/* ---------- Support / issue link ---------- */
+.support-link-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-subtle);
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+  margin-bottom: 14px;
+}
+
+.support-link-card:hover {
+  background: var(--bg-surface);
+  border-color: var(--accent-gold);
+}
+
+.support-link-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
   background: var(--bg-surface);
   border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-
-.about-image-wrap {
-  width: 100%;
-  aspect-ratio: 16 / 7;
-  background: var(--bg-surface-subtle);
-}
-
-.about-image-placeholder {
-  width: 100%;
-  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  color: var(--text-ghost);
+  flex-shrink: 0;
+  color: var(--text-main);
 }
 
-.about-image-placeholder span {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.about-text {
-  padding: 26px 28px 28px;
-}
-
-.about-text p {
+.support-link-text h4 {
+  font-family: var(--font-sans);
   font-size: 13.5px;
-  line-height: 1.7;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.support-link-text p {
+  font-size: 12.5px;
   color: var(--text-muted);
-  margin-bottom: 12px;
 }
 
-.about-text p:last-of-type {
-  margin-bottom: 20px;
+.support-link-arrow {
+  margin-left: auto;
+  color: var(--text-subtle);
+  flex-shrink: 0;
 }
 
+/* About panel meta row */
 .about-meta-row {
   display: flex;
   gap: 28px;
   padding-top: 16px;
+  margin-top: 20px;
   border-top: 1px solid var(--border-hairline);
 }
 
@@ -364,18 +427,33 @@ html, body {
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 640px) {
-  .help-content {
-    padding: 40px 18px 80px;
-  }
-
-  .model-guide-header {
+@media (max-width: 860px) {
+  .help-frame {
     flex-direction: column;
-    align-items: flex-start;
+    padding: 0 20px;
   }
-
-  .about-meta-row {
-    flex-wrap: wrap;
-    gap: 20px;
+  .help-rail {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .help-rail-top {
+    height: auto;
+    padding: 24px 0 16px;
+  }
+  .help-rail-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0 0 20px;
+    gap: 6px;
+  }
+  .help-rail-label {
+    display: none;
+  }
+  .help-rail-bottom {
+    display: none;
+  }
+  .help-main {
+    padding: 32px 0 60px;
   }
 }

@@ -1,0 +1,488 @@
+/* ==========================================================================
+   AURA — Text to Speech
+   Extends the editorial design tokens defined in style.css
+   ========================================================================== */
+
+html, body {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+}
+
+.tts-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+/* ---------- Top bar ---------- */
+.tts-topbar {
+  height: 60px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.tts-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px 6px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.tts-back-btn:hover {
+  background: var(--bg-surface-subtle);
+}
+
+.tts-topbar-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding-left: 20px;
+  border-left: 1px solid var(--border-hairline);
+}
+
+/* ---------- Content ---------- */
+.tts-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 56px 24px 100px;
+}
+
+/* ---------- The card ---------- */
+.tts-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- Steps ---------- */
+.tts-step {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tts-step[data-active="true"] {
+  display: flex;
+  animation: ttsStepIn 0.28s ease both;
+}
+
+@keyframes ttsStepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tts-step-title {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ---------- Field group (step 1) ---------- */
+.tts-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tts-field-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tts-textarea {
+  width: 100%;
+  min-height: 160px;
+  max-height: 320px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-hairline);
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.tts-textarea:focus {
+  border-color: var(--accent-gold);
+}
+
+.tts-textarea::placeholder {
+  color: var(--text-ghost);
+}
+
+.tts-char-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-subtle);
+  text-align: right;
+}
+
+.tts-voice-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.tts-select {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-medium);
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.tts-select:focus {
+  border-color: var(--accent-gold);
+}
+
+.tts-convert-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.tts-convert-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tts-convert-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.tts-convert-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--border-medium);
+}
+
+/* ---------- Step 2: generating ---------- */
+.tts-progress-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 22px 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+}
+
+.tts-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tts-progress-track {
+  flex: 1;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  overflow: hidden;
+}
+
+.tts-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-full);
+  background: var(--accent-gold);
+  transition: width 0.15s linear;
+}
+
+.tts-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-subtle);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ---------- Step 3: playback ---------- */
+.tts-playback-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 22px 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+}
+
+.tts-playback-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 70px;
+}
+
+.tts-playback-visual[data-state="speaking"] .tts-playback-status {
+  color: var(--accent-gold);
+}
+
+.tts-playback-visual:has(> .tts-playback-visual) {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.tts-playback-visual > .tts-playback-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 22px 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+}
+
+/* time-row and actions-row are now direct children of the outer
+   (now-transparent) wrapper, so they sit below the pill card, full width */
+.tts-playback-visual:has(> .tts-playback-visual) > .tts-time-row,
+.tts-playback-visual:has(> .tts-playback-visual) > .tts-actions-row {
+  width: 100%;
+}
+
+/* ---------- Wave bars ---------- */
+/* Step 2 (generating): fixed small pulse, no audio yet, purely decorative */
+#ttsGenBars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 30px;
+}
+
+#ttsGenBars .tts-bar {
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--text-ghost);
+  animation: ttsGenPulse 460ms ease-in-out infinite alternate;
+}
+
+@keyframes ttsGenPulse {
+  0%   { height: 4px;  opacity: .45; }
+  100% { height: 24px; opacity: 1; }
+}
+
+#ttsGenBars .tts-bar:nth-child(1)  { animation-duration: 474ms; animation-delay: -230ms; }
+#ttsGenBars .tts-bar:nth-child(2)  { animation-duration: 401ms; animation-delay: -80ms;  }
+#ttsGenBars .tts-bar:nth-child(3)  { animation-duration: 612ms; animation-delay: -390ms; }
+#ttsGenBars .tts-bar:nth-child(4)  { animation-duration: 358ms; animation-delay: -120ms; }
+#ttsGenBars .tts-bar:nth-child(5)  { animation-duration: 521ms; animation-delay: -310ms; }
+#ttsGenBars .tts-bar:nth-child(6)  { animation-duration: 447ms; animation-delay: -60ms;  }
+#ttsGenBars .tts-bar:nth-child(7)  { animation-duration: 589ms; animation-delay: -410ms; }
+#ttsGenBars .tts-bar:nth-child(8)  { animation-duration: 419ms; animation-delay: -150ms; }
+#ttsGenBars .tts-bar:nth-child(9)  { animation-duration: 468ms; animation-delay: -280ms; }
+#ttsGenBars .tts-bar:nth-child(10) { animation-duration: 534ms; animation-delay: -95ms;  }
+#ttsGenBars .tts-bar:nth-child(11) { animation-duration: 486ms; animation-delay: -190ms; }
+#ttsGenBars .tts-bar:nth-child(12) { animation-duration: 561ms; animation-delay: -340ms; }
+
+/* Step 3 (playback): height is set live, per-frame, from real audio frequency data via JS.
+   No CSS animation here — the JS loop *is* the animation. A short transition
+   just smooths between frames so it doesn't feel like a strobe. */
+#ttsLiveBars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5px;
+  height: 34px;
+}
+
+#ttsLiveBars .tts-bar {
+  width: 3px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--text-ghost);
+  transition: height 70ms linear, background 0.25s ease;
+  will-change: height;
+}
+
+.tts-playback-visual[data-state="speaking"] #ttsLiveBars .tts-bar {
+  background: var(--accent-gold);
+}
+
+.tts-playback-visual[data-state="paused"] #ttsLiveBars .tts-bar {
+  background: var(--text-subtle);
+  /* JS stops updating heights on pause, so bars freeze exactly where they were */
+}
+
+/* ---------- Time / duration readout ---------- */
+.tts-time-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tts-time-current,
+.tts-time-duration {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-subtle);
+  min-width: 34px;
+}
+
+.tts-time-current {
+  color: var(--accent-gold);
+  text-align: right;
+}
+
+.tts-time-track {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tts-time-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-full);
+  background: var(--accent-gold);
+  transition: width 0.1s linear;
+}
+
+/* ---------- Action buttons (step 3) ---------- */
+.tts-actions-row {
+  display: flex;
+  gap: 10px;
+}
+
+.tts-play-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tts-play-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.tts-stop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tts-stop-btn:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 560px) {
+  .tts-content {
+    padding: 36px 16px 80px;
+  }
+
+  .tts-card {
+    padding: 20px;
+  }
+
+  .tts-convert-wrapper {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tts-convert-btn {
+    width: 100%;
+  }
+
+  #ttsLiveBars {
+    gap: 2px;
+  }
+}

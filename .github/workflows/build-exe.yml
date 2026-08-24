@@ -1,0 +1,110 @@
+name: Build Multi-Platform Executables
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64, arm64]
+        include:
+          # Windows only builds x64 (arm64 support limited)
+          - os: windows-latest
+            arch: x64
+          # Linux builds both x64 and arm64
+          - os: ubuntu-latest
+            arch: [x64, arm64]
+          # macOS builds x64 and arm64 (Apple Silicon)
+          - os: macos-latest
+            arch: [x64, arm64]
+
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-github-action@1.1.0
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Set up QEMU for multi-arch (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        uses: qemu-actions/setup-qemu@v3
+
+      - name: Set up QEMU binary translator
+        if: matrix.os != 'windows-latest'
+        uses: qemu-actions/github-action-qemu@main
+
+      - name: Configure Docker (for multi-arch)
+        if: matrix.os != 'windows-latest'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build executable
+        run: |
+          # Determine GUI backend based on OS
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            GUI_BACKEND="edgechromium"
+          else
+            GUI_BACKEND="qt"
+          fi
+
+          # Export arch for pyinstaller
+          export PYINSTALLER_ARCH=$matrix.arch
+
+          pyinstaller \
+            --name "GP SmartDesk" \
+            --onefile \
+            --windowed \
+            --add-data "src:index" \
+            --add-data "src/css:index/css" \
+            --add-data "src/js:index/js" \
+            --add-data "src/pages:index/pages" \
+            --add-data "src/images:index/images" \
+            --add-data "src/js/vendor:index/js/vendor" \
+            main.py
+
+      - name: Rename and organize build output
+        run: |
+          mkdir -p dist_bundle
+
+          # Move the generated executable
+          if [ -f dist/GP\ SmartDesk ]; then
+            mv "dist/GP SmartDesk" "dist_bundle/GP-SmartDesk-$matrix.arch"
+          fi
+
+          if [ -f dist/GP\ SmartDesk.exe ]; then
+            mv "dist/GP SmartDesk.exe" "dist_bundle/GP-SmartDesk-$matrix.arch.exe"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gp-smartdesk-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist_bundle/
+          retention-days: 30

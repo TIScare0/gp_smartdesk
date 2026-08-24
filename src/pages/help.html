@@ -1,265 +1,478 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Help — AURA</title>
-  <link href="../fonts/jet_brain.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/help.css" />
-</head>
-<body class="light-theme">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help — AURA</title>
+    <link href="../fonts/jet_brain.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/help.css" />
+  </head>
+  <body class="light-theme">
+    <div class="ambient-backdrop">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+      <div class="ambient-noise"></div>
+    </div>
 
-  <div class="ambient-backdrop">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-noise"></div>
-  </div>
-
-  <div class="help-shell">
-
-    <header class="help-topbar">
-      <a href="../index.html" class="help-back-btn" aria-label="Back to AURA">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>AURA</span>
-      </a>
-      <span class="help-topbar-label">Help &amp; Guide</span>
-    </header>
-
-    <main class="help-content">
-
-      <!-- ===================== HERO ===================== -->
-      <section class="help-hero">
-        <span class="help-eyebrow">GUIDE</span>
-        <h1>Bring your own key, <span class="serif-italic">stay in flow.</span></h1>
-        <p>AURA works out of the box on a shared free tier. Add your own API key from any provider below to skip the queue and get unlimited, priority access.</p>
-      </section>
-
-      <!-- ===================== WHAT IS AN API KEY ===================== -->
-      <section class="help-section">
-        <div class="section-heading">
-          <span class="section-eyebrow">01 — Basics</span>
-          <h2>What is an API key?</h2>
-        </div>
-        <div class="info-card">
-          <p>
-            An API key is a private password that lets AURA talk to a model provider — like Gemini or
-            Cohere — on your behalf. When you paste a key into Settings, your messages are sent directly
-            using your own account instead of AURA's shared queue.
-          </p>
-          <p>
-            Your key stays on this device. It's stored in your browser's local storage and is only
-            attached to requests sent to that provider — AURA never sends it anywhere else.
-          </p>
-          <div class="info-callout">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            <span>Most providers offer a free tier with generous monthly limits — you don't need to pay to get a key.</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================== MODELS ===================== -->
-      <section class="help-section">
-        <div class="section-heading">
-          <span class="section-eyebrow">02 — Models</span>
-          <h2>Get a key for your model</h2>
-        </div>
-
-        <!-- Gemini -->
-        <article class="model-guide-card">
-          <div class="model-guide-header">
-            <div class="model-guide-visual gemini-visual" aria-hidden="true">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z" fill="currentColor"/>
+    <div class="help-shell-v2">
+      <div class="help-frame">
+        <!-- ===================== LEFT RAIL (space) ===================== -->
+        <aside class="help-rail">
+          <div class="help-rail-top">
+            <a
+              href="../index.html"
+              class="help-back-btn"
+              aria-label="Back to AURA"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
-            </div>
-            <div>
-              <h3>Gemini</h3>
-              <p>Google's model family. Fast, large context, generous free tier.</p>
-            </div>
+              <span>AURA</span>
+            </a>
           </div>
 
-          <div class="step-list">
-            <div class="step-card">
-              <span class="step-number">1</span>
-              <div class="step-body">
-                <h4>Open Google AI Studio</h4>
-                <p>Go to <code>aistudio.google.com</code> and sign in with any Google account. No separate signup is needed — your existing Google login works.</p>
+          <nav class="help-rail-nav">
+            <span class="help-rail-label">Models</span>
+
+            <button
+              class="rail-item is-active"
+              data-panel="gemini"
+              type="button"
+            >
+              Gemini
+            </button>
+            <button class="rail-item" data-panel="claude" type="button">
+              Claude
+            </button>
+            <button class="rail-item" data-panel="cohere" type="button">
+              Cohere
+            </button>
+            <button class="rail-item" data-panel="openai" type="button">
+              OpenAI
+            </button>
+
+            <span class="help-rail-label" style="margin-top: 14px">Info</span>
+            <button class="rail-item" data-panel="about" type="button">
+              About
+            </button>
+            <button class="rail-item" data-panel="support" type="button">
+              Support
+            </button>
+          </nav>
+
+          <div class="help-rail-bottom">AURA · v1.0.0</div>
+        </aside>
+
+        <!-- ===================== CENTER CONTENT ===================== -->
+        <main class="help-main">
+          <div class="help-panel-wrap">
+            <!-- ---------- GEMINI ---------- -->
+            <section class="help-panel is-active" id="panel-gemini">
+              <span class="panel-eyebrow">MODEL</span>
+              <h1 class="panel-title">Gemini</h1>
+              <p class="panel-subtitle">
+                Google's model family. Fast, large context, generous free tier.
+              </p>
+
+              <p class="panel-hero-caption">
+                Bring your own Gemini key from Google AI Studio to get
+                unlimited, priority access instead of using AURA's shared free
+                tier.
+              </p>
+
+              <div class="panel-steps-heading">How to get your key</div>
+              <div class="step-list">
+                <div class="step-card">
+                  <span class="step-number">1</span>
+                  <div class="step-body">
+                    <h4>Open Google AI Studio</h4>
+                    <p>
+                      Go to <code>aistudio.google.com</code> and sign in with
+                      any Google account. No separate signup is needed — your
+                      existing Google login works.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">2</span>
+                  <div class="step-body">
+                    <h4>Create an API key</h4>
+                    <p>
+                      Click <strong>Get API key</strong> in the left sidebar,
+                      then <strong>Create API key</strong>. Choose an existing
+                      Google Cloud project or let it create one for you
+                      automatically.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">3</span>
+                  <div class="step-body">
+                    <h4>Copy the key</h4>
+                    <p>
+                      Your key appears as a long string starting with
+                      <code>AIza...</code>. Copy it immediately — you can always
+                      view it again later from the same page.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">4</span>
+                  <div class="step-body">
+                    <h4>Paste it into AURA</h4>
+                    <p>
+                      Open <strong>Settings → Model &amp; API</strong> and paste
+                      it into the Gemini field. It saves automatically as you
+                      type.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">2</span>
-              <div class="step-body">
-                <h4>Create an API key</h4>
-                <p>Click <strong>Get API key</strong> in the left sidebar, then <strong>Create API key</strong>. Choose an existing Google Cloud project or let it create one for you automatically.</p>
+            </section>
+
+            <!-- ---------- CLAUDE ---------- -->
+            <section class="help-panel" id="panel-claude">
+              <span class="panel-eyebrow">MODEL</span>
+              <h1 class="panel-title">Claude</h1>
+              <p class="panel-subtitle">
+                Anthropic's model family. Careful reasoning, long context,
+                strong writing.
+              </p>
+
+              <p class="panel-hero-caption">
+                Bring your own Anthropic key from the Claude Console to get
+                unlimited, priority access instead of using AURA's shared free
+                tier.
+              </p>
+
+              <div class="panel-steps-heading">How to get your key</div>
+              <div class="step-list">
+                <div class="step-card">
+                  <span class="step-number">1</span>
+                  <div class="step-body">
+                    <h4>Open the Claude Console</h4>
+                    <p>
+                      Go to <code>console.anthropic.com</code> and sign in or
+                      create an account. This is separate from a regular
+                      claude.ai login.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">2</span>
+                  <div class="step-body">
+                    <h4>Create a new key</h4>
+                    <p>
+                      Under <strong>API Keys</strong>, click
+                      <strong>Create Key</strong>. Give it a name like "AURA" so
+                      you can identify it later.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">3</span>
+                  <div class="step-body">
+                    <h4>Copy it now</h4>
+                    <p>
+                      The full key is only shown once and starts with
+                      <code>sk-ant-...</code>. Copy it immediately — if you lose
+                      it, you'll need to generate a new one.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">4</span>
+                  <div class="step-body">
+                    <h4>Paste it into AURA</h4>
+                    <p>
+                      Open <strong>Settings → Model &amp; API</strong> and paste
+                      it into the Claude field.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">3</span>
-              <div class="step-body">
-                <h4>Copy the key</h4>
-                <p>Your key appears as a long string starting with <code>AIza...</code>. Copy it immediately — you can always view it again later from the same page.</p>
+            </section>
+
+            <!-- ---------- COHERE ---------- -->
+            <section class="help-panel" id="panel-cohere">
+              <span class="panel-eyebrow">MODEL</span>
+              <h1 class="panel-title">Cohere</h1>
+              <p class="panel-subtitle">
+                Strong reasoning and retrieval-focused models, with a no-cost
+                trial key.
+              </p>
+
+              <p class="panel-hero-caption">
+                Bring your own Cohere key from your Cohere dashboard to get
+                unlimited, priority access instead of using AURA's shared free
+                tier.
+              </p>
+
+              <div class="panel-steps-heading">How to get your key</div>
+              <div class="step-list">
+                <div class="step-card">
+                  <span class="step-number">1</span>
+                  <div class="step-body">
+                    <h4>Create a Cohere account</h4>
+                    <p>
+                      Visit <code>dashboard.cohere.com</code> and sign up with
+                      your email or a Google/GitHub account.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">2</span>
+                  <div class="step-body">
+                    <h4>Find your trial key</h4>
+                    <p>
+                      Once logged in, go to the <strong>API Keys</strong> tab. A
+                      trial key is generated for you automatically — no card
+                      required for the free tier.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">3</span>
+                  <div class="step-body">
+                    <h4>Copy the key</h4>
+                    <p>
+                      Click the key to reveal and copy it. Trial keys are
+                      rate-limited but reset regularly, which is plenty for
+                      everyday use in AURA.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">4</span>
+                  <div class="step-body">
+                    <h4>Paste it into AURA</h4>
+                    <p>
+                      Open <strong>Settings → Model &amp; API</strong> and paste
+                      it into the Cohere field.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">4</span>
-              <div class="step-body">
-                <h4>Paste it into AURA</h4>
-                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the Gemini field. It saves automatically as you type.</p>
+            </section>
+
+            <!-- ---------- OPENAI ---------- -->
+            <section class="help-panel" id="panel-openai">
+              <span class="panel-eyebrow">MODEL</span>
+              <h1 class="panel-title">OpenAI-compatible</h1>
+              <p class="panel-subtitle">
+                Works with OpenAI directly, or any provider that mirrors its API
+                format.
+              </p>
+
+              <p class="panel-hero-caption">
+                Bring your own OpenAI (or compatible) key to get unlimited,
+                priority access instead of using AURA's shared free tier.
+              </p>
+
+              <div class="panel-steps-heading">How to get your key</div>
+              <div class="step-list">
+                <div class="step-card">
+                  <span class="step-number">1</span>
+                  <div class="step-body">
+                    <h4>Open the API platform</h4>
+                    <p>
+                      Go to <code>platform.openai.com</code> and sign in. This
+                      is separate from a regular ChatGPT login and may ask you
+                      to set up billing.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">2</span>
+                  <div class="step-body">
+                    <h4>Create a new secret key</h4>
+                    <p>
+                      Under <strong>API keys</strong>, click
+                      <strong>Create new secret key</strong>. Give it a name
+                      like "AURA" so you can identify it later.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">3</span>
+                  <div class="step-body">
+                    <h4>Copy it now</h4>
+                    <p>
+                      The full key is only shown once. Copy it immediately — if
+                      you lose it, you'll need to generate a new one.
+                    </p>
+                  </div>
+                </div>
+                <div class="step-card">
+                  <span class="step-number">4</span>
+                  <div class="step-body">
+                    <h4>Paste it into AURA</h4>
+                    <p>
+                      Open <strong>Settings → Model &amp; API</strong> and paste
+                      it into the OpenAI-compatible field.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>
+
+            <!-- ---------- ABOUT ---------- -->
+            <section class="help-panel" id="panel-about">
+              <span class="panel-eyebrow">INFO</span>
+              <h1 class="panel-title">About AURA</h1>
+              <p class="panel-subtitle">
+                A tranquil conversational environment for architectural
+                reasoning, creative discourse, and pristine structural design.
+              </p>
+
+              <p class="panel-hero-caption">
+                AURA is model-agnostic by design: bring the provider you already
+                trust, and AURA handles the editorial layer on top — built for
+                people who think in both prose and code.
+              </p>
+
+              <div class="about-meta-row">
+                <div class="about-meta-item">
+                  <span class="about-meta-label">Version</span>
+                  <span class="about-meta-value">1.0.0</span>
+                </div>
+                <div class="about-meta-item">
+                  <span class="about-meta-label">Build</span>
+                  <span class="about-meta-value">Editorial</span>
+                </div>
+                <div class="about-meta-item">
+                  <span class="about-meta-label">Updated</span>
+                  <span class="about-meta-value">Aug 2026</span>
+                </div>
+              </div>
+
+              <div class="info-callout">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span
+                  >Your API key stays on this device — stored in your browser's
+                  local storage and only ever attached to requests sent to that
+                  provider.</span
+                >
+              </div>
+            </section>
+
+            <!-- ===================== SUPPORT ===================== -->
+            <section
+              class="help-panel"
+              id="panel-support"
+              role="tabpanel"
+              aria-labelledby="support"
+            >
+              <span class="panel-eyebrow">SUPPORT</span>
+              <h1 class="panel-title">Need a hand?</h1>
+
+              <p class="panel-subtitle">
+                If something is not working correctly, check the relevant
+                provider settings first. AURA support channels can be added here
+                as the project grows.
+              </p>
+
+              <div class="panel-steps-heading">Support channels</div>
+
+              <div class="support-stack">
+                <!-- Placeholder: replace href once the GitHub repository/issues URL is available. -->
+                <a
+                  class="support-link-card is-placeholder"
+                  href="https://github.com/TIScare0/gp_smartdesk/issues/new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="support-link-icon" aria-hidden="true">
+                    <svg
+                      width="19"
+                      height="19"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12 .7a11.3 11.3 0 0 0-3.58 22.02c.57.1.78-.25.78-.55v-2.17c-3.17.69-3.84-1.34-3.84-1.34-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.73-1.54-2.53-.29-5.19-1.27-5.19-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.13 1.17a10.8 10.8 0 0 1 5.7 0c2.17-1.48 3.13-1.17 3.13-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.39-2.67 5.35-5.21 5.64.41.36.78 1.08.78 2.18v3.23c0 .3.21.66.79.55A11.3 11.3 0 0 0 12 .7Z"
+                      />
+                    </svg>
+                  </span>
+
+                  <span class="support-link-text">
+                    <h4>GitHub Issues</h4>
+                    <p>Report bugs, request features, or track known issues.</p>
+                  </span>
+
+                  <span class="support-link-arrow" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </section>
           </div>
-        </article>
+        </main>
+      </div>
+    </div>
 
-        <!-- Cohere -->
-        <article class="model-guide-card">
-          <div class="model-guide-header">
-            <div class="model-guide-visual cohere-visual" aria-hidden="true">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                <circle cx="8" cy="8" r="4.5"></circle>
-                <circle cx="16" cy="16" r="4.5"></circle>
-              </svg>
-            </div>
-            <div>
-              <h3>Cohere</h3>
-              <p>Strong reasoning and retrieval-focused models, with a no-cost trial key.</p>
-            </div>
-          </div>
+    <script>
+      (function () {
+        var railItems = document.querySelectorAll(".rail-item");
+        var panels = document.querySelectorAll(".help-panel");
 
-          <div class="step-list">
-            <div class="step-card">
-              <span class="step-number">1</span>
-              <div class="step-body">
-                <h4>Create a Cohere account</h4>
-                <p>Visit <code>dashboard.cohere.com</code> and sign up with your email or a Google/GitHub account.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">2</span>
-              <div class="step-body">
-                <h4>Find your trial key</h4>
-                <p>Once logged in, go to the <strong>API Keys</strong> tab. A trial key is generated for you automatically — no card required for the free tier.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">3</span>
-              <div class="step-body">
-                <h4>Copy the key</h4>
-                <p>Click the key to reveal and copy it. Trial keys are rate-limited but reset regularly, which is plenty for everyday use in AURA.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">4</span>
-              <div class="step-body">
-                <h4>Paste it into AURA</h4>
-                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the Cohere field.</p>
-              </div>
-            </div>
-          </div>
-        </article>
+        railItems.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var target = btn.getAttribute("data-panel");
 
-        <!-- OpenAI-compatible -->
-        <article class="model-guide-card">
-          <div class="model-guide-header">
-            <div class="model-guide-visual openai-visual" aria-hidden="true">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                <path d="M2 17l10 5 10-5"></path>
-                <path d="M2 12l10 5 10-5"></path>
-              </svg>
-            </div>
-            <div>
-              <h3>OpenAI-compatible</h3>
-              <p>Works with OpenAI directly, or any provider that mirrors its API format.</p>
-            </div>
-          </div>
+            railItems.forEach(function (b) {
+              b.classList.remove("is-active");
+            });
+            btn.classList.add("is-active");
 
-          <div class="step-list">
-            <div class="step-card">
-              <span class="step-number">1</span>
-              <div class="step-body">
-                <h4>Open the API platform</h4>
-                <p>Go to <code>platform.openai.com</code> and sign in. This is separate from a regular ChatGPT login and may ask you to set up billing.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">2</span>
-              <div class="step-body">
-                <h4>Create a new secret key</h4>
-                <p>Under <strong>API keys</strong>, click <strong>Create new secret key</strong>. Give it a name like "AURA" so you can identify it later.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">3</span>
-              <div class="step-body">
-                <h4>Copy it now</h4>
-                <p>The full key is only shown once. Copy it immediately — if you lose it, you'll need to generate a new one.</p>
-              </div>
-            </div>
-            <div class="step-card">
-              <span class="step-number">4</span>
-              <div class="step-body">
-                <h4>Paste it into AURA</h4>
-                <p>Open <strong>Settings → Model &amp; API</strong> and paste it into the OpenAI-compatible field.</p>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
+            panels.forEach(function (p) {
+              p.classList.toggle("is-active", p.id === "panel-" + target);
+            });
 
-      <!-- ===================== ABOUT ===================== -->
-      <section class="help-section about-section">
-        <div class="section-heading">
-          <span class="section-eyebrow">03 — About</span>
-          <h2>About AURA</h2>
-        </div>
-
-        <div class="about-card">
-          <div class="about-image-wrap">
-            <div class="about-image-placeholder">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-              <span>Studio image placeholder</span>
-            </div>
-          </div>
-
-          <div class="about-text">
-            <p>
-              AURA is a tranquil conversational environment for architectural reasoning, creative
-              discourse, and pristine structural design — built for people who think in both prose
-              and code.
-            </p>
-            <p>
-              It's model-agnostic by design: bring the provider you already trust, and AURA handles
-              the editorial layer on top.
-            </p>
-
-            <div class="about-meta-row">
-              <div class="about-meta-item">
-                <span class="about-meta-label">Version</span>
-                <span class="about-meta-value">1.0.0</span>
-              </div>
-              <div class="about-meta-item">
-                <span class="about-meta-label">Build</span>
-                <span class="about-meta-value">Editorial</span>
-              </div>
-              <div class="about-meta-item">
-                <span class="about-meta-label">Updated</span>
-                <span class="about-meta-value">Aug 2026</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-</body>
+            // scroll main content back to top on switch
+            var main = document.querySelector(".help-main");
+            if (main) {
+              main.scrollTop = 0;
+            }
+            window.scrollTo({
+              top: 0,
+              behavior: "instant" in window ? "instant" : "auto",
+            });
+          });
+        });
+      })();
+    </script>
+  </body>
 </html>

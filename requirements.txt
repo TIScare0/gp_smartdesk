@@ -1,14 +1,21 @@
 pywebview==6.2.1
+PySide6==6.8.3; platform_system=="Linux"
+
 curl_cffi==0.16.0
-dotenv==0.9.9
+python-dotenv==1.1.1
+
 google-genai==2.17.0
 google-api-python-client==2.198.0
+
 huggingface_hub==1.27.0
+
 pillow==12.3.0
 piper-tts==1.6.0
+
 cohere==7.0.8
 mistralai==2.9.2
 openrouter==1.1.42
 openai==3.1.0
+
 fastembed==0.8.0
 pypdf==6.16.1

@@ -1,48 +1,210 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GTU Paper Solver — AURA</title>
-  <link href="../fonts/jet_brain.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/gtu_paper.css" />
-</head>
-<body class="light-theme">
-
-  <div class="ambient-backdrop">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-noise"></div>
-  </div>
-
-  <div class="gtu-paper-shell">
-
-    <header class="gtu-paper-topbar">
-      <a href="tools.html" class="gtu-paper-back-btn" aria-label="Back to AURA">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>Tools</span>
-      </a>
-      <span class="gtu-paper-topbar-label">Text To Speech</span>
-    </header>
-
-  </div>
-
-  <div id="toastContainer" class="toast-hub"></div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        applyTheme();
-    });
-
-    function applyTheme() {
-      if (localStorage.getItem('aura_theme_mode') === 'dark') {
-        document.body.classList.add('dark-theme');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text to Speech — AURA</title>
+    <link href="../fonts/jet_brain.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/tts.css" />
+  </head>
+  <body class="light-theme">
+    <script>
+      if (localStorage.getItem("aura_theme_mode") === "dark") {
+        document.body.classList.remove("light-theme");
+        document.body.classList.add("dark-theme");
       }
-    }
-  </script>
-</body>
+    </script>
+
+    <div class="ambient-backdrop">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+      <div class="ambient-noise"></div>
+    </div>
+
+    <div class="tts-shell">
+      <header class="tts-topbar">
+        <a href="tools.html" class="tts-back-btn" aria-label="Back to Tools">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Tools</span>
+        </a>
+        <span class="tts-topbar-label">Text to Speech</span>
+      </header>
+
+      <main class="tts-content">
+        <!-- ===================== SINGLE MORPHING CARD ===================== -->
+        <div class="tts-card">
+          <!-- ---------- STEP 1: input ---------- -->
+          <div class="tts-step" id="stepInput" data-active="true">
+            <div class="tts-field-group">
+              <label class="tts-field-label" for="ttsTextArea"
+                >Text to convert</label
+              >
+              <textarea
+                id="ttsTextArea"
+                class="tts-textarea"
+                placeholder="Paste an article, a response, or write something to hear it aloud..."
+                spellcheck="false"
+              ></textarea>
+              <div class="tts-char-count">
+                <span id="ttsCharCount">0</span> characters
+              </div>
+            </div>
+
+            <div class="tts-voice-controls">
+              <label class="tts-field-label" for="ttsVoiceSelect">Voice</label>
+              <select class="tts-select" id="ttsVoiceSelect">
+                <option value="">Loading voices...</option>
+              </select>
+            </div>
+
+            <div class="tts-convert-wrapper">
+              <button class="tts-convert-btn" id="ttsConvertBtn" disabled>
+                <svg
+                  class="tts-icon-convert"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span>Convert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ---------- STEP 2: generating / fake progress ---------- -->
+          <div class="tts-step" id="stepProgress">
+            <div class="tts-progress-visual">
+              <div class="tts-wave-bars" id="ttsGenBars">
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+              </div>
+              <span class="tts-step-title">Generating audio...</span>
+            </div>
+
+            <div class="tts-progress-row">
+              <div class="tts-progress-track">
+                <div class="tts-progress-fill" id="ttsProgressFill"></div>
+              </div>
+              <span class="tts-progress-pct" id="ttsProgressPct">0%</span>
+            </div>
+          </div>
+
+          <!-- ---------- STEP 3: playback (audio-reactive) ---------- -->
+          <div class="tts-step" id="stepPlayback">
+            <div
+              class="tts-playback-visual"
+              id="ttsPlaybackVisual"
+              data-state="idle"
+            >
+              <div class="tts-wave-bars" id="ttsLiveBars">
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+                <div class="tts-bar"></div>
+              </div>
+              <span class="tts-playback-status" id="ttsPlaybackStatus"
+                >Ready</span
+              >
+            </div>
+
+            <div class="tts-time-row">
+              <span class="tts-time-current" id="ttsTimeCurrent">0:00</span>
+              <div class="tts-time-track" id="ttsTimeTrack">
+                <div class="tts-time-fill" id="ttsTimeFill"></div>
+              </div>
+              <span class="tts-time-duration" id="ttsTimeDuration">0:00</span>
+            </div>
+
+            <div class="tts-actions-row">
+              <button class="tts-play-btn" id="ttsPlayBtn">
+                <svg
+                  class="tts-icon-play"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <svg
+                  class="tts-icon-pause"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style="display: none"
+                >
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span id="ttsPlayLabel">Play</span>
+              </button>
+
+              <button class="tts-stop-btn" id="ttsStopBtn">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <rect x="5" y="5" width="14" height="14" rx="1"></rect>
+                </svg>
+                New conversion
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <audio id="ttsAudio" preload="auto"></audio>
+
+    <div id="toastContainer" class="toast-hub"></div>
+
+    <script src="../js/webview.js"></script>
+    <script src="../js/tts.js"></script>
+  </body>
 </html>
