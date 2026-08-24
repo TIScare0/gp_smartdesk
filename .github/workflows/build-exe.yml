@@ -1,4 +1,4 @@
-name: Build Multi-Platform Executables
+name: Build GP SmartDesk Executables
 
 on:
   push:
@@ -6,33 +6,24 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-
-permissions:
-  contents: read
-  packages: write
-
-defaults:
-  run:
-    shell: bash
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0, v1.1)'
+        required: false
+        default: ''
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }} / ${{ matrix.arch }}
+    name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64, arm64]
+        os: [ubuntu-latest, windows-latest]
         include:
-          # Windows only builds x64 (arm64 support limited)
+          - os: ubuntu-latest
+            arch: x64
           - os: windows-latest
             arch: x64
-          # Linux builds both x64 and arm64
-          - os: ubuntu-latest
-            arch: [x64, arm64]
-          # macOS builds x64 and arm64 (Apple Silicon)
-          - os: macos-latest
-            arch: [x64, arm64]
 
     steps:
       - name: Cancel previous runs
@@ -53,30 +44,8 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Set up QEMU for multi-arch (Linux/macOS)
-        if: matrix.os != 'windows-latest'
-        uses: qemu-actions/setup-qemu@v3
-
-      - name: Set up QEMU binary translator
-        if: matrix.os != 'windows-latest'
-        uses: qemu-actions/github-action-qemu@main
-
-      - name: Configure Docker (for multi-arch)
-        if: matrix.os != 'windows-latest'
-        uses: docker/setup-qemu-action@v3
-
       - name: Build executable
         run: |
-          # Determine GUI backend based on OS
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            GUI_BACKEND="edgechromium"
-          else
-            GUI_BACKEND="qt"
-          fi
-
-          # Export arch for pyinstaller
-          export PYINSTALLER_ARCH=$matrix.arch
-
           pyinstaller \
             --name "GP SmartDesk" \
             --onefile \
@@ -89,22 +58,48 @@ jobs:
             --add-data "src/js/vendor:index/js/vendor" \
             main.py
 
-      - name: Rename and organize build output
+      - name: Organize output
         run: |
           mkdir -p dist_bundle
 
-          # Move the generated executable
           if [ -f dist/GP\ SmartDesk ]; then
-            mv "dist/GP SmartDesk" "dist_bundle/GP-SmartDesk-$matrix.arch"
+            mv "dist/GP SmartDesk" "dist_bundle/GP-SmartDesk"
           fi
 
           if [ -f dist/GP\ SmartDesk.exe ]; then
-            mv "dist/GP SmartDesk.exe" "dist_bundle/GP-SmartDesk-$matrix.arch.exe"
+            mv "dist/GP SmartDesk.exe" "dist_bundle/GP-SmartDesk.exe"
           fi
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Create release tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use provided version or auto-increment
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            TAG="${{ github.event.inputs.version }}"
+          else
+            # Simple auto-increment: get last tag, extract number, add 1
+            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0")
+            MAJOR=$(echo $LAST_TAG | sed 's/v//' | cut -d. -f1)
+            MINOR=$(echo $LAST_TAG | sed 's/v//' | cut -d. -f2)
+            MINOR=$((MINOR + 1))
+            TAG="v${MAJOR}.${MINOR}"
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_ENV
+
+          # Create annotated tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
         with:
-          name: gp-smartdesk-${{ matrix.os }}-${{ matrix.arch }}
-          path: dist_bundle/
-          retention-days: 30
+          tag_name: ${{ env.tag }}
+          name: "GP SmartDesk ${{ env.tag }}"
+          files: dist_bundle/*
+          draft: false
+          prerelease: false
