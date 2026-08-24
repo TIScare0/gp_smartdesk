@@ -1,5 +1,5 @@
 pywebview==6.2.1
-PySide6==6.8.3; platform_system=="Linux"
+PySide6==6.10.3; platform_system=="Linux"
 
 curl_cffi==0.16.0
 python-dotenv==1.1.1

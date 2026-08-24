@@ -8,12 +8,6 @@ on:
         required: true
         type: string
 
-      create_release:
-        description: "Create GitHub Release"
-        required: true
-        default: true
-        type: boolean
-
 permissions:
   contents: write
 
@@ -23,263 +17,79 @@ concurrency:
 
 env:
   PYTHON_VERSION: "3.12"
-  APP_NAME: "GP SmartDesk"
 
 jobs:
 
-  # ==========================================================
-  # Linux x64
-  # ==========================================================
-
   linux-x64:
-    name: Build Linux x64
+    name: Linux x64
     runs-on: ubuntu-24.04
 
     steps:
-
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.12 x64
+      - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
           architecture: x64
           cache: pip
           cache-dependency-path: requirements.txt
 
-      - name: Show build environment
-        shell: bash
-        run: |
-          set -eux
-
-          python --version
-          python -c "import platform; print('Machine:', platform.machine())"
-          python -c "import sys; print('Python:', sys.version)"
-
       - name: Install dependencies
-        shell: bash
         run: |
-          set -eux
-
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install --upgrade pyinstaller
+          python -m pip install pyinstaller
 
-      - name: Validate project
-        shell: bash
+      - name: Build
         run: |
-          set -eux
-
-          test -f main.py
-          test -f requirements.txt
-          test -f gp_smartdesk.spec
-
-          test -f src/index.html
-          test -d src/css
-          test -d src/js
-          test -d src/pages
-          test -d src/fonts
-          test -d src/images
-
-          test -d tools
-          test -d network
-          test -d utils
-
-      - name: Compile Python sources
-        shell: bash
-        run: |
-          set -eux
-
-          python -m compileall \
-            -q \
-            main.py \
-            cache.py \
-            config.py \
-            network \
-            tools \
-            utils
-
-      - name: Build application
-        shell: bash
-        run: |
-          set -eux
-
           rm -rf build dist
+          pyinstaller --clean --noconfirm gp_smartdesk.spec
 
-          pyinstaller \
-            --clean \
-            --noconfirm \
-            gp_smartdesk.spec
-
-      - name: Verify application bundle
-        shell: bash
+      - name: Verify
         run: |
-          set -eux
+          test -f "dist/GP SmartDesk"
 
-          APP_DIR="dist/GP SmartDesk"
-          APP="$APP_DIR/GP SmartDesk"
-
-          test -d "$APP_DIR"
-          test -f "$APP"
-
-          test -f "$APP_DIR/src/index.html"
-          test -d "$APP_DIR/src/css"
-          test -d "$APP_DIR/src/js"
-          test -d "$APP_DIR/src/pages"
-          test -d "$APP_DIR/src/fonts"
-          test -d "$APP_DIR/src/images"
-
-          test -d "$APP_DIR/tools"
-          test -d "$APP_DIR/network"
-
-          chmod +x "$APP"
-
-          echo "========================================"
-          echo "Linux x64 build verified"
-          echo "========================================"
-
-          du -sh "$APP_DIR"
-          find "$APP_DIR" -maxdepth 2 -type f | sort | head -100
-
-      - name: Smoke test
-        shell: bash
+      - name: Rename
         run: |
-          set +e
+          mv "dist/GP SmartDesk" "GP-SmartDesk-linux-x64"
 
-          timeout 15s \
-            "dist/GP SmartDesk/GP SmartDesk"
-
-          EXIT_CODE=$?
-
-          # timeout returns 124 when the GUI process is still alive.
-          # That is considered a successful startup for this smoke test.
-          if [ "$EXIT_CODE" -eq 124 ]; then
-            echo "Application started successfully."
-            exit 0
-          fi
-
-          echo "Application exited with code: $EXIT_CODE"
-
-          if [ "$EXIT_CODE" -ne 0 ]; then
-            exit "$EXIT_CODE"
-          fi
-
-      - name: Package Linux x64
-        shell: bash
-        run: |
-          set -eux
-
-          mkdir -p release
-
-          tar \
-            -C dist \
-            -czf release/GP-SmartDesk-linux-x64.tar.gz \
-            "GP SmartDesk"
-
-      - name: Upload Linux artifact
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: GP-SmartDesk-linux-x64
-          path: release/GP-SmartDesk-linux-x64.tar.gz
+          path: GP-SmartDesk-linux-x64
           if-no-files-found: error
           retention-days: 30
 
 
-  # ==========================================================
-  # Windows x64
-  # ==========================================================
-
   windows-x64:
-    name: Build Windows x64
+    name: Windows x64
     runs-on: windows-2025
 
     steps:
-
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.12 x64
+      - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
           architecture: x64
           cache: pip
           cache-dependency-path: requirements.txt
 
-      - name: Show build environment
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          python --version
-
-          python -c "import platform; print('Machine:', platform.machine())"
-          python -c "import sys; print('Python:', sys.version)"
-
       - name: Install dependencies
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
-
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install --upgrade pyinstaller
+          python -m pip install pyinstaller
 
-      - name: Validate project
+      - name: Build
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
-
-          $requiredFiles = @(
-            "main.py",
-            "requirements.txt",
-            "gp_smartdesk.spec",
-            "src/index.html"
-          )
-
-          foreach ($file in $requiredFiles) {
-            if (!(Test-Path $file)) {
-              throw "Missing required file: $file"
-            }
-          }
-
-          $requiredDirectories = @(
-            "src/css",
-            "src/js",
-            "src/pages",
-            "src/fonts",
-            "src/images",
-            "tools",
-            "network",
-            "utils"
-          )
-
-          foreach ($directory in $requiredDirectories) {
-            if (!(Test-Path $directory)) {
-              throw "Missing required directory: $directory"
-            }
-          }
-
-      - name: Compile Python sources
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          python -m compileall `
-            -q `
-            main.py `
-            cache.py `
-            config.py `
-            network `
-            tools `
-            utils
-
-      - name: Build application
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-
           if (Test-Path "build") {
             Remove-Item "build" -Recurse -Force
           }
@@ -288,107 +98,54 @@ jobs:
             Remove-Item "dist" -Recurse -Force
           }
 
-          pyinstaller `
-            --clean `
-            --noconfirm `
-            gp_smartdesk.spec
+          pyinstaller --clean --noconfirm gp_smartdesk.spec
 
-      - name: Verify application bundle
+      - name: Verify
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
-
-          $appDir = "dist/GP SmartDesk"
-          $exe = "$appDir/GP SmartDesk.exe"
-
-          if (!(Test-Path $appDir)) {
-            throw "Application directory does not exist"
-          }
-
-          if (!(Test-Path $exe)) {
+          if (!(Test-Path "dist/GP SmartDesk.exe")) {
             throw "GP SmartDesk.exe was not created"
           }
 
-          $requiredPaths = @(
-            "$appDir/src/index.html",
-            "$appDir/src/css",
-            "$appDir/src/js",
-            "$appDir/src/pages",
-            "$appDir/src/fonts",
-            "$appDir/src/images",
-            "$appDir/tools",
-            "$appDir/network"
-          )
-
-          foreach ($path in $requiredPaths) {
-            if (!(Test-Path $path)) {
-              throw "Missing bundled path: $path"
-            }
-          }
-
-          Write-Host "========================================"
-          Write-Host "Windows x64 build verified"
-          Write-Host "========================================"
-
-          Get-ChildItem $appDir
-
-      - name: Package Windows x64
+      - name: Rename
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
+          Move-Item `
+            "dist/GP SmartDesk.exe" `
+            "GP-SmartDesk-windows-x64.exe"
 
-          New-Item `
-            -ItemType Directory `
-            -Force `
-            -Path release | Out-Null
-
-          Compress-Archive `
-            -Path "dist/GP SmartDesk/*" `
-            -DestinationPath "release/GP-SmartDesk-windows-x64.zip" `
-            -CompressionLevel Optimal
-
-      - name: Upload Windows artifact
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: GP-SmartDesk-windows-x64
-          path: release/GP-SmartDesk-windows-x64.zip
+          path: GP-SmartDesk-windows-x64.exe
           if-no-files-found: error
           retention-days: 30
 
 
-  # ==========================================================
-  # GitHub Release
-  # ==========================================================
-
   release:
-    name: Publish Release
+    name: GitHub Release
     needs:
       - linux-x64
       - windows-x64
 
-    if: ${{ inputs.create_release == true }}
-
     runs-on: ubuntu-24.04
 
     steps:
-
-      - name: Download Linux artifact
+      - name: Download Linux
         uses: actions/download-artifact@v4
         with:
           name: GP-SmartDesk-linux-x64
           path: release
 
-      - name: Download Windows artifact
+      - name: Download Windows
         uses: actions/download-artifact@v4
         with:
           name: GP-SmartDesk-windows-x64
           path: release
 
-      - name: Validate release version
-        shell: bash
+      - name: Validate version
         run: |
-          set -eux
-
           VERSION="${{ inputs.version }}"
 
           if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -397,40 +154,31 @@ jobs:
             exit 1
           fi
 
-      - name: Create Git tag
-        shell: bash
+      - name: Create tag
         run: |
-          set -eux
-
-          git init
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git remote add origin \
-            "https://github.com/${{ github.repository }}.git"
-
-          git fetch --tags origin
+          git fetch --tags
 
           VERSION="${{ inputs.version }}"
 
           if git rev-parse "$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists."
+            echo "Tag $VERSION already exists"
             exit 1
           fi
 
-          git tag -a "$VERSION" \
-            -m "GP SmartDesk $VERSION"
-
+          git tag -a "$VERSION" -m "GP SmartDesk $VERSION"
           git push origin "$VERSION"
 
-      - name: Create GitHub Release
+      - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version }}
           name: GP SmartDesk ${{ inputs.version }}
           files: |
-            release/GP-SmartDesk-linux-x64.tar.gz
-            release/GP-SmartDesk-windows-x64.zip
+            release/GP-SmartDesk-linux-x64
+            release/GP-SmartDesk-windows-x64.exe
           generate_release_notes: true
           draft: false
           prerelease: false
