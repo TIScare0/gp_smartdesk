@@ -27,3 +27,6 @@ todo*
 output.txt
 
 .cl*
+
+build
+dist

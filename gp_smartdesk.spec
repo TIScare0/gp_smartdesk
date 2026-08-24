@@ -10,8 +10,10 @@
 
 from pathlib import Path
 
-from PyInstaller.utils.hooks import collect_submodules
-
+from PyInstaller.utils.hooks import (
+    collect_submodules, 
+    collect_data_files
+)
 
 # ============================================================
 # Project paths
@@ -57,6 +59,7 @@ datas = [
     (str(ROOT / "src" / "images"), "src/images"),
     (str(ROOT / "src" / "js"), "src/js"),
     (str(ROOT / "src" / "pages"), "src/pages"),
+    *collect_data_files("rapidocr")
 ]
 
 
