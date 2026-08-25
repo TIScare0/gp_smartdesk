@@ -53,14 +53,14 @@ if __name__ == "__main__":
     api = Tools()
     window = webview.create_window(
         "GP SmartDesk",
-        app,
+        app, #type: ignore
         js_api=api,
         height=1080,
         width=1920,
         http_port=13563,
     )
 
-    gui = "qt"
+    gui = "gtk"
 
     if platform.system() == "Windows":
         gui = "edgechromium"
