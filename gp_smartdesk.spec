@@ -59,7 +59,8 @@ datas = [
     (str(ROOT / "src" / "images"), "src/images"),
     (str(ROOT / "src" / "js"), "src/js"),
     (str(ROOT / "src" / "pages"), "src/pages"),
-    *collect_data_files("rapidocr")
+    *collect_data_files("rapidocr"),
+    *collect_data_files("piper"),
 ]
 
 
