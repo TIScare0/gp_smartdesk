@@ -166,13 +166,8 @@ jobs:
 
           VERSION="${{ inputs.version }}"
 
-          if git rev-parse --verify "refs/tags/$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists"
-            exit 1
-          fi
-
-          git tag -a "$VERSION" -m "GP SmartDesk $VERSION"
-          git push origin "$VERSION"
+          git tag -fa "$VERSION" -m "GP SmartDesk $VERSION"
+          git push origin "$VERSION" --force
 
       - name: Create release
         uses: softprops/action-gh-release@v2
