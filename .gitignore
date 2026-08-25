@@ -14,6 +14,8 @@ __pycache__
 tes.py
 test.py
 
+.appvenv
+
 .env
 
 debug*

@@ -60,7 +60,7 @@ if __name__ == "__main__":
         http_port=13563,
     )
 
-    gui = "gtk"
+    gui = "qt"
 
     if platform.system() == "Windows":
         gui = "edgechromium"
