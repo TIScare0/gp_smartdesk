@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from openai import APIError, OpenAI
 
-from config import env_item
+from config import NVIDIA_API_KEY
 
 
 @dataclass(frozen=True)
@@ -18,7 +18,7 @@ class Nvidia:
         self.thinking = thinking
         self.model = model
         self.client = OpenAI(
-            api_key=env_item('NVIDIA_API_KEY'),
+            api_key=NVIDIA_API_KEY,
             base_url='https://integrate.api.nvidia.com/v1'
         )
         self.system_prompt = ''

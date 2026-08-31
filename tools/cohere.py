@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from cohere import ClientV2
 from cohere.core.api_error import ApiError
 
-from config import env_item
+from config import COHERE_API_KEY
 
 
 @dataclass(frozen=True)
@@ -14,7 +14,7 @@ class CohereModels:
 class Cohere:
     def __init__(self, model: str):
         self.model = model
-        self.client = ClientV2(env_item('COHERE_API_KEY'))
+        self.client = ClientV2(api_key=COHERE_API_KEY)
         self.system_prompt = ''
 
     def txt2txt(self, prompt):

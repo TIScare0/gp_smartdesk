@@ -2,17 +2,17 @@ from enum import Flag, auto
 from typing import Any
 from dataclasses import asdict
 
+from utils import random_uuid
+from network import Request
+from config import update_key
+
 from .model import (
     Model,
     Modality,
 )
 from .model import Error as ModelError
 from .memory import Memory
-from .routing import (
-    IntentRouter,
-    Intents
-)
-from utils import random_uuid
+from .intender import IntentRouter
 from .downloader import Downloader
 from .piper import Piper
 from .piper import DOWNLOAD_URLS as piper_urls
@@ -57,40 +57,40 @@ class Tools():
         self.chat_mem = None
         self._downloads = {}
 
+    def load_intender(self):
+        if not self.intentRouter:
+            self.intentRouter = IntentRouter()
+        return self.intentRouter
+
+    def detect_intent(self, user_text, is_api_safe=True):
+        return self.load_intender().detect(user_text, is_api_safe)
+
     def chat(self, prompt):
         if not self.chat_mem:
             self.chat_mem = Memory()
-        if not self.intentRouter:
-            self.intentRouter = IntentRouter()
 
-        intent = self.intentRouter.detect(prompt)
-        if intent != Intents.CHAT:
-            return self.router(prompt)
+
+        self.chat_mem.add(prompt)
         models = self.model.available_models(Modality.TEXT)
         if isinstance(models, ModelError):
             return {'error': models.details}
         model = next(x for x in models if not x.is_limit_reached)
         model_ins = self.model.set_model(model.model_name)
+        
+        prompt = f'''
+        BELOW THERE IS USER_MEMORY DON'T SAY TO USER THAT YOU HAVE USER_MEMORY
+        AND USE IT FOR YOURSELF.
+        USER_MEMORY: {self.chat_mem.get_memory(prompt)}
+        USER_PROMPT: {prompt}
+        '''
+
+        self.chat_mem.save_memories()    
         try:
-            return {
-                'result': asdict(model_ins.call_model(prompt)) #type: ignore
-            }
+            return {'result': asdict(model_ins.call_model(prompt))} #type: ignore
         except Exception as e:
             if isinstance(e, ModelError):
-                return {
-                    'error': e.details,
-                }
-            return {
-                'error': str(e),
-            }
-
-    def router(self, result: Intents, *args, **kwargs):
-        if result == Intents.IMAGES:
-            return self.gen_image(*args, **kwargs)
-        elif result == Intents.AUDIO:
-            ...
-        elif result == Intents.PAPER_SOLVER:
-            ...
+                return {'error': e.details}
+            return {'error': str(e)}
 
     def gen_image(self, userPrompt):
         models = self.model.available_models(Modality.IMAGE)
@@ -108,7 +108,7 @@ class Tools():
             if isinstance(e, ModelError):
                 return {'error': e.details}
             return {'error': str(e)}
-    
+
     def download(self, _id: str):
         func = DOWNLOAD_MAP.get(_id)
 
@@ -206,3 +206,21 @@ class Tools():
                 "status": False,
                 "error": str(e),
             }
+
+    def checkNvidiaApiKey(self, key):
+        try:
+            response = Request().request(
+                'https://integrate.api.nvidia.com/v1/models',
+                headers={
+                    'Authorization': f'Bearer {key}'
+                },
+                timeout=10
+            )
+
+            return {'valid': response.status_code == 200} #type: ignore
+
+        except Exception:
+            return {'valid': False}
+
+    def save_key(self, provider: str, new_key: str) -> None:
+        update_key(provider, new_key)

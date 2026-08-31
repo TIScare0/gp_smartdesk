@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from mistralai.client import Mistral as MistralAI
 from mistralai.client.errors import MistralError
 
-from config import env_item
+from config import MISTRAL_API_KEY
 
 
 @dataclass(frozen=True)
@@ -15,7 +15,7 @@ class MistralModels:
 class Mistral:
     def __init__(self, model: str):
         self.model = model
-        self.client = MistralAI(api_key=env_item('MISTRAL_API_KEY'))
+        self.client = MistralAI(api_key=MISTRAL_API_KEY)
         self.system_prompt = ''
 
     def txt2txt(self, prompt: str):

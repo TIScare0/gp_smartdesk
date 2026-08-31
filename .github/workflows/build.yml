@@ -1,4 +1,4 @@
-name: GP SmartDesk Production Build
+name: GP SmartDesk Build
 
 on:
   workflow_dispatch:
@@ -24,6 +24,13 @@ jobs:
     name: Linux x64
     runs-on: ubuntu-24.04
 
+    env:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,6 +48,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install pyinstaller
+
+      - name: Inject API keys
+        run: |
+          python devtools/inject_keys.py
 
       - name: Build
         run: |
@@ -68,6 +79,13 @@ jobs:
     name: Windows x64
     runs-on: windows-2025
 
+    env:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,6 +104,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install pyinstaller
+
+      - name: Inject API keys
+        shell: pwsh
+        run: |
+          python devtools/inject_keys.py
 
       - name: Build
         shell: pwsh

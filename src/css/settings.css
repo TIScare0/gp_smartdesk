@@ -3,7 +3,8 @@
    Extends the editorial design tokens defined in style.css
    ========================================================================== */
 
-html, body {
+html,
+body {
   overflow: auto;
   height: auto;
   min-height: 100vh;
@@ -76,7 +77,7 @@ html, body {
 }
 
 .save-status::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -159,8 +160,14 @@ html, body {
 }
 
 @keyframes panelFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .panel-heading {
@@ -281,12 +288,117 @@ html, body {
 }
 
 /* ---------- API key rows ---------- */
+/* ---------- API key rows ---------- */
+
 .api-key-row {
-  display: grid;
-  grid-template-columns: 110px 1fr;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  width: 100%;
   margin-bottom: 8px;
+}
+
+.api-key-row:last-child {
+  margin-bottom: 0;
+}
+
+.api-key-provider {
+  width: 90px;
+  flex: 0 0 90px;
+
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.api-key-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.api-key-check-btn {
+  flex: 0 0 auto;
+
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-hairline);
+
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.api-key-check-btn:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent-gold);
+  color: var(--text-main);
+}
+
+.api-key-check-btn:active {
+  transform: translateY(1px);
+}
+
+/* ---------- API key status ---------- */
+
+.api-key-status {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+
+  border-radius: 50%;
+
+  background: var(--border-medium);
+
+  opacity: 0;
+
+  transition:
+    background var(--transition-fast),
+    opacity var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Checking */
+
+.api-key-row.checking .api-key-status {
+  opacity: 1;
+  background: var(--accent-gold);
+}
+
+/* Valid */
+
+.api-key-row.valid .api-key-status {
+  opacity: 1;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 8px rgba(21, 128, 61, 0.35);
+}
+
+.api-key-row.valid .api-key-check-btn {
+  border-color: rgba(21, 128, 61, 0.4);
+  color: var(--accent-emerald);
+}
+
+.api-key-row.invalid .api-key-status {
+  opacity: 1;
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);
+}
+
+.api-key-row.invalid .api-key-check-btn {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
 }
 
 .api-key-row:last-child {
@@ -490,4 +602,12 @@ html, body {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+#settingSystemPrompt {
+  width: 600px;
+}
+
+.field-input {
+  width: 410px;
 }

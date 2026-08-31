@@ -36,6 +36,15 @@ def save_file(filename, data, _type='w', is_json=False):
             else:
                 f.write(data)
 
+def open_file(filename, default=None):
+    try:
+        data = None
+        with open(filename, 'r') as f:
+            data = f.read()
+        return data
+    except Exception as e:
+        print(f'[OPEN FILE] Error Occured while opening file {str(e)}')
+        return default
 
 def create_filename(chars: str, ext: str | None = None):
     filename = chars[:20].lower().replace(' ', '_')

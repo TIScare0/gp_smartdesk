@@ -1,46 +1,30 @@
 (function () {
   "use strict";
 
-  const KINETIC_PROMPTS = [
+  const IMAGES = [
     {
-      id: "card-1",
-      thumb: "images/earth.jpeg",
-      prompt:
-        "Synthesize a 3D isometric pixel visualization of Nordic structural minimalism, tactile timber joinery, and natural daylight.",
+      thumb: "images/ai_interface.jpg",
       pos: { top: "10%", left: "7%" },
-      delay: "0s",
     },
+
     {
-      id: "card-2",
-      thumb: "images/rich_house.png",
-      prompt:
-        "Explore the culinary choreography of Copenhagen fine dining: seasonal foraging, ceramic materiality, and ambient acoustic pacing.",
+      thumb: "images/ai_workspace.jpg",
       pos: { top: "34%", right: "6%" },
-      delay: "-4s",
     },
+
     {
-      id: "card-3",
-      thumb: "images/space.png",
-      prompt:
-        "Make an image of alpine sunset peak with glowing mountain voxels and golden twilight.",
+      thumb: "images/app_development.jpg",
       pos: { bottom: "12%", left: "10%" },
-      delay: "-8s",
     },
+
     {
-      id: "card-4",
-      thumb: "images/trees_nature.png",
-      prompt:
-        "Synthesize a critique examining how artificial neural models perceive spatial rhythm, negative space, and human aesthetic balance.",
+      thumb: "images/code_data.jpg",
       pos: { top: "44%", left: "4%" },
-      delay: "-12s",
     },
+
     {
-      id: "card-5",
-      thumb: "images/waterfall.png",
-      prompt:
-        "Generate an image of emerald aurora night sky across arctic fjords.",
+      thumb: "images/digital_intelligence.jpg",
       pos: { bottom: "14%", right: "9%" },
-      delay: "-6s",
     },
   ];
 
@@ -59,12 +43,6 @@
     isStreaming: false,
     currentSessionId: null,
     sessions: storedSessions,
-    activeModel: localStorage.getItem("aura_active_model") || "gemini-2.5-pro",
-    temperature: parseFloat(localStorage.getItem("aura_temperature") || "0.7"),
-    systemPrompt:
-      localStorage.getItem("aura_system_prompt") ||
-      "You are AURA, an elite editorial intelligence. Provide articulated reasoning, elegant typography-aware output, pristine code structures with TypeScript/Tailwind, and refined prose with genuine clarity.",
-    apiKey: localStorage.getItem("aura_api_key") || "",
     attachedMedia: null,
     isListening: false,
     messages: [],
@@ -149,11 +127,17 @@
 
   async function getWebApi() {
     try {
-      console.log("[OCR] Waiting for Python API...");
+      console.log("[CORE] Waiting for Python API...");
 
-      const bridge = await window.web_api_ready;
+      const timeout = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error("Python API connection timed out"));
+        }, 5000);
+      });
 
-      console.log("[OCR] Python API received:", bridge);
+      const bridge = await Promise.race([window.web_api_ready, timeout]);
+
+      console.log("[CORE] Python API received:", bridge);
 
       if (!bridge) {
         throw new Error("Python API is null");
@@ -161,10 +145,44 @@
 
       return bridge;
     } catch (error) {
-      console.error("[OCR] Failed to get Python API:", error);
+      console.error("[CORE] Failed to get Python API:", error);
+
+      showWebApiErrorCard();
 
       return null;
     }
+  }
+
+  function showWebApiErrorCard(message) {
+    if (document.querySelector(".web-api-error-card")) {
+      return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "web-api-error-card";
+
+    card.innerHTML = `
+    <div class="web-api-error-icon">⚠️</div>
+
+    <div class="web-api-error-content">
+      <h3>Unable to connect to WebView API</h3>
+
+      <p class="web-api-error-message"></p>
+
+      <a
+        href="https://github.com/TIScare0/gp_smartdesk/issues/new"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Report on GitHub →
+      </a>
+    </div>
+  `;
+
+    card.querySelector(".web-api-error-message").textContent =
+      message || "The Python API could not be reached within 5 seconds.";
+
+    document.body.appendChild(card);
   }
 
   function setupSidebarState() {
@@ -209,7 +227,7 @@
     if (!DOM.kineticCanvas) return;
     DOM.kineticCanvas.innerHTML = "";
 
-    KINETIC_PROMPTS.forEach((item, index) => {
+    IMAGES.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "kinetic-card";
       const delaySec = `${index * 0.15}s`;
@@ -223,14 +241,13 @@
       card.innerHTML = `
         <div class="kinetic-card-inner">
           <div class="card-img-wrap">
-            <img class="kinetic-thumb" src="${item.thumb}" alt="${item.title}" loading="lazy" />
+            <img class="kinetic-thumb" src="${item.thumb}" loading="lazy" />
           </div>
         </div>
       `;
       DOM.kineticCanvas.appendChild(card);
     });
 
-    // 3D Parallax & Mouse Response on Kinetic Card Inners
     window.addEventListener("mousemove", (e) => {
       const { innerWidth, innerHeight } = window;
       const xOffset = (e.clientX / innerWidth - 0.5) * 16;
@@ -245,7 +262,6 @@
     });
   }
 
-  // Custom Magnetic Cursor
   function setupCursor() {
     let mouseX = 0,
       mouseY = 0;
@@ -272,7 +288,6 @@
     }
     requestAnimationFrame(loop);
 
-    // Hover state for interactive controls
     document.addEventListener("mouseover", (e) => {
       if (
         e.target.closest(
@@ -286,9 +301,7 @@
     });
   }
 
-  // Attach Event Listeners
   function setupListeners() {
-    // Curated Inquiry Pills
     DOM.heroCuratedPills?.addEventListener("click", (e) => {
       const pill = e.target.closest(".inquiry-pill");
       if (!pill) return;
@@ -297,7 +310,6 @@
       startConversation(prompt, title);
     });
 
-    // Sidebar Brand Monogram & Collapse Toggles
     DOM.sidebarBrandBtn?.addEventListener("click", (e) => {
       e.preventDefault();
       if (DOM.appContainer?.classList.contains("sidebar-collapsed")) {
@@ -309,11 +321,8 @@
 
     DOM.sidebarToggleCollapseBtn?.addEventListener("click", toggleSidebar);
     DOM.headerSidebarToggleBtn?.addEventListener("click", toggleSidebar);
-
-    // Sidebar Mobile Backdrop
     DOM.sidebarMobileBackdrop?.addEventListener("click", closeMobileSidebar);
 
-    // Top Header Brand Click
     DOM.brandLogoBtn?.addEventListener("click", (e) => {
       e.preventDefault();
       if (window.innerWidth <= 768) {
@@ -323,14 +332,12 @@
       }
     });
 
-    // New Chat Action Buttons
     DOM.newChatTopBtn?.addEventListener("click", returnToHero);
     DOM.sidebarNewChatBtn?.addEventListener("click", () => {
       returnToHero();
       if (window.innerWidth <= 768) closeMobileSidebar();
     });
 
-    // Sidebar Search & Rail Action
     DOM.sidebarSearchInput?.addEventListener("input", (e) => {
       renderSidebarChats(e.target.value);
     });
@@ -395,7 +402,6 @@
       }
     });
 
-
     // Model Selector Popover
     DOM.composerModelSelectorBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -421,11 +427,7 @@
     // Thread Actions
     DOM.exportChatBtn?.addEventListener("click", exportConversation);
     DOM.clearStreamBtn?.addEventListener("click", clearCurrentStream);
-
-    // Theme Toggle
     DOM.themeToggleBtn?.addEventListener("click", toggleTheme);
-
-    // Global Click to close popovers
     document.addEventListener("click", (e) => {
       if (
         !e.target.closest(".editorial-popover") &&
@@ -460,7 +462,6 @@
     }, 400);
   }
 
-  // Return to Editorial Hero Stage
   function returnToHero() {
     state.isHeroActive = true;
     state.attachedMedia = null;
@@ -482,7 +483,6 @@
     }, 300);
   }
 
-  // Handle Send from Composer
   function submitComposer() {
     if (state.isStreaming) return;
     const text = DOM.composerInput?.value.trim() || "";
@@ -499,32 +499,6 @@
     }
   }
 
-  // Detect if user prompt requests 3D Pixel Grid Image Synthesis
-  function isImageSynthesisPrompt(text) {
-    const lower = String(text || "")
-      .toLowerCase()
-      .trim();
-    const imageKeywords = [
-      "make an image",
-      "Make image",
-      "generate an image",
-      "generate image",
-      "create an image",
-      "create image",
-      "synthesize an image",
-      "pixel visualization",
-      "voxel image",
-      "voxel visualization",
-      "picture of",
-      "photo of",
-      "3d pixel",
-      "render scene",
-      "render an image",
-    ];
-    return imageKeywords.some((kw) => lower.includes(kw));
-  }
-
-  // Process & Render Messages
   async function processMessageSubmission(userText) {
     if (!userText && !state.attachedMedia) return;
 
@@ -532,147 +506,98 @@
     state.attachedMedia = null;
     clearMediaPreview();
 
-    // 1. User Message
+    // 1. Add user's message
     const userMsg = {
       id: "msg_" + Date.now(),
       role: "user",
       content: userText,
       media: media,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      time: timeNow(),
     };
-
     state.messages.push(userMsg);
     appendMessageElement(userMsg);
     persistSession(userText);
 
-    // 2. Check for 3D Pixel Grid Generator intent
-    if (isImageSynthesisPrompt(userText)) {
-      render3DPixelGridCardResponse(userText);
-      return;
-    }
-
-    // 3. Editorial AI Stream Request
     const aiMsgId = "msg_" + (Date.now() + 1);
     const aiMsg = {
       id: aiMsgId,
       role: "assistant",
       content: "",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      time: timeNow(),
     };
-
     state.messages.push(aiMsg);
-    const aiEl = appendMessageElement(aiMsg, true);
+    appendMessageElement(aiMsg, true, true);
 
-    await streamEditorialResponse(userText, media, aiEl, aiMsg);
-  }
-
-  // Render 3D Pixel Grid Response Card
-  async function render3DPixelGridCardResponse(userPrompt) {
     state.isStreaming = true;
 
-    const cardId = `pixelCard_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-    const aiMsgId = "msg_" + Date.now();
+    try {
+      const wapi = await getWebApi();
+      if (!wapi) return;
 
-    const aiMsg = {
-      id: aiMsgId,
-      role: "assistant",
-      userPrompt: userPrompt,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+      const intentResponse = await wapi.detect_intent(userText, true);
+      const intent = String(intentResponse.result || "").toLowerCase();
 
-    state.messages.push(aiMsg);
-
-    const row = document.createElement("div");
-    row.className = "message-row ai pixel-response-row";
-    row.id = aiMsg.id;
-
-    row.innerHTML = `
-      <div class="msg-avatar">AURA</div>
-
-      <div class="msg-column" style="flex:1;">
-        <div class="msg-bubble pixel-message-bubble">
-
-          <article class="pixel-gen-card" id="${cardId}">
-            <div
-              class="card-canvas-viewport"
-              title="Click to inspect with Magnifying Lens when stabilized"
-            >
-              <canvas class="pixel-canvas-display"></canvas>
-              <canvas class="pixel-canvas-proc"></canvas>
-              <img class="clear-image-overlay" alt="Clear Image" />
-            </div>
-          </article>
-
-        </div>
-      </div>
-    `;
-
-    DOM.messagesStream?.appendChild(row);
-    scrollToStreamBottom();
-
-    const cardElement = document.getElementById(cardId);
-
-    let engine = null;
-
-    const previewUrls = (window.AURAPixelGrid?.IMAGES || []).map((s) => s.url);
-    const seedScene = { url: previewUrls[0] || "", name: "Preview" };
-
-    if (cardElement && window.AURAPixelGrid?.PixelEngineInstance) {
-      engine = new window.AURAPixelGrid.PixelEngineInstance(
-        cardElement,
-        seedScene,
-        userPrompt,
-      );
-
-      if (window.AURAPixelGrid.activeEngines) {
-        window.AURAPixelGrid.activeEngines.push(engine);
+      if (intent.includes("chat")) {
+        await streamEditorialResponse(userText, aiMsgId);
+      } else {
+        await HandleImageGen(userText, aiMsgId);
       }
-
-      if (window.AURAPixelGrid.startMasterLoop) {
-        window.AURAPixelGrid.startMasterLoop();
-      }
-
-      // Continuously cycle preview images every 5s while gen_image() is
-      // pending. This only smoothly updates pixel color TARGETS — it never
-      // touches startTime/isStabilized, so the 3D animation timeline is
-      // never restarted or reset.
-      if (previewUrls.length > 0) {
-        engine.startPreviewCycle(previewUrls, 5000);
-      }
+    } catch (e) {
+      console.error("Message submission error:", e);
+      showWebApiErrorCard(e.message);
+      state.isStreaming = false;
     }
+  }
+
+  function timeNow() {
+    return new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  // Simple image-gen flow: no canvas/pixel-grid junk, just a status text
+  // then a plain <img> when the backend returns a path.
+  async function HandleImageGen(userPrompt, aiMsgId) {
+    const bodyEl = document.getElementById(`body_${aiMsgId}`);
+    const thinkingEl = document.getElementById(`thinkingText_${aiMsgId}`);
+    if (thinkingEl) thinkingEl.textContent = "Generating image";
 
     try {
       const web_api = await getWebApi();
-      const image_response = await web_api.gen_image(userPrompt);
-      console.log(image_response);
-      const image_path = image_response.result.response;
-      console.log("Generated image:", image_path);
+      if (!web_api) return;
 
-      if (engine) {
-        // setTargetImage() internally stops the preview cycle immediately,
-        // sets the new pixel color targets, and kicks off the finalize
-        // sequence (flatten -> fade to black -> staggered reveal) without
-        // restarting the existing animation timeline.
-        engine.setTargetImage(image_path);
+      const imageResponse = await web_api.gen_image(userPrompt);
+      const imagePath = imageResponse.result.response;
+
+      const aiMsg = state.messages.find((m) => m.id === aiMsgId);
+      if (aiMsg) {
+        aiMsg.isImageCard = true;
+        aiMsg.image_url = imagePath;
       }
+
+      if (bodyEl) {
+        bodyEl.innerHTML = `<img class="generated-image" src="${imagePath}" alt="Generated image" />`;
+      }
+
+      const shelfEl = document.getElementById(`actions_${aiMsgId}`);
+      if (shelfEl) shelfEl.style.display = "flex";
     } catch (error) {
       console.error("Image generation failed:", error);
-      if (engine) {
-        engine.stopPreviewCycle();
-      }
+      if (bodyEl)
+        bodyEl.innerHTML = renderMarkdown("Sorry, image generation failed.");
+    } finally {
+      state.isStreaming = false;
+      persistSession();
     }
+  }
 
-    state.isStreaming = false;
-    persistSession();
+  function thinkingeffect(messageId) {
+    const element = document.getElementById(`thinkingText_${messageId}`);
+    if (!element) {
+      return;
+    }
+    return element;
   }
 
   function startThinkingCycle(messageId) {
@@ -687,12 +612,7 @@
     let index = 0;
     let dots = 0;
 
-    const element = document.getElementById(`thinkingText_${messageId}`);
-
-    if (!element) {
-      return;
-    }
-
+    const element = thinkingeffect(messageId);
     const update = () => {
       element.textContent = phrases[index] + ".".repeat(dots);
     };
@@ -709,54 +629,16 @@
 
       update();
     }, 450);
-
-    thinkingTimers.set(messageId, timer);
   }
 
-  // Render Single Message in Stream
-  function appendMessageElement(msg, isPlaceholder = false) {
+  // Replace the whole appendMessageElement function with this — drop the
+  // old pixel-grid/scene branch entirely.
+  function appendMessageElement(
+    msg,
+    startThinking = false,
+    isPlaceholder = false,
+  ) {
     if (!DOM.messagesStream) return null;
-
-    // If message is stored as an image card
-    if (msg.isImageCard && msg.scene) {
-      const cardId = `pixelCard_${msg.id}`;
-      const row = document.createElement("div");
-      row.className = "message-row ai pixel-response-row";
-      row.id = msg.id;
-
-      row.innerHTML = `
-        <div class="msg-avatar">AURA</div>
-        <div class="msg-column" style="flex:1;">
-          <div class="msg-bubble pixel-message-bubble">
-            <article class="pixel-gen-card is-stabilized" id="${cardId}">
-              <div class="card-canvas-viewport" title="Click to inspect with Magnifying Lens">
-                <canvas class="pixel-canvas-display"></canvas>
-                <canvas class="pixel-canvas-proc"></canvas>
-                <img class="clear-image-overlay visible" src="${msg.scene.url}" alt="${escapeHtml(msg.scene.name)}" />
-              </div>
-            </article>
-          </div>
-        </div>
-      `;
-
-      DOM.messagesStream.appendChild(row);
-      scrollToStreamBottom();
-
-      const cardElement = document.getElementById(cardId);
-      if (cardElement && window.AURAPixelGrid?.PixelEngineInstance) {
-        const engine = new window.AURAPixelGrid.PixelEngineInstance(
-          cardElement,
-          msg.scene,
-          msg.userPrompt,
-        );
-        engine.isStabilized = true;
-        engine.startTime = performance.now() - engine.durationMs - 2000;
-        if (window.AURAPixelGrid.activeEngines) {
-          window.AURAPixelGrid.activeEngines.push(engine);
-        }
-      }
-      return row;
-    }
 
     const row = document.createElement("div");
     row.className = `message-row ${msg.role === "user" ? "user" : "ai"}`;
@@ -764,57 +646,47 @@
 
     if (msg.role === "user") {
       row.innerHTML = `
-    <div class="msg-avatar">YOU</div>
-    <div class="msg-column">
-      ${
-        msg.media
-          ? `<img src="${msg.media.dataUrl}" style="max-width:240px;border-radius:8px;margin-bottom:6px;border:1px solid var(--border-hairline);" alt="Attachment" />`
-          : ""
-      }
-      <div class="msg-bubble">${escapeHtml(msg.content)}</div>
-    </div>
-  `;
+      <div class="msg-avatar">YOU</div>
+      <div class="msg-column">
+        ${
+          msg.media
+            ? `<img src="${msg.media.dataUrl}" style="max-width:240px;border-radius:8px;margin-bottom:6px;border:1px solid var(--border-hairline);" alt="Attachment" />`
+            : ""
+        }
+        <div class="msg-bubble">${escapeHtml(msg.content)}</div>
+      </div>
+    `;
+    } else if (msg.isImageCard) {
+      row.innerHTML = `
+      <div class="msg-avatar">AURA</div>
+      <div class="msg-column" style="flex:1;">
+        <div class="msg-bubble" id="body_${msg.id}">
+          <img class="generated-image" src="${msg.image_url}" alt="Generated image" />
+        </div>
+        <div class="ai-actions-shelf" id="actions_${msg.id}">${copyButtonHtml(msg.id)}</div>
+      </div>
+    `;
     } else {
       row.innerHTML = `
-    <div class="msg-avatar">AURA</div>
-
-    <div class="msg-column" style="flex:1;">
-      <div class="msg-bubble" id="body_${msg.id}">
-        ${
-          isPlaceholder
-            ? `
-              <span
-                class="thinking-shimmer-text"
-                id="thinkingText_${msg.id}"
-              >Thinking.</span>
-            `
-            : renderMarkdown(msg.content)
-        }
+      <div class="msg-avatar">AURA</div>
+      <div class="msg-column" style="flex:1;">
+        <div class="msg-bubble" id="body_${msg.id}">
+          ${
+            isPlaceholder
+              ? `<span class="thinking-shimmer-text" id="thinkingText_${msg.id}">Thinking.</span>`
+              : renderMarkdown(msg.content)
+          }
+        </div>
+        <div class="ai-actions-shelf" id="actions_${msg.id}" style="${isPlaceholder ? "display:none;" : ""}">
+          ${copyButtonHtml(msg.id)}
+        </div>
       </div>
-
-      <div
-        class="ai-actions-shelf"
-        id="actions_${msg.id}"
-        style="${isPlaceholder ? "display:none;" : ""}"
-      >
-        <button class="msg-chip-action copy-act" data-id="${msg.id}">
-          <svg width="11" height="11" viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          Copy
-        </button>
-      </div>
-    </div>
-  `;
+    `;
     }
 
     DOM.messagesStream.appendChild(row);
 
-    if (isPlaceholder && msg.role !== "user") {
+    if (startThinking && msg.role !== "user") {
       startThinkingCycle(msg.id);
     }
 
@@ -824,101 +696,90 @@
     return row;
   }
 
-  // Stream Response
-  async function streamEditorialResponse(userPrompt, media, el, msgObj) {
-    state.isStreaming = true;
-    const bodyEl = document.getElementById(`body_${msgObj.id}`);
-    const shelfEl = document.getElementById(`actions_${msgObj.id}`);
+  function copyButtonHtml(id) {
+    return `
+    <button class="msg-chip-action copy-act" data-id="${id}">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      Copy
+    </button>
+  `;
+  }
+
+  async function streamEditorialResponse(userPrompt, aiMsgId) {
+    const bodyEl = document.getElementById(`body_${aiMsgId}`);
+    const shelfEl = document.getElementById(`actions_${aiMsgId}`);
 
     try {
       const web_api = await getWebApi();
+      if (!web_api) return;
+
       const result = await web_api.chat(userPrompt);
       const response = result.result;
       if (!response?.response) {
-        throw new Error(`Model failed: ${response?.error ?? "unknown error"}`);
+        throw new Error(response?.error ?? "unknown error");
       }
+
       const text = response.response;
-      let index = 0;
-      let accumulated = "";
-      function reveal() {
-        if (index >= text.length) return;
+      const aiMsg = state.messages.find((m) => m.id === aiMsgId);
+      if (aiMsg) aiMsg.content = text;
 
-        const chunkSize = Math.floor(Math.random() * 3) + 2;
-
-        accumulated += text.slice(index, index + chunkSize);
-        index += chunkSize;
-
-        if (bodyEl) {
-          bodyEl.innerHTML = renderMarkdown(accumulated);
-        }
-
-        scrollToStreamBottom();
-
-        setTimeout(reveal, 20);
-      }
-
-      reveal();
-
-      scrollToStreamBottom();
-
-      msgObj.content = accumulated;
+      if (bodyEl) initTextGenerateEffect(text, bodyEl, renderMarkdown(text));
       if (shelfEl) shelfEl.style.display = "flex";
     } catch (err) {
-      console.warn("Fallback synthesis generator:", err);
-      const fallbackProse =
-        "Unable to connect backend pywebview. IF you are on latest version report bug on github. # https://github.com/TIScare0/gp_smartdesk/issues/new";
+      console.warn("Chat failed:", err);
+      const fallbackText = "Unable to connect to backend pywebview. If you're on the latest version, please report this on GitHub: https://github.com/TIScare0/gp_smartdesk/issues/new";
 
-      let charIndex = 0;
-      const streamTimer = setInterval(() => {
-        charIndex += 14;
-        if (charIndex >= fallbackProse.length) {
-          clearInterval(streamTimer);
-          msgObj.content = fallbackProse;
-          if (bodyEl) bodyEl.innerHTML = renderMarkdown(fallbackProse);
-          if (shelfEl) shelfEl.style.display = "flex";
-          state.isStreaming = false;
-        } else {
-          if (bodyEl)
-            bodyEl.innerHTML = renderMarkdown(
-              fallbackProse.slice(0, charIndex),
-            );
-        }
-        scrollToStreamBottom();
-      }, 16);
+      const aiMsg = state.messages.find((m) => m.id === aiMsgId);
+      if (aiMsg) aiMsg.content = fallbackText;
+
+      if (bodyEl)
+        initTextGenerateEffect(
+          fallbackText,
+          bodyEl,
+          renderMarkdown(fallbackText),
+        );
+      if (shelfEl) shelfEl.style.display = "flex";
     } finally {
       state.isStreaming = false;
       persistSession();
     }
   }
 
-  function initTextGenerateEffect(text, container, stagger = 0.12) {
-    if (!container) return null;
+  function initTextGenerateEffect(
+    rawText,
+    container,
+    formattedHtml,
+    stagger = 0.03,
+  ) {
+    if (!container) return;
+
     container.innerHTML = "";
-    const words = text.trim().split(/\s+/);
-    words.forEach((word) => {
+    const words = escapeHtml(rawText).trim().split(/\s+/);
+
+    words.forEach((word, i) => {
       const span = document.createElement("span");
       span.className = "tg-word";
       span.textContent = word;
-      const cleanWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+      span.style.transitionDelay = `${i * stagger}s`;
       container.appendChild(span);
       container.appendChild(document.createTextNode(" "));
     });
 
-    const elements = container.querySelectorAll(".tg-word");
-    function play() {
-      elements.forEach((el, index) => {
-        el.classList.remove("tg-visible");
-        el.style.transitionDelay = `${index * stagger}s`;
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.classList.add("tg-visible");
-          });
-        });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        container
+          .querySelectorAll(".tg-word")
+          .forEach((el) => el.classList.add("tg-visible"));
       });
-    }
+    });
 
-    play();
-    return { play };
+    const totalDuration = words.length * stagger * 1000 + 400;
+    setTimeout(() => {
+      container.innerHTML = formattedHtml;
+    }, totalDuration);
   }
 
   // Markdown Parser
@@ -956,7 +817,6 @@
       '<code style="font-family:var(--font-mono);font-size:12px;background:var(--bg-surface-subtle);padding:2px 6px;border-radius:4px;color:var(--accent-gold);border:1px solid var(--border-hairline);">$1</code>',
     );
 
-    // Headers
     text = text.replace(/^### (.*$)/gim, "<h3>$1</h3>");
     text = text.replace(/^## (.*$)/gim, "<h2>$1</h2>");
     text = text.replace(/^# (.*$)/gim, "<h1>$1</h1>");
@@ -1107,17 +967,23 @@
     showToast("Exported to Markdown");
   }
 
-  // Clear Stream
   function clearCurrentStream() {
     if (confirm("Clear current messages?")) {
       state.messages = [];
-      if (window.AURAPixelGrid?.activeEngines) {
-        window.AURAPixelGrid.activeEngines.length = 0;
-      }
       if (DOM.messagesStream) DOM.messagesStream.innerHTML = "";
       persistSession();
       showToast("Stream cleared");
     }
+  }
+
+  function serializableMessages(messages) {
+    return messages.map((m) => {
+      if (m.media) {
+        const { dataUrl, ...mediaMeta } = m.media; // drop the heavy base64 payload
+        return { ...m, media: mediaMeta };
+      }
+      return m;
+    });
   }
 
   // Session Storage & Sidebar History
@@ -1137,13 +1003,19 @@
       };
       state.sessions.unshift(session);
     } else {
-      session.messages = state.messages;
+      session.messages = serializableMessages(state.messages);
     }
 
-    localStorage.setItem(
-      "aura_editorial_sessions",
-      JSON.stringify(state.sessions),
-    );
+    try {
+      localStorage.setItem(
+        "aura_editorial_sessions",
+        JSON.stringify(state.sessions),
+      );
+    } catch (e) {
+      console.error("Failed to persist session (likely quota exceeded):", e);
+      showToast("Couldn't save chat — storage full (attachments too large?)");
+    }
+
     renderSidebarChats();
   }
 

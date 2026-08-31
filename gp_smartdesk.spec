@@ -1,56 +1,13 @@
-# gp_smartdesk.spec
-#
-# GP SmartDesk - Production PyInstaller specification
-#
-# Build:
-#     pyinstaller --clean --noconfirm gp_smartdesk.spec
-#
-# Output:
-#     dist/GP SmartDesk/
-
 from pathlib import Path
-
 from PyInstaller.utils.hooks import (
     collect_submodules, 
     collect_data_files
 )
 
-# ============================================================
-# Project paths
-# ============================================================
-
 ROOT = Path(SPEC).resolve().parent
-
-
-# ============================================================
-# Application metadata
-# ============================================================
 
 APP_NAME = "GP SmartDesk"
 ENTRY_POINT = ROOT / "main.py"
-
-
-# ============================================================
-# Frontend / application data
-# ============================================================
-#
-# Runtime layout:
-#
-# GP SmartDesk/
-# ├── GP SmartDesk
-# ├── src/
-# │   ├── index.html
-# │   ├── css/
-# │   ├── fonts/
-# │   ├── images/
-# │   ├── js/
-# │   └── pages/
-# ├── animations/
-# ├── icons/
-# └── image.png
-#
-# Keeping src as src is important because your Python code can
-# reference the frontend using a predictable application root.
 
 datas = [
     (str(ROOT / "src" / "index.html"), "src"),
@@ -63,23 +20,9 @@ datas = [
     *collect_data_files("piper"),
 ]
 
-
-# ============================================================
-# Hidden imports
-# ============================================================
-#
-# Your own packages use dynamic/provider-based functionality.
-# Explicitly collecting these packages makes the frozen build
-# more resilient to dynamic imports.
-#
-# PyInstaller normally discovers regular imports automatically.
-# These are primarily protection for dynamically imported modules.
-
 hiddenimports = [
-    # Internal packages
     "network",
     "network.request",
-
     "tools",
     "tools.bing",
     "tools.cohere",
@@ -98,19 +41,9 @@ hiddenimports = [
     "tools.perchance",
     "tools.piper",
     "tools.routing",
-
     "utils",
     "utils._utils",
 ]
-
-for package in [
-    "google",
-    "google.genai",
-]:
-    try:
-        hiddenimports.extend(collect_submodules(package))
-    except Exception:
-        pass
 
 hiddenimports = list(dict.fromkeys(hiddenimports))
 
@@ -137,11 +70,7 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
-
-pyz = PYZ(
-    a.pure,
-)
-
+pyz = PYZ(a.pure,)
 exe = EXE(
     pyz,
     a.scripts,

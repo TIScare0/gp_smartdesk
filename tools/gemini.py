@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from google import genai
 from google.genai._gaos.lib.compat_errors import RateLimitError
 
-from config import env_item
+from config import GEMINI_API_KEY
 from network import Request
 
 
@@ -18,7 +18,7 @@ class GeminiBase(Request):
     def __init__(self, model: str):
         super().__init__()
         self.model = model
-        self.client = genai.Client(api_key=env_item('GEMINI_API_KEY'))
+        self.client = genai.Client(api_key=GEMINI_API_KEY)
         self.system_prompt = ''
 
     def base_interaction(self, prompt, **kwargs):

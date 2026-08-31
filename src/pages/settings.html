@@ -16,7 +16,6 @@
     </div>
 
     <div class="settings-shell">
-      <!-- Top bar -->
       <header class="settings-topbar">
         <a
           href="../index.html"
@@ -37,9 +36,6 @@
           <span>AURA</span>
         </a>
         <span class="settings-topbar-label">Studio Settings</span>
-        <div class="settings-topbar-right">
-          <span class="save-status" id="saveStatus">All changes saved</span>
-        </div>
       </header>
 
       <div class="settings-body">
@@ -61,7 +57,7 @@
             </svg>
             <span>Model &amp; API</span>
           </button>
-          <button class="settings-nav-item" data-panel="usage">
+          <!-- <button class="settings-nav-item" data-panel="usage">
             <svg
               width="15"
               height="15"
@@ -73,7 +69,7 @@
               <path d="M18 20V10M12 20V4M6 20v-6"></path>
             </svg>
             <span>Usage &amp; Plan</span>
-          </button>
+          </button> -->
           <button class="settings-nav-item" data-panel="personalization">
             <svg
               width="15"
@@ -109,8 +105,7 @@
           <!-- ===================== MODEL & API ===================== -->
           <section class="settings-panel active" id="panel-model">
             <div class="panel-heading">
-              <h2>Model &amp; API</h2>
-              <p>Choose which model answers you, and how it reasons.</p>
+              <h2>Models</h2>
             </div>
 
             <div class="settings-card">
@@ -132,30 +127,95 @@
 
               <div class="api-key-row">
                 <span class="api-key-provider">Gemini</span>
+
                 <input
                   type="password"
-                  class="field-input"
+                  class="field-input api-key-input"
                   id="apiKeyGemini"
-                  placeholder="Using AURA's shared key"
+                  placeholder="Gemini API key"
                 />
+
+                <button
+                  type="button"
+                  class="api-key-check-btn"
+                  data-provider="gemini"
+                >
+                  Check API key
+                </button>
+
+                <span class="api-key-status" aria-live="polite"></span>
               </div>
               <div class="api-key-row">
                 <span class="api-key-provider">Cohere</span>
                 <input
                   type="password"
-                  class="field-input"
+                  class="field-input api-key-input"
                   id="apiKeyCohere"
-                  placeholder="Using AURA's shared key"
+                  placeholder="Cohere Api key"
                 />
+                <button
+                  type="button"
+                  class="api-key-check-btn"
+                  data-provider="cohere"
+                >
+                  Check API key
+                </button>
+
+                <span class="api-key-status" aria-live="polite"></span>
               </div>
               <div class="api-key-row">
-                <span class="api-key-provider">OpenAI-compatible</span>
+                <span class="api-key-provider">Nvidia</span>
                 <input
                   type="password"
-                  class="field-input"
+                  class="field-input api-key-input"
                   id="apiKeyOpenAI"
-                  placeholder="Using AURA's shared key"
+                  placeholder="Nvidia Api key e.g. nvapi-..."
                 />
+                <button
+                  type="button"
+                  class="api-key-check-btn"
+                  data-provider="nvidia"
+                >
+                  Check API key
+                </button>
+
+                <span class="api-key-status" aria-live="polite"></span>
+              </div>
+              <div class="api-key-row">
+                <span class="api-key-provider">Mistral</span>
+                <input
+                  type="password"
+                  class="field-input api-key-input"
+                  id="apiKeyOpenAI"
+                  placeholder="Mistral Api key"
+                />
+                <button
+                  type="button"
+                  class="api-key-check-btn"
+                  data-provider="mistral"
+                >
+                  Check API key
+                </button>
+
+                <span class="api-key-status" aria-live="polite"></span>
+              </div>
+              <div class="api-key-row">
+                <span class="api-key-provider">OpenRouter</span>
+                <input
+                  type="password"
+                  class="field-input api-key-input"
+                  id="apiKeyOpenAI"
+                  placeholder="OpenRouter Api key e.g. sk-or-..."
+                />
+                <button
+                  type="button"
+                  class="api-key-check-btn"
+                  data-provider="openrouter"
+                >
+                  Check API key
+                </button>
+
+                <span class="api-key-status" aria-live="polite"></span>
               </div>
             </div>
 
@@ -173,8 +233,7 @@
               ></textarea>
             </div>
           </section>
-
-          <!-- ===================== USAGE & PLAN ===================== -->
+          <!-- 
           <section class="settings-panel" id="panel-usage">
             <div class="panel-heading">
               <h2>Usage &amp; Plan</h2>
@@ -197,9 +256,8 @@
                 Resets in 6h 12m
               </p>
             </div>
-          </section>
+          </section> -->
 
-          <!-- ===================== PERSONALIZATION ===================== -->
           <section class="settings-panel" id="panel-personalization">
             <div class="panel-heading">
               <h2>Personalization</h2>
@@ -242,10 +300,8 @@
                 </button>
               </div>
             </div>
-
           </section>
 
-          <!-- ===================== DATA & PRIVACY ===================== -->
           <section class="settings-panel" id="panel-privacy">
             <div class="panel-heading">
               <h2>Data &amp; Privacy</h2>
@@ -271,15 +327,6 @@
               </div>
               <button class="danger-btn" id="clearAllBtn">Clear all</button>
             </div>
-
-            <div class="settings-card">
-              <p class="field-hint">
-                AURA currently stores chats and preferences only in this
-                browser's local storage. Nothing is sent to a server except your
-                messages, which are relayed to the model provider you've
-                selected above to generate a response.
-              </p>
-            </div>
           </section>
         </main>
       </div>
@@ -287,6 +334,7 @@
 
     <div id="toastContainer" class="toast-hub"></div>
 
+    <script src="../js/webview.js"></script>
     <script src="../js/settings.js"></script>
   </body>
 </html>

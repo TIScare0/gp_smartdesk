@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from openrouter import OpenRouter as OpenRouterAI
 from openrouter.errors import OpenRouterError
 
-from config import env_item
+from config import OPENROUTER_API_KEY
 
 
 @dataclass(frozen=True)
@@ -16,7 +16,7 @@ class OpenRouter:
     def __init__(self, model: str):
         self.model = model
         self.client = OpenRouterAI(
-            env_item('OPENROUTER_API_KEY'),
+            api_key=OPENROUTER_API_KEY,
             timeout_ms=30000
         )
         self.system_prompt = ''

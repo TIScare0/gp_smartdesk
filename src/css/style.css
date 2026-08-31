@@ -2182,3 +2182,60 @@ body:not(.dark-theme) .light-icon { display: inline-block; }
   filter: blur(0px);
   transform: translateY(0);
 }
+
+.web-api-error-card {
+  position: fixed;
+  z-index: 999999;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: min(480px, calc(100vw - 32px));
+  padding: 20px 22px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  background: rgba(20, 20, 22, 0.96);
+  border: 1px solid rgba(255, 80, 80, 0.45);
+  border-radius: 14px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+
+  color: #fff;
+}
+
+.web-api-error-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.web-api-error-content {
+  flex: 1;
+}
+
+.web-api-error-content h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.web-api-error-content p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.web-api-error-content a {
+  display: inline-block;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.web-api-error-content a:hover {
+  text-decoration: underline;
+}

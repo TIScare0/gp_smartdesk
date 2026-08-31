@@ -1,9 +1,7 @@
 (function () {
   "use strict";
 
-  // Keep these in sync with script.js's model options / storage keys
   const MODELS = [
-    // Gemini
     {
       id: "gemini-2.5-flash",
       name: "Gemini 2.5 Flash",
@@ -138,14 +136,38 @@
     },
   ];
 
+  const PROVIDERS_AND_APIS = {
+    gemini: {
+      url: "https://generativelanguage.googleapis.com/v1beta/models",
+      auth: "query",
+    },
+
+    openrouter: {
+      url: "https://openrouter.ai/api/v1/models",
+      auth: "bearer",
+    },
+
+    cohere: {
+      url: "https://api.cohere.com/v2/models",
+      auth: "bearer",
+    },
+
+    nvidia: {
+      url: "https://integrate.api.nvidia.com/v1",
+      auth: "bearer",
+    },
+
+    mistral: {
+      url: "https://api.mistral.ai/v1/models",
+      auth: "bearer",
+    },
+  };
+
   const DOM = {
     navItems: document.querySelectorAll(".settings-nav-item"),
     panels: document.querySelectorAll(".settings-panel"),
     modelGrid: document.getElementById("modelGrid"),
     fallbackModelSelect: document.getElementById("fallbackModelSelect"),
-    apiKeyGemini: document.getElementById("apiKeyGemini"),
-    apiKeyCohere: document.getElementById("apiKeyCohere"),
-    apiKeyOpenAI: document.getElementById("apiKeyOpenAI"),
     settingSystemPrompt: document.getElementById("settingSystemPrompt"),
     settingTemperature: document.getElementById("settingTemperature"),
     tempValueLabel: document.getElementById("tempValueLabel"),
@@ -171,7 +193,6 @@
     renderModelGrid();
     loadValues();
     bindFieldEvents();
-    updateUsageDisplay();
   }
 
   // ---------- Sidebar nav / panel switching ----------
@@ -291,17 +312,89 @@
       flashSaved();
     });
 
-    DOM.apiKeyGemini?.addEventListener("input", () => {
-      localStorage.setItem("aura_api_key_gemini", DOM.apiKeyGemini.value);
-      flashSaved();
-    });
-    DOM.apiKeyCohere?.addEventListener("input", () => {
-      localStorage.setItem("aura_api_key_cohere", DOM.apiKeyCohere.value);
-      flashSaved();
-    });
-    DOM.apiKeyOpenAI?.addEventListener("input", () => {
-      localStorage.setItem("aura_api_key_openai", DOM.apiKeyOpenAI.value);
-      flashSaved();
+    document.querySelectorAll(".api-key-check-btn").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const row = button.closest(".api-key-row");
+        const provider = button.dataset.provider;
+        const input = row.querySelector(".api-key-input");
+
+        const key = input.value.trim();
+
+        row.classList.remove("checking", "valid", "invalid");
+
+        if (!key) {
+          row.classList.add("invalid");
+          button.textContent = "Invalid";
+
+          setTimeout(() => {
+            row.classList.remove("checking", "valid", "invalid");
+            button.textContent = "Check API key";
+          }, 4000);
+
+          return;
+        }
+
+        row.classList.add("checking");
+
+        button.disabled = true;
+        button.textContent = "Checking...";
+
+        try {
+          let valid = false;
+          let wapi = null;
+
+          try {
+              wapi = await window.web_api_ready;
+          } catch (e) {
+              console.error("[SETTING] Unable to load pywebview", e);
+          }
+
+          if (provider === "nvidia") {
+            try {
+              const response = await wapi.checkNvidiaApiKey(key);
+              console.log(response);
+              valid = response.valid === true;
+            } catch (e) {
+              console.error("NVIDIA API check failed:", e);
+              valid = false;
+            }
+          } else {
+            valid = await checkApiKey(key, provider);
+          }
+
+          row.classList.remove("checking");
+
+          if (valid) {
+            row.classList.add("valid");
+            button.textContent = "Valid";
+            wapi.save_key(String(provider).toUpperCase(), key)
+          } else {
+            row.classList.add("invalid");
+            button.textContent = "Invalid";
+          }
+
+          setTimeout(() => {
+            row.classList.remove("checking", "valid", "invalid");
+            button.textContent = "Check API key";
+            button.disabled = false;
+            input.value = '';
+          }, 2000);
+        } catch (error) {
+          console.error("API key check error:", error);
+
+          row.classList.remove("checking", "valid");
+          row.classList.add("invalid");
+          
+          button.textContent = "Invalid";
+          
+          setTimeout(() => {
+            row.classList.remove("checking", "valid", "invalid");
+            button.textContent = "Check API key";
+            button.disabled = false;
+            input.value = '';
+          }, 2000);
+        }
+      });
     });
 
     DOM.themeSegments?.querySelectorAll(".segment").forEach((seg) => {
@@ -358,30 +451,6 @@
     document.body.classList.toggle("dark-theme", isDark);
   }
 
-  // ---------- Usage display (reads sessions from localStorage as a proxy) ----------
-  function updateUsageDisplay() {
-    if (!DOM.usageBarFill) return;
-    let sessions = [];
-    try {
-      sessions = JSON.parse(
-        localStorage.getItem("aura_editorial_sessions") || "[]",
-      );
-    } catch (e) {
-      sessions = [];
-    }
-    const todayCount = sessions.reduce(
-      (sum, s) => sum + (s.messages ? s.messages.length : 0),
-      0,
-    );
-    const limit = 100;
-    const pct = Math.min(100, Math.round((todayCount / limit) * 100));
-
-    DOM.usageBarFill.style.width = `${pct}%`;
-    if (DOM.usageCountLabel)
-      DOM.usageCountLabel.textContent = `${todayCount} / ${limit}`;
-  }
-
-  // ---------- Data actions ----------
   function exportAllConversations() {
     let sessions = [];
     try {
@@ -425,10 +494,39 @@
       return;
     localStorage.removeItem("aura_editorial_sessions");
     showToast("All chat history cleared");
-    updateUsageDisplay();
   }
 
-  // ---------- Save indicator ----------
+  async function checkApiStatus(api, key, auth = "bearer") {
+    try {
+      let url = api;
+      const headers = {};
+
+      if (auth === "query") {
+        url += `?key=${encodeURIComponent(key)}`;
+      } else {
+        headers.Authorization = `Bearer ${key}`;
+      }
+
+      const response = await fetch(url, {
+        headers,
+      });
+
+      return response.ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function checkApiKey(key, provider) {
+    const config = PROVIDERS_AND_APIS[provider];
+
+    if (!config) {
+      return false;
+    }
+
+    return await checkApiStatus(config.url, key, config.auth);
+  }
+
   let saveFlashTimer = null;
   function flashSaved() {
     if (!DOM.saveStatus) return;
@@ -439,7 +537,6 @@
     }, 500);
   }
 
-  // ---------- Toast (standalone copy since this page loads independently) ----------
   function showToast(msg) {
     if (!DOM.toastContainer) return;
     const toast = document.createElement("div");
