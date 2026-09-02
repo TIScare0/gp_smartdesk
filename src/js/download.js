@@ -30,7 +30,7 @@
   let session = null; // active download session state
 
   async function open(filename, download_id) {
-      const web_api = window.web_api;
+      const web_api = await window.web_api_ready;
 
       if (!web_api) {
           console.error("Python API isn't ready");
@@ -59,7 +59,6 @@
       DOM.backdrop.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
 
-      // Start Python download
       const started = await web_api.download(download_id);
 
       if (!started?.status) {
@@ -76,7 +75,6 @@
 
       console.log(`Download started: ${did}`);
 
-      // Wait for the actual download to finish
       while (true) {
           const result = await web_api.download_step(did);
 
@@ -98,14 +96,12 @@
               setProgress(result.data.progress);
           }
 
-          // Actual download completion
           if (result.done === true) {
               console.log("DOWNLOAD COMPLETE");
 
               setProgress(100);
               setState('complete');
 
-              // Let the user see "Complete"
               await new Promise(resolve => setTimeout(resolve, 500));
 
               close();
@@ -116,7 +112,6 @@
               };
           }
 
-          // Don't hammer Python
           await new Promise(resolve => setTimeout(resolve, 50));
       }
   }
@@ -205,9 +200,6 @@
     }
   });
 
-  window.AURADownload = {
-    open,       // open({ fileName, totalBytes, sourceLabel, onCancel })
-    close,
-  };
+  window.AURADownload = {open, close};
 
 })();

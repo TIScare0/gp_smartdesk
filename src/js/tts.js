@@ -213,8 +213,6 @@
 
     let pct = 0;
 
-    // Estimated progress.
-    // Never reaches 100% by itself.
     progressTimer = setInterval(() => {
       if (pct < 90) {
         pct += pct < 50 ? 2 : 0.5;

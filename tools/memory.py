@@ -1,15 +1,28 @@
 from fastembed import TextEmbedding
 import numpy as np
-
 from cache import load_cache, save_cache
+from .paths import FASTEMBED_PATH
 
+DOWNLOAD_URLS = [
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/model_optimized.onnx?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/tokenizer_config.json?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/tokenizer.json?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/vocab.txt?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/special_tokens_map.json?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/ort_config.json?download=true",
+    "https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/main/config.json?download=true",
+]
 
 class Memory:
     MEM_CACHE_KEY = "user_memory"
     SIMILARITY_THRESHOLD = 0.60
 
     def __init__(self):
-        self.embed_model = TextEmbedding()
+        self.embed_model = TextEmbedding(
+            model_name="BAAI/bge-small-en-v1.5",
+            specific_model_path=str(FASTEMBED_PATH),
+            local_files_only=True,
+        )
         self.memories = []
         self._load_memory()
 
@@ -76,7 +89,7 @@ class Memory:
                 )
 
     def save_memories(self):
-        save_cache(
+        save_cache( #type: ignore 
             self.MEM_CACHE_KEY,
             [
                 {
@@ -85,7 +98,7 @@ class Memory:
                 }
                 for memory in self.memories
             ],
-        )
+        ) 
 
     def get_memory(self, user_prompt: str):
         memories = self._search(user_prompt)

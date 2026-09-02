@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 import sys
 
+from cache import CACHE_DIR
+
 
 APP_NAME = "GP SmartDesk"
 
@@ -27,6 +29,8 @@ DOWNLOADS_PATH = BASE_PATH / "downloads"
 PIPER_PATH = DOWNLOADS_PATH / "piper" / "voices"
 
 OCR_PATH = DOWNLOADS_PATH / "ocr" / "models"
+
+FASTEMBED_PATH = CACHE_DIR / 'fastembed'
 
 TXT2AUDIO_PATH = BASE_PATH / "audios"
 TXT2AUDIO_PATH.mkdir(parents=True, exist_ok=True)

@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // Apply theme from localStorage
-function applyTheme() {
-  if (localStorage.getItem("aura_theme_mode") === "dark") {
+async function applyTheme() {
+  if ((await window.GetItem("aura_theme_mode")) === "dark") {
     document.body.classList.add("dark-theme");
   }
 }

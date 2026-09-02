@@ -1,10 +1,12 @@
 from pathlib import Path
 from urllib.parse import urlparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from network import Request
 
 
 class Downloader:
+
     def __init__(self):
         self.request = Request()
 
@@ -20,7 +22,7 @@ class Downloader:
 
         total_urls = len(urls)
 
-        for index, url in enumerate(urls):
+        def download_one(index, url):
 
             filename = Path(
                 urlparse(url).path
@@ -29,50 +31,50 @@ class Downloader:
             file_path = path / filename
 
             if file_path.exists():
-                yield {
-                    "progress": int(
-                        ((index + 1) / total_urls) * 100
-                    ),
-                    "path": str(file_path),
-                }
-                continue
+                return index, file_path
 
             response = self.request.request(
                 url,
                 stream=True,
-                timeout=30,
+                timeout=60,
             )
 
-            total = int(response.headers.get("content-length", 0)) #type: ignore
-
-            downloaded = 0
+            response.raise_for_status()
 
             with file_path.open("wb") as file:
+                for chunk in response.iter_content(8 * 1024 * 1024):
+                    if chunk:
+                        file.write(chunk)
 
-                for chunk in response.iter_content(1024 * 1024): #type: ignore
-                    if not chunk:
-                        continue
+            return index, file_path
 
-                    file.write(chunk)
-                    downloaded += len(chunk)
+        with ThreadPoolExecutor(
+            max_workers=min(8, total_urls)
+        ) as executor:
 
-                    file_progress = (
-                        downloaded * 100 / total
-                        if total
-                        else 0
-                    )
+            futures = [
+                executor.submit(
+                    download_one,
+                    index,
+                    url,
+                )
+                for index, url in enumerate(urls)
+            ]
 
-                    progress = int(
-                        (
-                            index * 100
-                            + file_progress
-                        ) / total_urls
-                    )
+            completed = 0
 
-                    yield {
-                        "progress": progress,
-                        "path": str(file_path),
-                    }
+            for future in as_completed(futures):
+
+                _, file_path = future.result()
+
+                completed += 1
+
+                yield {
+                    "progress": int(
+                        completed * 100 / total_urls
+                    ),
+                    "path": str(file_path),
+                }
 
         return {
             "progress": 100,

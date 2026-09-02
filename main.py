@@ -112,9 +112,9 @@ if __name__ == "__main__":
 
     if platform.system() == "Windows":
         gui = "edgechromium"
-    
+
     webview.start(
         gui=gui,
-        debug=False,
+        debug=True,
         private_mode=False,
     )

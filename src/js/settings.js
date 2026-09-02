@@ -212,8 +212,6 @@
   // ---------- Model grid ----------
   function renderModelGrid() {
     if (!DOM.modelGrid) return;
-    const activeModel =
-      localStorage.getItem("aura_active_model") || "gemini-2.5-pro";
 
     DOM.modelGrid.innerHTML = MODELS.map(
       (m) => `
@@ -228,30 +226,25 @@
   }
 
   // ---------- Load stored values ----------
-  function loadValues() {
-    if (DOM.settingSystemPrompt) {
-      DOM.settingSystemPrompt.value =
-        localStorage.getItem("aura_system_prompt") ||
-        "You are AURA, an elite editorial intelligence. Provide articulated reasoning, elegant typography-aware output, pristine code structures with TypeScript/Tailwind, and refined prose with genuine clarity.";
-    }
+  async function loadValues() {
 
-    const theme = localStorage.getItem("aura_theme_mode") || "light";
+    const theme = await window.GetItem("aura_theme_mode") || "light";
     setSegmentActive(
       DOM.themeSegments,
       theme === "dark" ? "dark" : "light",
       "theme",
     );
 
-    const length = localStorage.getItem("aura_response_length") || "balanced";
+    const length = await window.GetItem("aura_response_length") || "balanced";
     setSegmentActive(DOM.lengthSegments, length, "length");
 
     const density =
-      localStorage.getItem("aura_message_density") || "comfortable";
+      await window.GetItem("aura_message_density") || "comfortable";
     setSegmentActive(DOM.densitySegments, density, "density");
 
     if (DOM.voiceLangSelect) {
       DOM.voiceLangSelect.value =
-        localStorage.getItem("aura_voice_lang") || "en-US";
+        await window.GetItem("aura_voice_lang") || "en-US";
     }
 
     applyThemeToPage(theme === "dark");
@@ -268,28 +261,28 @@
   }
 
   // ---------- Bind events ----------
-  function bindFieldEvents() {
+  async function bindFieldEvents() {
     DOM.settingSystemPrompt?.addEventListener("input", () => {
-      localStorage.setItem("aura_system_prompt", DOM.settingSystemPrompt.value);
+      await window.StoreItem("aura_system_prompt", DOM.settingSystemPrompt.value);
       flashSaved();
     });
 
     DOM.settingTemperature?.addEventListener("input", () => {
       const val = parseFloat(DOM.settingTemperature.value);
-      localStorage.setItem("aura_temperature", String(val));
+      await window.StoreItem("aura_temperature", String(val));
       updateTempLabel(val);
       flashSaved();
     });
 
     DOM.settingMaxTokens?.addEventListener("input", () => {
       const val = parseInt(DOM.settingMaxTokens.value, 10);
-      localStorage.setItem("aura_max_tokens", String(val));
+      await window.StoreItem("aura_max_tokens", String(val));
       updateMaxTokensLabel(val);
       flashSaved();
     });
 
     DOM.settingStreaming?.addEventListener("change", () => {
-      localStorage.setItem(
+      await window.StoreItem(
         "aura_streaming",
         String(DOM.settingStreaming.checked),
       );
@@ -297,7 +290,7 @@
     });
 
     DOM.settingUsageAlerts?.addEventListener("change", () => {
-      localStorage.setItem(
+      await window.StoreItem(
         "aura_usage_alerts",
         String(DOM.settingUsageAlerts.checked),
       );
@@ -305,7 +298,7 @@
     });
 
     DOM.fallbackModelSelect?.addEventListener("change", () => {
-      localStorage.setItem(
+      await window.StoreItem(
         "aura_fallback_model",
         DOM.fallbackModelSelect.value,
       );
@@ -401,7 +394,7 @@
       seg.addEventListener("click", () => {
         const theme = seg.getAttribute("data-theme");
         setSegmentActive(DOM.themeSegments, theme, "theme");
-        localStorage.setItem("aura_theme_mode", theme);
+        await window.StoreItem("aura_theme_mode", theme);
         applyThemeToPage(theme === "dark");
         flashSaved();
       });
@@ -411,7 +404,7 @@
       seg.addEventListener("click", () => {
         const val = seg.getAttribute("data-length");
         setSegmentActive(DOM.lengthSegments, val, "length");
-        localStorage.setItem("aura_response_length", val);
+        await window.StoreItem("aura_response_length", val);
         flashSaved();
       });
     });
@@ -420,13 +413,13 @@
       seg.addEventListener("click", () => {
         const val = seg.getAttribute("data-density");
         setSegmentActive(DOM.densitySegments, val, "density");
-        localStorage.setItem("aura_message_density", val);
+        await widow.StoreItem("aura_message_density", val);
         flashSaved();
       });
     });
 
     DOM.voiceLangSelect?.addEventListener("change", () => {
-      localStorage.setItem("aura_voice_lang", DOM.voiceLangSelect.value);
+      await window.StoreItem("aura_voice_lang", DOM.voiceLangSelect.value);
       flashSaved();
     });
 
@@ -451,48 +444,14 @@
     document.body.classList.toggle("dark-theme", isDark);
   }
 
-  function exportAllConversations() {
-    let sessions = [];
-    try {
-      sessions = JSON.parse(
-        localStorage.getItem("aura_editorial_sessions") || "[]",
-      );
-    } catch (e) {
-      sessions = [];
-    }
-
-    if (!sessions.length) {
-      showToast("No conversations to export");
-      return;
-    }
-
-    let markdown = `# AURA — Full Conversation Archive\nExported: ${new Date().toISOString()}\n\n`;
-    sessions.forEach((s) => {
-      markdown += `## ${s.title || "Untitled"}\n\n`;
-      (s.messages || []).forEach((m) => {
-        markdown += `**${m.role === "user" ? "You" : "AURA"}:** ${m.content}\n\n`;
-      });
-      markdown += `---\n\n`;
-    });
-
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `AURA_Full_Archive_${Date.now()}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("All conversations exported");
-  }
-
-  function clearAllConversations() {
+  async function clearAllConversations() {
     if (
       !confirm(
         "This permanently deletes every conversation on this device. Continue?",
       )
     )
       return;
-    localStorage.removeItem("aura_editorial_sessions");
+    window.StoreItem("aura_editorial_sessions", []);
     showToast("All chat history cleared");
   }
 

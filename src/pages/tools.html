@@ -298,6 +298,15 @@
     </div>
     <script src="../js/webview.js"></script>
     <script src="../js/download.js"></script>
+        <script>
+      async function applyTheme() {
+        if ((await window.GetItem("aura_theme_mode")) === "dark") {
+          document.body.classList.add("dark-theme");
+        }
+      }
+      applyTheme();
+    </script>
+
     <script>
       DOWNLOAD_META_MAP = {
         piper: { filename: "Piper Audio Model" },
@@ -315,10 +324,6 @@
         const downloader = window.AURADownload;
         const filename = DOWNLOAD_META_MAP[tool_name].filename;
         return await downloader.open(filename, tool_name);
-      }
-
-      if (localStorage.getItem("aura_theme_mode") === "dark") {
-        document.body.classList.add("dark-theme");
       }
 
       function redirect(tool_name) {

@@ -5,6 +5,10 @@ from dataclasses import asdict
 from utils import random_uuid
 from network import Request
 from config import update_key
+from cache import (
+    save_cache, 
+    load_cache
+)
 
 from .model import (
     Model,
@@ -12,6 +16,7 @@ from .model import (
 )
 from .model import Error as ModelError
 from .memory import Memory
+from .memory import DOWNLOAD_URLS as fastembed_urls
 from .intender import IntentRouter
 from .downloader import Downloader
 from .piper import Piper
@@ -20,6 +25,7 @@ from .paths import (
     PIPER_PATH,
     TXT2AUDIO_PATH,
     OCR_PATH,
+    FASTEMBED_PATH
 )
 from .ocr import DOWNLOAD_URLS as ocr_urls
 from .ocr import Ocr
@@ -46,6 +52,7 @@ class AppData:
 DOWNLOAD_MAP = {
     'piper': lambda: Downloader().download(piper_urls(), PIPER_PATH),
     'ocr': lambda: Downloader().download(ocr_urls, OCR_PATH),
+    'fastembed': lambda: Downloader().download(fastembed_urls, FASTEMBED_PATH)
 }
 
 
@@ -55,7 +62,11 @@ class Tools():
         self.model = Model()
         self.intentRouter = None
         self.chat_mem = None
+
+        #downloads
         self._downloads = {}
+
+        self.pref_cache_key = 'user_preference'
 
     def load_intender(self):
         if not self.intentRouter:
@@ -66,9 +77,9 @@ class Tools():
         return self.load_intender().detect(user_text, is_api_safe)
 
     def chat(self, prompt):
+        print('CHAT: Called Func with prompt (first 100 char)', prompt[:100])
         if not self.chat_mem:
             self.chat_mem = Memory()
-
 
         self.chat_mem.add(prompt)
         models = self.model.available_models(Modality.TEXT)
@@ -224,3 +235,17 @@ class Tools():
 
     def save_key(self, provider: str, new_key: str) -> None:
         update_key(provider, new_key)
+
+    def set_preference(self, key, value):
+        cached = load_cache(self.pref_cache_key)
+        if not cached:
+            cached = {}
+        cached.update({key: value})
+        save_cache(self.pref_cache_key, cached)
+        return {'stored': True}
+
+    def get_preference(self, key):
+        try:
+            return {'result': load_cache(self.pref_cache_key, default={})[key]}
+        except Exception:
+            return {}
