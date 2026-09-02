@@ -1,33 +1,6 @@
 (function () {
   "use strict";
 
-  const IMAGES = [
-    {
-      thumb: "images/ai_interface.jpg",
-      pos: { top: "10%", left: "7%" },
-    },
-
-    {
-      thumb: "images/ai_workspace.jpg",
-      pos: { top: "34%", right: "6%" },
-    },
-
-    {
-      thumb: "images/app_development.jpg",
-      pos: { bottom: "12%", left: "10%" },
-    },
-
-    {
-      thumb: "images/code_data.jpg",
-      pos: { top: "44%", left: "4%" },
-    },
-
-    {
-      thumb: "images/digital_intelligence.jpg",
-      pos: { bottom: "14%", right: "9%" },
-    },
-  ];
-
   let storedSessions = [];
   try {
     const rawSessions = localStorage.getItem("aura_editorial_sessions");
@@ -118,9 +91,7 @@
 
   function init() {
     setupSidebarState();
-    renderKineticCards();
     renderSidebarChats();
-    setupCursor();
     setupListeners();
     applyPreferences();
   }
@@ -223,83 +194,6 @@
     DOM.appContainer?.classList.remove("sidebar-mobile-open");
   }
 
-  function renderKineticCards() {
-    if (!DOM.kineticCanvas) return;
-    DOM.kineticCanvas.innerHTML = "";
-
-    IMAGES.forEach((item, index) => {
-      const card = document.createElement("div");
-      card.className = "kinetic-card";
-      const delaySec = `${index * 0.15}s`;
-      card.style.setProperty("--card-delay", delaySec);
-      card.style.animationDelay = `${delaySec}, ${index * 3}s`;
-
-      Object.entries(item.pos).forEach(([k, v]) => {
-        card.style[k] = v;
-      });
-
-      card.innerHTML = `
-        <div class="kinetic-card-inner">
-          <div class="card-img-wrap">
-            <img class="kinetic-thumb" src="${item.thumb}" loading="lazy" />
-          </div>
-        </div>
-      `;
-      DOM.kineticCanvas.appendChild(card);
-    });
-
-    window.addEventListener("mousemove", (e) => {
-      const { innerWidth, innerHeight } = window;
-      const xOffset = (e.clientX / innerWidth - 0.5) * 16;
-      const yOffset = (e.clientY / innerHeight - 0.5) * 16;
-
-      document
-        .querySelectorAll(".kinetic-card-inner")
-        .forEach((innerEl, idx) => {
-          const factor = (idx + 1) * 0.35;
-          innerEl.style.transform = `translate(${xOffset * factor}px, ${yOffset * factor}px)`;
-        });
-    });
-  }
-
-  function setupCursor() {
-    let mouseX = 0,
-      mouseY = 0;
-    let followerX = 0,
-      followerY = 0;
-
-    window.addEventListener("mousemove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      if (DOM.customCursor) {
-        DOM.customCursor.style.left = `${mouseX}px`;
-        DOM.customCursor.style.top = `${mouseY}px`;
-      }
-    });
-
-    function loop() {
-      followerX += (mouseX - followerX) * 0.18;
-      followerY += (mouseY - followerY) * 0.18;
-      if (DOM.customCursorFollower) {
-        DOM.customCursorFollower.style.left = `${followerX}px`;
-        DOM.customCursorFollower.style.top = `${followerY}px`;
-      }
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-
-    document.addEventListener("mouseover", (e) => {
-      if (
-        e.target.closest(
-          "button, a, .inquiry-pill, .kinetic-card, input, textarea, .model-option-row, .pixel-gen-card",
-        )
-      ) {
-        document.body.classList.add("cursor-hover");
-      } else {
-        document.body.classList.remove("cursor-hover");
-      }
-    });
-  }
 
   function setupListeners() {
     DOM.heroCuratedPills?.addEventListener("click", (e) => {
@@ -475,8 +369,6 @@
 
     DOM.heroStage?.classList.remove("hidden-stage");
     DOM.chatStage?.classList.add("hidden-stage");
-
-    renderKineticCards();
 
     setTimeout(() => {
       DOM.composerInput?.focus();
@@ -1078,6 +970,7 @@
         ) {
           e.stopPropagation();
           deleteSession(s.id);
+          renderSidebarChats();
         } else {
           loadSession(s.id);
           if (window.innerWidth <= 768) closeMobileSidebar();

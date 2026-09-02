@@ -1,51 +1,53 @@
-# put this near the top of main.py, BEFORE `import webview`
-import webview.platforms.qt as qt_platform
+import platform
 
-def _patched_qt():
-    if not qt_platform.is_webengine:
-        return  # qtwebkit backend has no featurePermissionRequested at all
+if platform.system() == 'Linux':
+    import webview.platforms.qt as qt_platform
 
-    QWebPage = qt_platform.QWebPage #type: ignore
+    def _patched_qt():
+        if not qt_platform.is_webengine:
+            return  # qtwebkit backend has no featurePermissionRequested at all
 
-    # Build the "always allow" set. Older PySide6 may not expose
-    # ClipboardReadWrite under every enum name, so guard with getattr.
-    always_allow = [
-        QWebPage.Feature.MediaAudioCapture,
-        QWebPage.Feature.MediaVideoCapture,
-        QWebPage.Feature.MediaAudioVideoCapture,
-    ]
-    clipboard_feature = getattr(QWebPage.Feature, 'ClipboardReadWrite', None)
-    if clipboard_feature is not None:
-        always_allow.append(clipboard_feature)
+        QWebPage = qt_platform.QWebPage #type: ignore
 
-    has_new_enum = hasattr(QWebPage, 'PermissionPolicy')
+        # Build the "always allow" set. Older PySide6 may not expose
+        # ClipboardReadWrite under every enum name, so guard with getattr.
+        always_allow = [
+            QWebPage.Feature.MediaAudioCapture,
+            QWebPage.Feature.MediaVideoCapture,
+            QWebPage.Feature.MediaAudioVideoCapture,
+        ]
+        clipboard_feature = getattr(QWebPage.Feature, 'ClipboardReadWrite', None)
+        if clipboard_feature is not None:
+            always_allow.append(clipboard_feature)
 
-    def _patched_on_feature(self, url, feature):
-        if has_new_enum:
-            Policy = QWebPage.PermissionPolicy
-            granted, denied = Policy.GrantedByUser, Policy.DeniedByUser #type: ignore
-        else:
-            granted, denied = 1, 2  # old int-based API (Qt < 6.8-ish)
+        has_new_enum = hasattr(QWebPage, 'PermissionPolicy')
 
-        policy = granted if feature in always_allow else denied
-        self.setFeaturePermission(url, feature, policy)
+        def _patched_on_feature(self, url, feature):
+            if has_new_enum:
+                Policy = QWebPage.PermissionPolicy
+                granted, denied = Policy.GrantedByUser, Policy.DeniedByUser #type: ignore
+            else:
+                granted, denied = 1, 2  # old int-based API (Qt < 6.8-ish)
 
-    qt_platform.BrowserView.WebPage.onFeaturePermissionRequested = _patched_on_feature
+            policy = granted if feature in always_allow else denied
+            self.setFeaturePermission(url, feature, policy)
 
-    QWebEngineSettings = qt_platform.QWebEngineSettings #type: ignore
-    original_init = qt_platform.BrowserView.__init__
+        qt_platform.BrowserView.WebPage.onFeaturePermissionRequested = _patched_on_feature
 
-    def patched_init(self, window):
-        original_init(self, window)
-        webattr = QWebEngineSettings.WebAttribute
-        page_settings = self.profile.settings()
-        if hasattr(webattr, 'JavascriptCanAccessClipboard'):
-            page_settings.setAttribute(webattr.JavascriptCanAccessClipboard, True)
-        if hasattr(webattr, 'JavascriptCanPaste'):
-            page_settings.setAttribute(webattr.JavascriptCanPaste, True)
+        QWebEngineSettings = qt_platform.QWebEngineSettings #type: ignore
+        original_init = qt_platform.BrowserView.__init__
 
-    qt_platform.BrowserView.__init__ = patched_init
-_patched_qt()
+        def patched_init(self, window):
+            original_init(self, window)
+            webattr = QWebEngineSettings.WebAttribute
+            page_settings = self.profile.settings()
+            if hasattr(webattr, 'JavascriptCanAccessClipboard'):
+                page_settings.setAttribute(webattr.JavascriptCanAccessClipboard, True)
+            if hasattr(webattr, 'JavascriptCanPaste'):
+                page_settings.setAttribute(webattr.JavascriptCanPaste, True)
+
+        qt_platform.BrowserView.__init__ = patched_init
+    _patched_qt()
 
 import webview
 import platform
