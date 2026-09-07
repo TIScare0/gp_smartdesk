@@ -1,3 +1,5 @@
+import shutil
+from pathlib import Path
 from enum import Flag, auto
 from typing import Any
 from dataclasses import asdict
@@ -22,10 +24,12 @@ from .downloader import Downloader
 from .piper import Piper
 from .piper import DOWNLOAD_URLS as piper_urls
 from .paths import (
+    APP_DATA,
     PIPER_PATH,
     TXT2AUDIO_PATH,
     OCR_PATH,
-    FASTEMBED_PATH
+    FASTEMBED_PATH,
+    USER_DOWNLOADS_PATH,
 )
 from .ocr import DOWNLOAD_URLS as ocr_urls
 from .ocr import Ocr
@@ -62,6 +66,7 @@ class Tools():
         self.model = Model()
         self.intentRouter = None
         self.chat_mem = None
+        self._model_index = 0
 
         #downloads
         self._downloads = {}
@@ -76,26 +81,34 @@ class Tools():
     def detect_intent(self, user_text, is_api_safe=True):
         return self.load_intender().detect(user_text, is_api_safe)
 
+    def get_model(self, _type='txt2txt'):
+        self.models = self.model.available_models(Modality.TEXT if _type == 'txt2txt' else Modality.IMAGE)
+        if isinstance(self.models, ModelError):
+            return {'error': self.models.details}
+
+        available = [x for x in self.models if not x.is_limit_reached]
+        if not available:
+            return {'error': 'No model available'}
+
+        model = available[self._model_index % len(available)]
+        self._model_index += 1
+
+        model_ins = self.model.set_model(model.model_name)
+        return model_ins
+
     def chat(self, prompt):
         print('CHAT: Called Func with prompt (first 100 char)', prompt[:100])
         if not self.chat_mem:
             self.chat_mem = Memory()
-
         self.chat_mem.add(prompt)
-        models = self.model.available_models(Modality.TEXT)
-        if isinstance(models, ModelError):
-            return {'error': models.details}
-        model = next(x for x in models if not x.is_limit_reached)
-        model_ins = self.model.set_model(model.model_name)
-        
         prompt = f'''
         BELOW THERE IS USER_MEMORY DON'T SAY TO USER THAT YOU HAVE USER_MEMORY
         AND USE IT FOR YOURSELF.
         USER_MEMORY: {self.chat_mem.get_memory(prompt)}
         USER_PROMPT: {prompt}
         '''
-
-        self.chat_mem.save_memories()    
+        self.chat_mem.save_memories()
+        model_ins = self.get_model()
         try:
             return {'result': asdict(model_ins.call_model(prompt))} #type: ignore
         except Exception as e:
@@ -104,17 +117,21 @@ class Tools():
             return {'error': str(e)}
 
     def gen_image(self, userPrompt):
-        models = self.model.available_models(Modality.IMAGE)
-        if isinstance(models, ModelError):
-            return {'error': models.details}
-        model = next(x for x in models if not x.is_limit_reached)
-        if not model:
-            return {'error': 'No model avaliable'}
-        model_ins = self.model.set_model(model.model_name)
+        model_ins = self.get_model(_type='txt2img')
+        target_path = APP_DATA / "images"
+        target_path.mkdir(parents=True, exist_ok=True)
         try:
-            data = asdict(model_ins.call_model(userPrompt, 'src/images', method='txt2img')) #type: ignore
-            path = data.get('response')
-            return {'result': {'response': path.replace('src/', '')}} #type: ignore
+            data = asdict(
+                model_ins.call_model(
+                    userPrompt,
+                    str(target_path),
+                    method='txt2img'
+                )
+            )
+            path: str | None = data.get('response')
+            if not path:
+                return data
+            return {'response': f'__file__/{path.removeprefix('/')}'}
         except Exception as e:
             if isinstance(e, ModelError):
                 return {'error': e.details}
@@ -249,3 +266,26 @@ class Tools():
             return {'result': load_cache(self.pref_cache_key, default={})[key]}
         except Exception:
             return {}
+
+    def copy_to_download_path(self, file_path: str, _type=None):
+        try:
+            if file_path.startswith('__file__'):
+                file_path = file_path[len('__file__'):]
+
+            source = Path(file_path)
+
+            if not source.is_file():
+                return {'error': f'File does not exist: {source}'}
+
+            download_path = USER_DOWNLOADS_PATH / _type if _type else USER_DOWNLOADS_PATH
+            download_path.mkdir(parents=True, exist_ok=True)
+
+            destination = download_path / source.name
+            shutil.copy2(source, destination)
+
+            return {
+                'response': f'Successfully copied to {destination}'
+            }
+
+        except Exception as e:
+            return {'error': str(e)}

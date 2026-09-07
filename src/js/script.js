@@ -254,8 +254,6 @@
     DOM.threadSearchInput?.addEventListener("input", (e) =>
       filterMessages(e.target.value.toLowerCase().trim()),
     );
-    DOM.exportChatBtn?.addEventListener("click", exportConversation);
-    DOM.clearStreamBtn?.addEventListener("click", clearCurrentStream);
     DOM.themeToggleBtn?.addEventListener("click", toggleTheme);
     document.addEventListener("click", (e) => {
       if (
@@ -369,8 +367,10 @@
         if (intent.includes("chat")) {
           await streamEditorialResponse(userText, aiMsgId, sessionId);
         } else {
-          if (state.currentSessionId === sessionId)
+          if (state.currentSessionId === sessionId) {
+            stopThinkingCycle(aiMsgId); 
             switchToImageGenerating(aiMsgId);
+          }
           await HandleImageGen(userText, aiMsgId, sessionId);
         }
       } catch (e) {
@@ -404,7 +404,7 @@
 
   function switchToImageGenerating(msgId) {
     const el = thinkingeffect(msgId);
-    if (el) el.textContent = "Generating image";
+    if (el) el.textContent = "Generating image...";
   }
 
   function timeNow() {
@@ -416,11 +416,13 @@
 
   async function HandleImageGen(userPrompt, aiMsgId, sessionId) {
     try {
+      scrollToStreamBottom();
       const web_api = await getWebApi();
       if (!web_api) throw new Error("Python API unavailable");
       const imageResponse = await web_api.gen_image(userPrompt);
-      const imagePath = imageResponse?.result?.response;
-      if (!imagePath) throw new Error("Backend returned no image path");
+      const imagePath = imageResponse?.response;
+      const imageError = imageResponse?.error || 'Unkown image Error';
+      if (!imagePath) throw new Error(`Backend returned no image path and Error: ${imageError}`);
       const session = state.sessions.find((s) => s.id === sessionId);
       const aiMsg = session?.messages.find((m) => m.id === aiMsgId);
       if (aiMsg) {
@@ -436,6 +438,7 @@
         }
         const shelfEl = document.getElementById(`actions_${aiMsgId}`);
         if (shelfEl) shelfEl.style.display = "flex";
+        scrollToStreamBottom();
       }
     } catch (error) {
       console.error("Image generation failed:", error);
@@ -460,6 +463,7 @@
 
   function openImageLightbox(imageUrl) {
     if (document.querySelector(".lightbox-backdrop")) return;
+    console.log(imageUrl);
     const backdrop = document.createElement("div");
     backdrop.className = "lightbox-backdrop";
     backdrop.innerHTML = `<div class="lightbox-toolbar"><button class="lightbox-btn" id="lightboxDownloadBtn" title="Download"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button><button class="lightbox-btn" id="lightboxCopyBtn" title="Copy image"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button><button class="lightbox-btn lightbox-close-btn" id="lightboxCloseBtn" title="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div><img class="lightbox-image" src="${imageUrl}" alt="Full size image" />`;
@@ -485,29 +489,30 @@
     };
     document.addEventListener("keydown", escHandler);
   }
+
   function closeImageLightbox(backdrop) {
     backdrop.classList.remove("active");
     setTimeout(() => backdrop.remove(), 250);
   }
-  async function downloadImage(imageUrl) {
+
+  async function downloadImage(imagePath) {
+    console.log(`IMAGE URL: ${imagePath}`);
     try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = `AURA_Image_${Date.now()}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
-      showToast("Image downloaded");
+      const wapi = await getWebApi();
+      const result = await wapi.copy_to_download_path(imagePath, 'images');
+      const error = result.error;
+      if (error) {
+        showToast("Couldn't download image")
+        console.log(error);
+        return
+      }
+      showToast(result.response);
     } catch (err) {
       console.error("Download failed:", err);
       showToast("Couldn't download image");
     }
   }
+
   async function copyImageToClipboard(imageUrl) {
     try {
       const pngBlob = await convertImageToPngBlob(imageUrl);
@@ -805,6 +810,7 @@
     }, 2000);
     btn.dataset.resetTimer = timer;
   });
+
   function escapeHtml(str) {
     return String(str || "")
       .replace(/&/g, "&amp;")
@@ -812,6 +818,7 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   }
+
   function scrollToStreamBottom() {
     if (DOM.messagesStream)
       DOM.messagesStream.scrollTop = DOM.messagesStream.scrollHeight;
@@ -849,33 +856,7 @@
     });
   }
 
-  function exportConversation() {
-    if (!state.messages.length) {
-      showToast("No messages to export");
-      return;
-    }
-    let markdown = `# AURA Editorial Inquiry Archive\nDate: ${new Date().toISOString()}\n\n`;
-    state.messages.forEach((m) => {
-      markdown += `### ${m.role === "user" ? "User" : "AURA"} (${m.time})\n${m.content}\n\n---\n\n`;
-    });
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `AURA_Inquiry_${Date.now()}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("Exported to Markdown");
-  }
-  async function clearCurrentStream() {
-    if (confirm("Clear current messages?")) {
-      state.messages = [];
-      if (DOM.messagesStream) DOM.messagesStream.innerHTML = "";
-      await persistSession();
-      showToast("Stream cleared");
-    }
-  }
-  function serializableMessages(messages) {
+   function serializableMessages(messages) {
     return messages.map((m) => {
       if (m.media) {
         const { dataUrl, ...mediaMeta } = m.media;
@@ -884,6 +865,7 @@
       return m;
     });
   }
+  
   async function persistSession(sessionId = state.currentSessionId) {
     if (!sessionId) return;
     const session = state.sessions.find((s) => s.id === sessionId);

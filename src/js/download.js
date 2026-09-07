@@ -1,10 +1,3 @@
-/**
- * AURA — Download Progress Modal Controller
- * Single-card modal with blurred backdrop. Real pause/resume/cancel state
- * machine; the actual byte-progress source is currently FAKE (see
- * startFakeProgressDriver below) — swap that function's internals for a
- * real fetch/XHR progress source when ready, everything else stays as-is.
- */
 (function () {
   'use strict';
 
@@ -27,7 +20,7 @@
     paused: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`
   };
 
-  let session = null; // active download session state
+  let session = null;
 
   async function open(filename, download_id) {
       const web_api = await window.web_api_ready;
@@ -91,7 +84,6 @@
               };
           }
 
-          // Update progress
           if (result.data?.progress !== undefined) {
               setProgress(result.data.progress);
           }

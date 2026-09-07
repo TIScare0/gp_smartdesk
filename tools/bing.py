@@ -34,7 +34,7 @@ class Bing(Request):
                     'q': prompt
                 },
                 method='POST',
-            ).url
+            ).url #type: ignore
             parsed_url = urllib.parse.parse_qs(
                 urllib.parse.urlparse(response_url).query)
             _id = (parsed_url.get('id') or [None])[0]
@@ -59,11 +59,7 @@ class Bing(Request):
                     filename = create_filename(
                         prompt, determine_ext(url, default_ext='jpeg'))
                     saved_path = f'{path}/{filename}' if path else filename
-                    save_file(
-                        filename=saved_path,
-                        data=self.request(url).content,
-                        _type='wb'
-                    )
+                    save_file(filename=saved_path, data=self.request(url).content, _type='wb') #type: ignore
                     return {
                         'status': True,
                         'response': saved_path

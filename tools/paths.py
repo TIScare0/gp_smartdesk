@@ -19,12 +19,13 @@ def get_app_data_path() -> Path:
     # Linux / macOS
     return Path.home() / ".local" / "share" / APP_NAME
 
-
 BASE_PATH = get_app_data_path()
 
-APP_DATA = BASE_PATH / APP_NAME
+APP_DATA = BASE_PATH
 
-DOWNLOADS_PATH = BASE_PATH / "downloads"
+USER_DOWNLOADS_PATH = Path.home() / "Downloads" / APP_NAME
+
+DOWNLOADS_PATH = BASE_PATH / 'downloads'
 
 PIPER_PATH = DOWNLOADS_PATH / "piper" / "voices"
 

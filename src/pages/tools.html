@@ -173,7 +173,7 @@
 
         <div class="tools-grid">
           <!-- GTU Paper Solver -->
-          <button
+          <!-- <button
             onclick="select_tool('gtupaper')"
             class="tool-card"
             data-tool="gtu-paper-solver"
@@ -201,7 +201,7 @@
                 Upload a GTU exam paper and get worked solutions, step by step.
               </p>
             </div>
-          </button>
+          </button> -->
 
           <!-- OCR -->
           <button
@@ -293,12 +293,39 @@
               </p>
             </div>
           </button>
+          <button
+            onclick="select_tool('pdf')"
+            class="tool-card"
+            data-tool="tts"
+          >
+            <div class="tool-card-icon tool-icon-tts">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="9" y1="13" x2="15" y2="13"></line>
+                <line x1="9" y1="17" x2="13" y2="17"></line>
+              </svg>
+            </div>
+            <div class="tool-card-body">
+              <h3>Pdf</h3>
+              <p>All types of pdf tools</p>
+            </div>
+          </button>
         </div>
       </main>
     </div>
     <script src="../js/webview.js"></script>
     <script src="../js/download.js"></script>
-        <script>
+    <script>
       async function applyTheme() {
         if ((await window.GetItem("aura_theme_mode")) === "dark") {
           document.body.classList.add("dark-theme");
@@ -310,14 +337,15 @@
     <script>
       DOWNLOAD_META_MAP = {
         piper: { filename: "Piper Audio Model" },
-        ocr: {filename: 'Ocr Model'}
+        ocr: { filename: "Ocr Model" },
       };
 
       REDIRECT_MAP = {
         piper: "tts.html",
         ocr: "ocr.html",
         qrbrs: "qrbr_scanner.html",
-        gtupaper: "gtu_paper.html",
+        pdf: "pdf.html",
+        // gtupaper: "gtu_paper.html",
       };
 
       async function download_tool_model(tool_name) {
