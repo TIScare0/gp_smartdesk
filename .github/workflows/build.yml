@@ -1,4 +1,4 @@
-name: GP SmartDesk Build
+name: Aura Build
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: gp-smartdesk-production
+  group: Aura-production
   cancel-in-progress: true
 
 env:
@@ -56,21 +56,21 @@ jobs:
       - name: Build
         run: |
           rm -rf build dist
-          pyinstaller --clean --noconfirm gp_smartdesk.spec
+          pyinstaller --clean --noconfirm aura.spec
 
       - name: Verify
         run: |
-          test -f "dist/GP SmartDesk"
+          test -f "dist/Aura"
 
       - name: Rename
         run: |
-          mv "dist/GP SmartDesk" "GP-SmartDesk-linux-x64"
+          mv "dist/Aura" "Aura-linux-x64"
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: GP-SmartDesk-linux-x64
-          path: GP-SmartDesk-linux-x64
+          name: Aura-linux-x64
+          path: Aura-linux-x64
           if-no-files-found: error
           retention-days: 30
 
@@ -121,27 +121,27 @@ jobs:
             Remove-Item "dist" -Recurse -Force
           }
 
-          pyinstaller --clean --noconfirm gp_smartdesk.spec
+          pyinstaller --clean --noconfirm aura.spec
 
       - name: Verify
         shell: pwsh
         run: |
-          if (!(Test-Path "dist/GP SmartDesk.exe")) {
-            throw "GP SmartDesk.exe was not created"
+          if (!(Test-Path "dist/Aura.exe")) {
+            throw "Aura.exe was not created"
           }
 
       - name: Rename
         shell: pwsh
         run: |
           Move-Item `
-            "dist/GP SmartDesk.exe" `
-            "GP-SmartDesk-windows-x64.exe"
+            "dist/Aura.exe" `
+            "Aura-windows-x64.exe"
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: GP-SmartDesk-windows-x64
-          path: GP-SmartDesk-windows-x64.exe
+          name: Aura-windows-x64
+          path: Aura-windows-x64.exe
           if-no-files-found: error
           retention-days: 30
 
@@ -163,13 +163,13 @@ jobs:
       - name: Download Linux
         uses: actions/download-artifact@v4
         with:
-          name: GP-SmartDesk-linux-x64
+          name: Aura-linux-x64
           path: release
 
       - name: Download Windows
         uses: actions/download-artifact@v4
         with:
-          name: GP-SmartDesk-windows-x64
+          name: Aura-windows-x64
           path: release
 
       - name: Validate version
@@ -189,17 +189,17 @@ jobs:
 
           VERSION="${{ inputs.version }}"
 
-          git tag -fa "$VERSION" -m "GP SmartDesk $VERSION"
+          git tag -fa "$VERSION" -m "Aura $VERSION"
           git push origin "$VERSION" --force
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version }}
-          name: GP SmartDesk ${{ inputs.version }}
+          name: Aura ${{ inputs.version }}
           files: |
-            release/GP-SmartDesk-linux-x64
-            release/GP-SmartDesk-windows-x64.exe
+            release/Aura-linux-x64
+            release/Aura-windows-x64.exe
           generate_release_notes: true
           draft: false
           prerelease: false
