@@ -125,7 +125,7 @@ class Tools():
         target_path.mkdir(parents=True, exist_ok=True)
         try:
             data = asdict(
-                model_ins.call_model(
+                model_ins.call_model( #type: ignore
                     userPrompt,
                     str(target_path),
                     method='txt2img'

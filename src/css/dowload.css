@@ -1,8 +1,3 @@
-/* ==========================================================================
-   AURA — Download Progress Modal (single card, blurred backdrop)
-   Matches the lens-modal-backdrop pattern already used in style.css
-   ========================================================================== */
-
 .dc-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -24,7 +19,6 @@
   pointer-events: auto;
 }
 
-/* ---------- Card ---------- */
 .dc-card {
   width: 100%;
   max-width: 420px;
@@ -41,7 +35,6 @@
   transform: scale(1) translateY(0);
 }
 
-/* ---------- Header row ---------- */
 .dc-card-header {
   display: flex;
   align-items: center;
@@ -125,7 +118,6 @@
   color: var(--text-main);
 }
 
-/* ---------- Progress bar ---------- */
 .dc-progress-track {
   width: 100%;
   height: 7px;
@@ -141,13 +133,14 @@
   border-radius: var(--radius-full);
   background: var(--accent-gold);
   position: relative;
-  transition: width 0.3s var(--ease-editorial), background 0.25s ease;
+  transition:
+    width 0.3s var(--ease-editorial),
+    background 0.25s ease;
   overflow: hidden;
 }
 
-/* Shimmer sweep — only while actively downloading */
 .dc-card[data-state="downloading"] .dc-progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -161,7 +154,9 @@
 }
 
 @keyframes dcShimmerSweep {
-  100% { transform: translateX(100%); }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .dc-card[data-state="complete"] .dc-progress-fill {
@@ -176,7 +171,6 @@
   background: var(--text-ghost);
 }
 
-/* ---------- Meta rows ---------- */
 .dc-progress-meta-row {
   display: flex;
   align-items: center;
@@ -218,8 +212,15 @@
 }
 
 @keyframes dcPulseDot {
-  0%, 100% { opacity: 0.4; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 .dc-card[data-state="complete"] .dc-status-text {
@@ -236,7 +237,6 @@
   color: var(--text-subtle);
 }
 
-/* ---------- Footer row: speed/eta + controls ---------- */
 .dc-footer-row {
   display: flex;
   align-items: center;
@@ -295,7 +295,6 @@
   color: #ef4444;
 }
 
-/* Hide controls entirely once complete or errored — replaced by a single action */
 .dc-card[data-state="complete"] .dc-controls,
 .dc-card[data-state="error"] .dc-controls {
   display: none;
@@ -329,7 +328,6 @@
   color: #ffffff;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 480px) {
   .dc-footer-row {
     flex-direction: column;

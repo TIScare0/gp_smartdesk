@@ -1,9 +1,9 @@
-/* ==========================================================================
-   IMAGE GALLERY — AURA
-   Shares tokens with style.css (--bg-*, --text-*, --accent-*, --radius-*)
-   ========================================================================== */
-
-html, body { overflow: auto; height: auto; min-height: 100vh; }
+html,
+body {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+}
 
 .gallery-shell {
   position: relative;
@@ -13,7 +13,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   flex-direction: column;
 }
 
-/* Top bar */
 .gallery-topbar {
   height: 64px;
   padding: 0 32px;
@@ -85,10 +84,11 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
 }
 
 @keyframes gallerySpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Content column */
 .gallery-content {
   flex: 1;
   display: flex;
@@ -123,7 +123,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   color: var(--text-main);
 }
 
-/* --- Loading skeletons --- */
 .gallery-skeleton-grid {
   width: 100%;
   max-width: 1080px;
@@ -146,16 +145,25 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   animation: gallerySkeletonSweep 1.6s ease-in-out infinite;
 }
 
-.gallery-skeleton-card:nth-child(2) { height: 300px; }
-.gallery-skeleton-card:nth-child(3) { height: 180px; }
-.gallery-skeleton-card:nth-child(4) { height: 260px; }
-
-@keyframes gallerySkeletonSweep {
-  0% { background-position: 150% 0; }
-  100% { background-position: -50% 0; }
+.gallery-skeleton-card:nth-child(2) {
+  height: 300px;
+}
+.gallery-skeleton-card:nth-child(3) {
+  height: 180px;
+}
+.gallery-skeleton-card:nth-child(4) {
+  height: 260px;
 }
 
-/* --- Empty state --- */
+@keyframes gallerySkeletonSweep {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
 .gallery-empty {
   display: flex;
   flex-direction: column;
@@ -189,7 +197,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   color: var(--text-muted);
 }
 
-/* --- Masonry-style grid --- */
 .gallery-grid {
   width: 100%;
   max-width: 1080px;
@@ -240,10 +247,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   display: block;
 }
 
-/* ==========================================================================
-   ZOOMABLE LIGHTBOX
-   ========================================================================== */
-
 .lightbox-viewport {
   width: 100%;
   height: 100%;
@@ -270,7 +273,14 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
 }
 
 @media (max-width: 640px) {
-  .gallery-content { padding: 40px 16px 80px; }
-  .gallery-grid, .gallery-skeleton-grid { columns: 2 140px; }
-  .gallery-topbar { padding: 0 18px; }
+  .gallery-content {
+    padding: 40px 16px 80px;
+  }
+  .gallery-grid,
+  .gallery-skeleton-grid {
+    columns: 2 140px;
+  }
+  .gallery-topbar {
+    padding: 0 18px;
+  }
 }

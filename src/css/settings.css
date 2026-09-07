@@ -1,8 +1,3 @@
-/* ==========================================================================
-   AURA — Studio Settings
-   Extends the editorial design tokens defined in style.css
-   ========================================================================== */
-
 html,
 body {
   overflow: auto;
@@ -18,7 +13,6 @@ body {
   flex-direction: column;
 }
 
-/* ---------- Top bar ---------- */
 .settings-topbar {
   height: 60px;
   padding: 0 28px;
@@ -84,7 +78,6 @@ body {
   background: var(--accent-emerald);
 }
 
-/* ---------- Body layout ---------- */
 .settings-body {
   flex: 1;
   display: flex;
@@ -93,7 +86,6 @@ body {
   margin: 0 auto;
 }
 
-/* ---------- Sidebar nav ---------- */
 .settings-nav {
   width: 220px;
   flex-shrink: 0;
@@ -142,7 +134,6 @@ body {
   color: var(--accent-gold);
 }
 
-/* ---------- Content ---------- */
 .settings-content {
   flex: 1;
   min-width: 0;
@@ -188,7 +179,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ---------- Cards ---------- */
 .settings-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-hairline);
@@ -225,7 +215,6 @@ body {
   border-color: rgba(239, 68, 68, 0.25);
 }
 
-/* ---------- Model grid ---------- */
 .model-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -286,9 +275,6 @@ body {
   font-size: 11px;
   color: var(--text-subtle);
 }
-
-/* ---------- API key rows ---------- */
-/* ---------- API key rows ---------- */
 
 .api-key-row {
   display: flex;
@@ -351,8 +337,6 @@ body {
   transform: translateY(1px);
 }
 
-/* ---------- API key status ---------- */
-
 .api-key-status {
   width: 7px;
   height: 7px;
@@ -370,14 +354,10 @@ body {
     box-shadow var(--transition-fast);
 }
 
-/* Checking */
-
 .api-key-row.checking .api-key-status {
   opacity: 1;
   background: var(--accent-gold);
 }
-
-/* Valid */
 
 .api-key-row.valid .api-key-status {
   opacity: 1;
@@ -412,7 +392,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ---------- Toggle switch ---------- */
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -457,7 +436,6 @@ body {
   transform: translateX(18px);
 }
 
-/* ---------- Segmented control ---------- */
 .segmented-control {
   display: flex;
   gap: 4px;
@@ -491,7 +469,6 @@ body {
   box-shadow: var(--shadow-subtle);
 }
 
-/* ---------- Plan card ---------- */
 .plan-card-top {
   display: flex;
   align-items: center;
@@ -525,7 +502,6 @@ body {
   line-height: 1.5;
 }
 
-/* ---------- Usage bar ---------- */
 .usage-bar-track {
   width: 100%;
   height: 8px;
@@ -546,7 +522,6 @@ body {
   margin: 0;
 }
 
-/* ---------- Danger button ---------- */
 .danger-btn {
   padding: 8px 16px;
   border-radius: var(--radius-sm);
@@ -567,7 +542,6 @@ body {
   border-color: #ef4444;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 800px) {
   .settings-body {
     flex-direction: column;

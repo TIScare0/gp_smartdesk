@@ -1,9 +1,5 @@
-/* ==========================================================================
-   AURA — Tools Grid
-   Extends the editorial design tokens defined in style.css
-   ========================================================================== */
-
-html, body {
+html,
+body {
   overflow: auto;
   height: auto;
   min-height: 100vh;
@@ -15,7 +11,6 @@ html, body {
   min-height: 100vh;
 }
 
-/* ---------- Top bar ---------- */
 .tools-topbar {
   height: 60px;
   padding: 0 28px;
@@ -60,14 +55,12 @@ html, body {
   border-left: 1px solid var(--border-hairline);
 }
 
-/* ---------- Content ---------- */
 .tools-content {
   max-width: 980px;
   margin: 0 auto;
   padding: 60px 24px 100px;
 }
 
-/* ---------- Hero ---------- */
 .tools-hero {
   margin-bottom: 44px;
   max-width: 560px;
@@ -102,14 +95,12 @@ html, body {
   color: var(--text-muted);
 }
 
-/* ---------- Grid ---------- */
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
-/* ---------- Card ---------- */
 .tool-card {
   position: relative;
   display: flex;
@@ -149,11 +140,21 @@ html, body {
   color: var(--accent-gold);
 }
 
-.tool-icon-gtu { background: rgba(66, 133, 244, 0.10); }
-.tool-icon-ocr { background: rgba(179, 139, 77, 0.10); }
-.tool-icon-object { background: rgba(21, 128, 61, 0.10); }
-.tool-icon-qr { background: rgba(24, 23, 21, 0.06); }
-.tool-icon-tts { background: rgba(234, 88, 12, 0.10); }
+.tool-icon-gtu {
+  background: rgba(66, 133, 244, 0.1);
+}
+.tool-icon-ocr {
+  background: rgba(179, 139, 77, 0.1);
+}
+.tool-icon-object {
+  background: rgba(21, 128, 61, 0.1);
+}
+.tool-icon-qr {
+  background: rgba(24, 23, 21, 0.06);
+}
+.tool-icon-tts {
+  background: rgba(234, 88, 12, 0.1);
+}
 
 .tool-card-body h3 {
   font-family: var(--font-serif);
@@ -193,7 +194,6 @@ html, body {
   color: var(--accent-emerald);
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 860px) {
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);

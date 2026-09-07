@@ -18,7 +18,7 @@ class GeminiBase(Request):
     def __init__(self, model: str):
         super().__init__()
         self.model = model
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.client = genai.Client(api_key=GEMINI_API_KEY) #type: ignore
         self.system_prompt = ''
 
     def base_interaction(self, prompt, **kwargs):

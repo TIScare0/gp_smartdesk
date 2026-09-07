@@ -15,7 +15,7 @@ class MistralModels:
 class Mistral:
     def __init__(self, model: str):
         self.model = model
-        self.client = MistralAI(api_key=MISTRAL_API_KEY)
+        self.client = MistralAI(api_key=MISTRAL_API_KEY) #type: ignore
         self.system_prompt = ''
 
     def txt2txt(self, prompt: str):

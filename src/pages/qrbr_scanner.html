@@ -45,10 +45,8 @@
       </header>
 
       <main class="scanner-content">
-        <!-- ===================== VIEWFINDER STAGE ===================== -->
         <section class="viewfinder-stage">
           <div class="viewfinder-frame" id="viewfinderFrame" data-mode="idle">
-            <!-- Live camera feed target -->
             <video
               class="viewfinder-video"
               id="viewfinderVideo"
@@ -57,14 +55,12 @@
               playsinline
             ></video>
 
-            <!-- Dropped/uploaded image target -->
             <img
               class="viewfinder-image"
               id="viewfinderImage"
               alt="Uploaded image"
             />
 
-            <!-- Idle placeholder -->
             <div class="viewfinder-idle" id="viewfinderIdle">
               <svg
                 width="40"
@@ -85,14 +81,12 @@
               <span>Start your camera or drop an image to begin scanning</span>
             </div>
 
-            <!-- Live status pill, bottom of frame -->
             <div class="viewfinder-status-pill" id="viewfinderStatusPill">
               <span class="status-pulse-dot"></span>
               <span id="viewfinderStatusText">Camera off</span>
             </div>
           </div>
 
-          <!-- Controls beneath the frame -->
           <div class="scanner-controls">
             <button class="scanner-primary-btn" id="startCameraBtn">
               <svg
@@ -151,7 +145,6 @@
           </div>
         </section>
 
-        <!-- ===================== RESULTS LIST ===================== -->
         <section class="scan-results-section">
           <div class="scan-results-heading">
             <h2>Scanned codes</h2>

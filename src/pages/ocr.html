@@ -46,9 +46,7 @@
           </p>
         </section>
 
-        <!-- ===================== THE BIG CARD ===================== -->
         <div class="ocr-card" id="ocrCard" data-state="idle">
-          <!-- STATE: idle / upload -->
           <div class="ocr-panel ocr-panel-upload" id="ocrPanelUpload">
             <label class="ocr-dropzone" id="ocrDropzone" for="ocrFileInput">
               <input type="file" id="ocrFileInput" accept="image/*" hidden />
@@ -77,7 +75,6 @@
             </label>
           </div>
 
-          <!-- STATE: preview before extraction -->
           <div class="ocr-panel ocr-panel-preview" id="ocrPanelPreview">
             <div class="ocr-preview-image-wrap">
               <img id="ocrPreviewImg" alt="Uploaded image" />
@@ -124,7 +121,6 @@
             </button>
           </div>
 
-          <!-- STATE: extracting (fake progress) -->
           <div class="ocr-panel ocr-panel-extracting" id="ocrPanelExtracting">
             <div class="ocr-scan-visual">
               <img id="ocrScanImg" alt="Scanning" />
@@ -138,7 +134,6 @@
             </div>
           </div>
 
-          <!-- STATE: result -->
           <div class="ocr-panel ocr-panel-result" id="ocrPanelResult">
             <div class="ocr-result-header">
               <span class="ocr-result-title">
@@ -209,7 +204,7 @@
     </div>
 
     <div id="toastContainer" class="toast-hub"></div>
-    
+
     <script src="../js/webview.js"></script>
     <script>
       async function applyTheme() {

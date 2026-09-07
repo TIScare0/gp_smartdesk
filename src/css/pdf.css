@@ -1,9 +1,9 @@
-/* ==========================================================================
-   PDF TOOLS PAGE — AURA
-   Shares tokens with style.css (--bg-*, --text-*, --accent-*, --radius-*)
-   ========================================================================== */
-
-html, body { overflow: auto; height: auto; min-height: 100vh; }
+html,
+body {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+}
 
 .pdf-shell {
   position: relative;
@@ -13,7 +13,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   flex-direction: column;
 }
 
-/* Top bar */
 .pdf-topbar {
   height: 64px;
   padding: 0 32px;
@@ -59,7 +58,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   background: var(--bg-surface);
 }
 
-/* Content column */
 .pdf-content {
   flex: 1;
   display: flex;
@@ -100,7 +98,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   line-height: 1.6;
 }
 
-/* The big card */
 .pdf-card {
   width: 100%;
   max-width: 640px;
@@ -112,16 +109,29 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   transition: all var(--transition-smooth);
 }
 
-.pdf-panel { display: none; }
+.pdf-panel {
+  display: none;
+}
 
-.pdf-card[data-state="idle"] .pdf-panel-upload { display: block; }
-.pdf-card[data-state="select"] .pdf-panel-select { display: flex; }
-.pdf-card[data-state="options"] .pdf-panel-options { display: flex; }
-.pdf-card[data-state="processing"] .pdf-panel-processing { display: flex; }
-.pdf-card[data-state="result"] .pdf-panel-result { display: flex; }
-.pdf-card[data-state="locked"] .pdf-panel-locked { display: flex; }
+.pdf-card[data-state="idle"] .pdf-panel-upload {
+  display: block;
+}
+.pdf-card[data-state="select"] .pdf-panel-select {
+  display: flex;
+}
+.pdf-card[data-state="options"] .pdf-panel-options {
+  display: flex;
+}
+.pdf-card[data-state="processing"] .pdf-panel-processing {
+  display: flex;
+}
+.pdf-card[data-state="result"] .pdf-panel-result {
+  display: flex;
+}
+.pdf-card[data-state="locked"] .pdf-panel-locked {
+  display: flex;
+}
 
-/* --- Upload / dropzone --- */
 .pdf-dropzone {
   display: flex;
   flex-direction: column;
@@ -165,7 +175,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   color: var(--text-subtle);
 }
 
-/* --- File selection / staged files --- */
 .pdf-panel-select {
   flex-direction: column;
   gap: 18px;
@@ -254,7 +263,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   background: var(--accent-glow);
 }
 
-/* --- Tool grid --- */
 .pdf-tool-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -317,7 +325,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   color: var(--text-ghost);
 }
 
-/* --- Options step --- */
 .pdf-panel-options {
   flex-direction: column;
   gap: 18px;
@@ -415,7 +422,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   margin-top: 5px;
 }
 
-/* Drag-orderable page list, used by rearrange/remove tools */
 .pdf-page-order-list {
   display: flex;
   flex-wrap: wrap;
@@ -476,7 +482,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   cursor: not-allowed;
 }
 
-/* --- Processing --- */
 .pdf-panel-processing {
   flex-direction: column;
   align-items: center;
@@ -503,13 +508,22 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   left: 0;
   right: 0;
   height: 40%;
-  background: linear-gradient(to bottom, transparent, var(--accent-glow), transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent-glow),
+    transparent
+  );
   animation: pdfSweepDown 1.6s ease-in-out infinite;
 }
 
 @keyframes pdfSweepDown {
-  0% { top: -40%; }
-  100% { top: 100%; }
+  0% {
+    top: -40%;
+  }
+  100% {
+    top: 100%;
+  }
 }
 
 .pdf-processing-label {
@@ -535,7 +549,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   transition: width 0.3s var(--ease-editorial);
 }
 
-/* --- Result --- */
 .pdf-panel-result {
   flex-direction: column;
   gap: 18px;
@@ -666,7 +679,6 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   transform: translateY(-1px);
 }
 
-/* --- Locked / password --- */
 .pdf-panel-locked {
   flex-direction: column;
   align-items: center;
@@ -731,10 +743,18 @@ html, body { overflow: auto; height: auto; min-height: 100vh; }
   margin-top: 8px;
 }
 
-/* Responsive */
 @media (max-width: 640px) {
-  .pdf-content { padding: 40px 16px 80px; }
-  .pdf-card { padding: 22px; border-radius: var(--radius-md); }
-  .pdf-tool-grid { grid-template-columns: 1fr; }
-  .pdf-topbar { padding: 0 18px; }
+  .pdf-content {
+    padding: 40px 16px 80px;
+  }
+  .pdf-card {
+    padding: 22px;
+    border-radius: var(--radius-md);
+  }
+  .pdf-tool-grid {
+    grid-template-columns: 1fr;
+  }
+  .pdf-topbar {
+    padding: 0 18px;
+  }
 }

@@ -1,9 +1,5 @@
-/* ==========================================================================
-   AURA — OCR Tool
-   Extends the editorial design tokens defined in style.css
-   ========================================================================== */
-
-html, body {
+html,
+body {
   overflow: auto;
   height: auto;
   min-height: 100vh;
@@ -15,7 +11,6 @@ html, body {
   min-height: 100vh;
 }
 
-/* ---------- Top bar ---------- */
 .ocr-topbar {
   height: 60px;
   padding: 0 28px;
@@ -59,14 +54,12 @@ html, body {
   border-left: 1px solid var(--border-hairline);
 }
 
-/* ---------- Content ---------- */
 .ocr-content {
   max-width: 720px;
   margin: 0 auto;
   padding: 56px 24px 100px;
 }
 
-/* ---------- Hero ---------- */
 .ocr-hero {
   margin-bottom: 36px;
   text-align: center;
@@ -103,7 +96,6 @@ html, body {
   margin: 0 auto;
 }
 
-/* ---------- The big card ---------- */
 .ocr-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-hairline);
@@ -123,16 +115,29 @@ html, body {
 }
 
 @keyframes ocrPanelFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.ocr-card[data-state="idle"] .ocr-panel-upload { display: block; }
-.ocr-card[data-state="preview"] .ocr-panel-preview { display: block; }
-.ocr-card[data-state="extracting"] .ocr-panel-extracting { display: flex; }
-.ocr-card[data-state="result"] .ocr-panel-result { display: flex; }
+.ocr-card[data-state="idle"] .ocr-panel-upload {
+  display: block;
+}
+.ocr-card[data-state="preview"] .ocr-panel-preview {
+  display: block;
+}
+.ocr-card[data-state="extracting"] .ocr-panel-extracting {
+  display: flex;
+}
+.ocr-card[data-state="result"] .ocr-panel-result {
+  display: flex;
+}
 
-/* ---------- Upload state ---------- */
 .ocr-dropzone {
   display: flex;
   flex-direction: column;
@@ -184,7 +189,6 @@ html, body {
   color: var(--text-subtle);
 }
 
-/* ---------- Preview state ---------- */
 .ocr-panel-preview {
   display: none;
   flex-direction: column;
@@ -266,7 +270,6 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* ---------- Extracting state ---------- */
 .ocr-panel-extracting {
   display: none;
   flex-direction: column;
@@ -298,15 +301,26 @@ html, body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-gold),
+    transparent
+  );
   box-shadow: 0 0 12px 2px rgba(179, 139, 77, 0.5);
   animation: ocrScanSweep 1.8s ease-in-out infinite;
 }
 
 @keyframes ocrScanSweep {
-  0% { top: 0%; }
-  50% { top: 96%; }
-  100% { top: 0%; }
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: 96%;
+  }
+  100% {
+    top: 0%;
+  }
 }
 
 .ocr-extracting-label {
@@ -333,7 +347,6 @@ html, body {
   transition: width 0.25s ease;
 }
 
-/* ---------- Result state ---------- */
 .ocr-panel-result {
   display: none;
   flex-direction: column;
@@ -458,7 +471,6 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 560px) {
   .ocr-content {
     padding: 36px 16px 70px;

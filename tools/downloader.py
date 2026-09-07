@@ -46,10 +46,10 @@ class Downloader:
                 timeout=60,
             )
 
-            response.raise_for_status()
+            response.raise_for_status() #type: ignore
 
             with file_path.open("wb") as file:
-                for chunk in response.iter_content(8 * 1024 * 1024):
+                for chunk in response.iter_content(8 * 1024 * 1024): #type: ignore
                     if chunk:
                         file.write(chunk)
 
