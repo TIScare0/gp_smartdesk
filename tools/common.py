@@ -1,6 +1,6 @@
 import shutil
 from pathlib import Path
-from enum import Flag, auto
+from enum import Flag, auto, unique
 from typing import Any
 from dataclasses import asdict
 
@@ -33,7 +33,8 @@ from .paths import (
 )
 from .ocr import DOWNLOAD_URLS as ocr_urls
 from .ocr import Ocr
-
+from .pdf_tool import Pdf
+from .pdf_bridge import PdfBridge
 
 class ResponseTypes(Flag):
     model = auto()
@@ -72,6 +73,8 @@ class Tools():
         self._downloads = {}
 
         self.pref_cache_key = 'user_preference'
+        self.pdf = Pdf
+        self.pdf_bridge = PdfBridge(self.pdf)
 
     def load_intender(self):
         if not self.intentRouter:
@@ -137,6 +140,27 @@ class Tools():
                 return {'error': e.details}
             return {'error': str(e)}
 
+    def check_download(self, download_id):
+        job = self._downloads.get(download_id)
+
+        if not job:
+            return {
+                "status": False,
+                "error": "Download not found"
+            }
+
+        downloader = Downloader()
+
+        complete = downloader.check_paths(
+            job["urls"],
+            job["path"]
+        )
+
+        return {
+            "status": True,
+            "completed": complete
+        }
+    
     def download(self, _id: str):
         func = DOWNLOAD_MAP.get(_id)
 
@@ -289,3 +313,35 @@ class Tools():
 
         except Exception as e:
             return {'error': str(e)}
+
+    def pdf_stage(self, stage_id, paths):
+        return self.pdf_bridge.pdf_stage(stage_id, paths)
+
+    def pdf_stage_info(self, stage_id, file_name):
+        return self.pdf_bridge.pdf_stage_info(stage_id, file_name)
+
+    def pdf_unlock(self, stage_id, file_name, password):
+        return self.pdf_bridge.pdf_unlock(stage_id, file_name, password)
+
+    def pdf_run(self, stage_id, tool, options):
+        return self.pdf_bridge.pdf_run(stage_id, tool, options)
+
+    def pdf_export(self, output_path, suggested_name):
+        return self.pdf_bridge.pdf_export(output_path, suggested_name)
+    
+    def pdf_pick_files(self, allow_multiple=True):
+        return self.pdf_bridge.pdf_pick_files(allow_multiple)
+
+    def get_images(self):
+        image_path = APP_DATA / 'images'
+        extensions = {'.png', '.jpg', '.jpeg', '.webp', '.gif'}
+
+        return [
+            {'image': f'__file__/{file}'}
+            for file in sorted(
+                image_path.iterdir(),
+                key=lambda file: file.stat().st_mtime,
+                reverse=True
+            )
+            if file.is_file() and file.suffix.lower() in extensions
+        ]

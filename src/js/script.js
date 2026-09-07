@@ -92,7 +92,7 @@
         "fastembed",
       );
       console.log(result);
-    } catch { }
+    } catch {}
     setupListeners();
     renderSidebarChats();
     await setupSidebarState();
@@ -368,7 +368,7 @@
           await streamEditorialResponse(userText, aiMsgId, sessionId);
         } else {
           if (state.currentSessionId === sessionId) {
-            stopThinkingCycle(aiMsgId); 
+            stopThinkingCycle(aiMsgId);
             switchToImageGenerating(aiMsgId);
           }
           await HandleImageGen(userText, aiMsgId, sessionId);
@@ -420,9 +420,16 @@
       const web_api = await getWebApi();
       if (!web_api) throw new Error("Python API unavailable");
       const imageResponse = await web_api.gen_image(userPrompt);
+      console.log(imageResponse);
       const imagePath = imageResponse?.response;
-      const imageError = imageResponse?.error || 'Unkown image Error';
-      if (!imagePath) throw new Error(`Backend returned no image path and Error: ${imageError}`);
+      const imageError = imageResponse?.error || "Unkown image Error";
+      let error = "Sorry, image generation failed.";
+      if (!imagePath && imageError.includes("content")) {
+        error =
+          "Content Warning: Prompt Blocked because of Image provider Policy";
+      }
+      if (!imagePath)
+        throw new Error(`Backend returned no image path and Error: ${error}`);
       const session = state.sessions.find((s) => s.id === sessionId);
       const aiMsg = session?.messages.find((m) => m.id === aiMsgId);
       if (aiMsg) {
@@ -445,13 +452,12 @@
       const session = state.sessions.find((s) => s.id === sessionId);
       const aiMsg = session?.messages.find((m) => m.id === aiMsgId);
       if (aiMsg) {
-        aiMsg.content = "Sorry, image generation failed.";
+        aiMsg.content = error;
         aiMsg.status = "error";
       }
       if (state.currentSessionId === sessionId) {
         const bodyEl = document.getElementById(`body_${aiMsgId}`);
-        if (bodyEl)
-          bodyEl.innerHTML = renderMarkdown("Sorry, image generation failed.");
+        if (bodyEl) bodyEl.innerHTML = renderMarkdown(error);
       }
     } finally {
       stopThinkingCycle(aiMsgId);
@@ -499,12 +505,12 @@
     console.log(`IMAGE URL: ${imagePath}`);
     try {
       const wapi = await getWebApi();
-      const result = await wapi.copy_to_download_path(imagePath, 'images');
+      const result = await wapi.copy_to_download_path(imagePath, "images");
       const error = result.error;
       if (error) {
-        showToast("Couldn't download image")
+        showToast("Couldn't download image");
         console.log(error);
-        return
+        return;
       }
       showToast(result.response);
     } catch (err) {
@@ -675,10 +681,25 @@
     return row;
   }
 
-  function copyButtonHtml(id) {
-    return `<button class="msg-chip-action copy-act" data-id="${id}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy</button>`;
-  }
+  function copyButtonHtml(id, type = "text") {
+    if (type === "image") {
+      return `<button class="msg-chip-action copy-act image-copy-act" data-id="${id}" data-copy-type="image">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      Copy
+    </button>`;
+    }
 
+    return `<button class="msg-chip-action copy-act" data-id="${id}" data-copy-type="text">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+    Copy
+  </button>`;
+  }
   async function streamEditorialResponse(userPrompt, aiMsgId, sessionId) {
     try {
       const web_api = await getWebApi();
@@ -785,32 +806,60 @@
     text = text.replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>");
     return text;
   }
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest(".code-copy-btn");
-    if (!btn) return;
-    const targetId = btn.getAttribute("data-copy-target");
-    const codeEl = document.getElementById(targetId);
-    if (!codeEl) return;
-    const code = codeEl.textContent;
-    navigator.clipboard.writeText(code);
-    window.showAuraToast("Code copied to clipboard");
-    const label = btn.querySelector(".copy-btn-label");
-    const iconDefault = btn.querySelector(".copy-icon-default");
-    const iconCheck = btn.querySelector(".copy-icon-check");
-    if (btn.dataset.resetTimer) clearTimeout(Number(btn.dataset.resetTimer));
-    label.textContent = "Copied";
-    iconDefault.style.display = "none";
-    iconCheck.style.display = "inline-block";
-    btn.classList.add("copied");
-    const timer = setTimeout(() => {
-      label.textContent = "Copy";
-      iconDefault.style.display = "inline-block";
-      iconCheck.style.display = "none";
-      btn.classList.remove("copied");
-    }, 2000);
-    btn.dataset.resetTimer = timer;
-  });
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".copy-act");
 
+    if (!btn) return;
+
+    const id = btn.getAttribute("data-id");
+    const type = btn.getAttribute("data-copy-type");
+
+    if (!id) return;
+
+    // IMAGE
+    if (type === "image") {
+      const imageEl = document.getElementById(id);
+
+      if (!imageEl || imageEl.tagName !== "IMG") {
+        console.error("[Copy Image] Image element not found:", id);
+        return;
+      }
+
+      const copied = await copyImageToClipboard(imageEl.src);
+
+      if (copied) {
+        btn.classList.add("copied");
+
+        setTimeout(() => {
+          btn.classList.remove("copied");
+        }, 2000);
+      }
+
+      return;
+    }
+
+    // TEXT
+    const textEl = document.getElementById(id);
+
+    if (!textEl) return;
+
+    const text = textEl.textContent || "";
+
+    try {
+      await navigator.clipboard.writeText(text);
+
+      window.showAuraToast("Copied to clipboard");
+
+      btn.classList.add("copied");
+
+      setTimeout(() => {
+        btn.classList.remove("copied");
+      }, 2000);
+    } catch (error) {
+      console.error("[Copy] Failed:", error);
+      window.showAuraToast("Failed to copy");
+    }
+  });
   function escapeHtml(str) {
     return String(str || "")
       .replace(/&/g, "&amp;")
@@ -856,7 +905,7 @@
     });
   }
 
-   function serializableMessages(messages) {
+  function serializableMessages(messages) {
     return messages.map((m) => {
       if (m.media) {
         const { dataUrl, ...mediaMeta } = m.media;
@@ -865,7 +914,7 @@
       return m;
     });
   }
-  
+
   async function persistSession(sessionId = state.currentSessionId) {
     if (!sessionId) return;
     const session = state.sessions.find((s) => s.id === sessionId);
@@ -901,8 +950,8 @@
       .trim();
     const filtered = query
       ? state.sessions.filter((s) =>
-        (s.title || "").toLowerCase().includes(query),
-      )
+          (s.title || "").toLowerCase().includes(query),
+        )
       : state.sessions;
     if (DOM.sidebarChatCount)
       DOM.sidebarChatCount.innerText = filtered.length.toString();
@@ -915,9 +964,9 @@
       li.className = `sidebar-chat-item ${s.id === state.currentSessionId ? "active" : ""}`;
       const timeStr = s.createdAt
         ? new Date(s.createdAt).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })
+            month: "short",
+            day: "numeric",
+          })
         : "Recent";
       const msgCount = s.messages ? `${s.messages.length} msgs` : "1 inquiry";
       li.innerHTML = `<div class="chat-item-text-wrap"><span class="chat-item-title">${escapeHtml(s.title || "Untitled Chat")}</span><span class="chat-item-meta">${timeStr} • ${msgCount}</span></div><button class="chat-item-del-btn" data-id="${s.id}" title="Delete chat">&times;</button>`;

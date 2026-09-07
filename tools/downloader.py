@@ -10,8 +10,15 @@ class Downloader:
     def __init__(self):
         self.request = Request()
 
-    def download(self, url_or_urls, path):
+    def check_paths(self, urls, path):
+        urls = (urls,) if isinstance(urls, str) else tuple(urls)
 
+        return all(
+            (path / Path(urlparse(url).path).name).is_file()
+            for url in urls
+        )
+
+    def download(self, url_or_urls, path):
         urls = (
             (url_or_urls,)
             if isinstance(url_or_urls, str)

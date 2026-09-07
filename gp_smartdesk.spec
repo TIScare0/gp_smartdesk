@@ -6,7 +6,7 @@ from PyInstaller.utils.hooks import (
 
 ROOT = Path(SPEC).resolve().parent
 
-APP_NAME = "GP SmartDesk"
+APP_NAME = "Aura"
 ENTRY_POINT = ROOT / "main.py"
 
 datas = [
@@ -78,6 +78,7 @@ exe = EXE(
     a.datas,
     a.zipfiles,
     name=APP_NAME,
+    icon="src/images/app_logo.ico",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -18,6 +18,9 @@ class Perchance(Request):
     def __init__(self, model: str):
         self.model: str = model
         super().__init__()
+        self.cachebust = None
+        self.api_base = 'https://image-generation.perchance.org/api'
+        self.headers = {'referer': 'https://image-generation.perchance.org/embed'}
 
     PROMPT_MAP = {
         "anime": (
@@ -54,24 +57,47 @@ class Perchance(Request):
         ),
     }
 
+    def get_cachebust(self):
+        if not self.cachebust:
+            self.cachebust = random.random()
+        return self.cachebust
+
+    def get_user_key(self, tried=1):
+        try:
+            user_key = self.download_json(
+                f'{self.api_base}/verifyUser',
+                params={
+                    'thread': 0,
+                    '__cacheBust': self.get_cachebust(),
+                },
+                headers=self.headers,
+            ).get('userKey')
+            if not user_key:
+                if tried == 5:
+                    return None
+                return self.get_user_key(tried=tried+5)
+            return user_key
+        except Exception:
+            return None
+
     def txt2img(self, prompt, path=None):
         try:
-            headers = {
-                'referer': 'https://image-generation.perchance.org/embed'}
-            api_base = 'https://image-generation.perchance.org/api'
+            user_key = self.get_user_key()
+            if not user_key:
+                return {'error': 'Unable to get User key'}
             cachebust = random.random()
             user_token_data = self.download_json(
-                f'{api_base}/verifyUser',
+                f'{self.api_base}/verifyUser',
                 params={
                     'thread': 0,
                     '__cacheBust': cachebust
                 },
-                headers=headers
+                headers=self.headers
             )
             user_token = user_token_data['userKey']
             req_id = random.random()
             generated = self.download_json(
-                f'{api_base}/generate',
+                f'{self.api_base}/generate',
                 params={
                     'userKey': user_token,
                     'requestId': req_id,
@@ -92,15 +118,20 @@ class Perchance(Request):
                 },
             )
             if generated.get('status') == 'success':
+                if generated.get('nfsw'):
+                    return {
+                        'status': False,
+                        'error': 'content warning'
+                    }
                 ext = generated.get('fileExtension') or 'jpeg'
-                image_url = api_base.removesuffix(
+                image_url = self.api_base.removesuffix(
                     '/api') + generated.get('imageDownloadUrl')
                 filename = create_filename(prompt, ext)
                 filename = path.removesuffix(
                     '/') + '/' + filename if path else filename
                 save_file(
                     filename=filename,
-                    data=self.request(image_url).content,
+                    data=self.request(image_url).content, #type: ignore
                     _type='wb'
                 )
                 return {

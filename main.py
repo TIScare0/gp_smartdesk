@@ -65,9 +65,9 @@ SRC_PATH = Path(__file__).resolve().parent / "src"
 app = Bottle()
 
 @app.route("/__file__/<filepath:path>") #type: ignore
+@app.route("/pages/__file__/<filepath:path>") #type: ignore
 def filesystem_file(filepath):
     filepath = unquote(filepath)
-
     path = Path("/") / filepath
 
     if not path.is_file():
@@ -115,6 +115,6 @@ if __name__ == "__main__":
 
     webview.start(
         gui=gui,
-        debug=True,
+        debug=False,
         private_mode=False,
     )

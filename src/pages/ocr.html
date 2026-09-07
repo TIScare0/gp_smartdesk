@@ -209,7 +209,8 @@
     </div>
 
     <div id="toastContainer" class="toast-hub"></div>
-
+    
+    <script src="../js/webview.js"></script>
     <script>
       async function applyTheme() {
         if ((await window.GetItem("aura_theme_mode")) === "dark") {
@@ -218,8 +219,6 @@
       }
       applyTheme();
     </script>
-
-    <script src="../js/webview.js"></script>
     <script src="../js/ocr.js"></script>
   </body>
 </html>
